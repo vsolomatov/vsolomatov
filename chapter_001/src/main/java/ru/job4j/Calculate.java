@@ -10,7 +10,7 @@ package ru.job4j;
 public class Calculate {
     /**
      * Main.
-     * @param args - args.
+     * @param args - параметр метода main (единственный параметр)
      */
     public static void main(String[] args) {
         System.out.println("Hello World");
