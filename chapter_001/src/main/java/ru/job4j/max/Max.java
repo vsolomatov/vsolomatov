@@ -6,7 +6,24 @@ package ru.job4j.max;
  */
 
 public class Max {
+    /**
+     * Возвращает максимальное значение из двух целых чисел
+     * @param first, second.
+     * @return Ответ.
+     */
     public int max(int first, int second) {
         return (first > second) ? first : second;
+    }
+
+    /**
+     * Возвращает максимальное значение из трех целых чисел
+     * @param first, second, third
+     * @return Ответ.
+     */
+    public int max_third(int first, int second, int third) {
+        int rsl;
+        rsl=max(first,second);
+        rsl=max(rsl,third);
+        return rsl;
     }
 }

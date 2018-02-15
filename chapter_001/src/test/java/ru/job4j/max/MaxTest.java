@@ -17,16 +17,25 @@ public class MaxTest {
         int result = maxim.max(1, 2);
         assertThat(result, is(2));
     }
+
     @Test
     public void whenSecondLessFirst() {
         Max maxim = new Max();
         int result = maxim.max(3, 2);
         assertThat(result, is(3));
     }
+
     @Test
     public void whenFirstEqualSecond() {
         Max maxim = new Max();
         int result = maxim.max(3, 3);
         assertThat(result, is(3));
+    }
+
+    @Test
+    public void whenMaxThird() {
+        Max maxim = new Max();
+        int result = maxim.max_third(4, 1, 3);
+        assertThat(result, is(4));
     }
 }
