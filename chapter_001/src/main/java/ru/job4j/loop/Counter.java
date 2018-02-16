@@ -1,4 +1,5 @@
 package ru.job4j.loop;
+
 /**
  * @author Viacheslav Solomatov (solomatoff.vyacheslav@yandex.ru)
  * @version $Id$
@@ -9,14 +10,15 @@ public class Counter {
 
     /**
      * Вычисляет сумму четных чисел в диапазоне от start до finish
+     *
      * @param start, finish.
      * @return Ответ.
      */
     public int add(int start, int finish) {
-        int rst=0;
-        for (int index=start; index<=finish; index++) {
-            if (index%2==0) {
-                rst+=index;
+        int rst = 0;
+        for (int index = start; index <= finish; index++) {
+            if (index % 2 == 0) {
+                rst += index;
             }
         }
         return rst;
