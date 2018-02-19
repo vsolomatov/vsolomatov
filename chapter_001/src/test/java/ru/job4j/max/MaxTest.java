@@ -35,7 +35,7 @@ public class MaxTest {
     @Test
     public void whenMaxThird() {
         Max maxim = new Max();
-        int result = maxim.max_third(4, 1, 3);
+        int result = maxim.maxthird(4, 1, 3);
         assertThat(result, is(4));
     }
 }

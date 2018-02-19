@@ -11,7 +11,8 @@ public class Counter {
     /**
      * Вычисляет сумму четных чисел в диапазоне от start до finish
      *
-     * @param start, finish.
+     * @param start Начальное значение
+     * @param finish Конечное значение
      * @return Ответ.
      */
     public int add(int start, int finish) {
