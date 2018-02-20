@@ -16,12 +16,11 @@ public class Square {
 
     public int[] calculate(int bound) {
 
-        int[] rst;
-        rst = new int[bound + 1];
+        int[] rst = new int[bound];
 
         // заполнить массив через цикл элементами от 1 до bound возведенные в квадрат
         for (int index = 1; index <= bound; index++) {
-            rst[index] = index * index;
+            rst[index - 1] = index * index;
         }
         return rst;
     }
