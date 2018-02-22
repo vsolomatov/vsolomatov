@@ -13,7 +13,6 @@ public class Square {
      * @param bound Длина массива.
      * @return Массив заполненный элементами от 1 до bound возведенными в квадрат
      */
-
     public int[] calculate(int bound) {
 
         int[] rst = new int[bound];

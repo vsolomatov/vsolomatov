@@ -28,7 +28,6 @@ public class Triangle {
     private boolean exist(double ab, double ac, double bc) {
         return ((ab + bc > ac) & (ab + ac > bc) & (ac + bc > ab));
     }
-
     /**
      * Метод вычисления полупериметра по длинам сторон.
      * <p>
@@ -44,7 +43,6 @@ public class Triangle {
     public double period(double ab, double ac, double bc) {
         return (ab + ac + bc) / 2;
     }
-
     /**
      * Метод должен вычислить площадь треугольника.
      *

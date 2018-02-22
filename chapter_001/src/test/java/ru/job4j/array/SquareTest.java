@@ -16,7 +16,6 @@ public class SquareTest {
         }*/
         assertThat(rst.calculate(5), is(sq5));
     }
-
     @Test
     public void whenSquareSeven() {
         Square rst = new Square();

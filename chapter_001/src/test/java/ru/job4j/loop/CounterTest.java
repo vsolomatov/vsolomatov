@@ -19,7 +19,6 @@ public class CounterTest {
                 is(30)
         );
     }
-
     @Test
     public void whenCounterStartFiveFinishTwentyNine() {
         Counter count = new Counter();

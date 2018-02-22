@@ -14,7 +14,6 @@ public class Board {
      * @param height Высота шахматной доски
      * @return Строка (псевдографика шахматной доски)
      */
-
     public String paint(int width, int height) {
 
         StringBuilder screen = new StringBuilder();

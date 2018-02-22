@@ -15,9 +15,7 @@ public class FindLoop {
      * @return Индекс искомого элемента массива, либо -1 в случае отсутствия такого элемента
      */
     public int indexOf(int[] data, int el) {
-
         int rsl = -1; // если элемента нет в массиве, то возвращаем -1.
-
         for (int index = 0; index < data.length; index++) {
             if (data[index] == el) {
                 rsl = index;
@@ -25,7 +23,6 @@ public class FindLoop {
                 break;
             }
         }
-
         return rsl;
     }
 }

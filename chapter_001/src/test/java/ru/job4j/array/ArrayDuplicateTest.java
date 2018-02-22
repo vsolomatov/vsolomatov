@@ -6,7 +6,6 @@ import static org.hamcrest.collection.IsArrayContainingInAnyOrder.arrayContainin
 import static org.junit.Assert.*;
 
 public class ArrayDuplicateTest {
-
     @Test
     public void whenArrayHasDuplicatesThenDropIt() {
         String[] input = {"Привет", "Мир", "Привет", "Супер", "Мир"};

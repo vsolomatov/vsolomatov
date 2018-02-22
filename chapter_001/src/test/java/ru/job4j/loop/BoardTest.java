@@ -9,7 +9,6 @@ import static org.junit.Assert.assertThat;
  * @version $Id$
  * @since 0.1
  */
-
     public class BoardTest {
         @Test
         public void whenPaintBoardWithWidthThreeAndHeightThreeThenStringWithThreeColsAndThreeRows() {
@@ -19,7 +18,6 @@ import static org.junit.Assert.assertThat;
             String expected = String.format("X X%s X %sX X%s", line, line, line);
             assertThat(result, is(expected));
         }
-
         @Test
         public void whenPaintBoardWithWidthFiveAndHeightFourThenStringWithFiveColsAndFourRows() {
             //тест, проверяющий формирование доски 5 на 4.

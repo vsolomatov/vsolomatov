@@ -10,9 +10,7 @@ public class FindLoopTest {
     public void whenFindEl() {
         FindLoop rst = new FindLoop();
         int[] aArr = {1, 4, 25, 16, 9};
-
         //System.out.println(rst.indexOf(aArr,9));
-
         assertThat(rst.indexOf(aArr,9), is(4));
     }
     @Test
@@ -24,5 +22,4 @@ public class FindLoopTest {
 
         assertThat(rst.indexOf(aArr,8), is(-1));
     }
-
 }

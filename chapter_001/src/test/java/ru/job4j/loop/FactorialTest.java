@@ -15,7 +15,6 @@ public class FactorialTest {
                 is(120)
         );
     }
-
     @Test
     public void whenCalculateFactorialForZeroThenOne() {
         //тест, проверяющий, что факториал для числа 0 равен 1.
@@ -25,7 +24,6 @@ public class FactorialTest {
                 is(1)
         );
     }
-
     @Test
     public void whenCalculateFactorialForMinusThenOne() {
         //тест, проверяющий, что факториал для числа 0 равен 1.

@@ -34,7 +34,6 @@ public class ArrayChar {
                 result = false;
             }
         }
-
         return result;
     }
 
@@ -47,10 +46,8 @@ public class ArrayChar {
      */
     public boolean contains(String origin, String sub) {
         boolean result = true;
-
         char[] originarray = origin.toCharArray();
         char[] subarray = sub.toCharArray();
-
         // проверяем, что массив data имеет элементы одинаковые со вспомогательным массивом subarray
         for (int out = 0; out < originarray.length - subarray.length + 1; out++) {
             result = true;

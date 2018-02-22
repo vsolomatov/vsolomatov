@@ -7,7 +7,6 @@ package ru.job4j.loop;
  */
 
 public class Counter {
-
     /**
      * Вычисляет сумму четных чисел в диапазоне от start до finish
      *

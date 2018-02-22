@@ -12,9 +12,7 @@ public class BubbleSortTest {
         BubbleSort rst = new BubbleSort();
         int[] aArr = {1, 5, 4, 2, 3, 1, 7, 8, 0, 5};
         int[] bArr = {0, 1, 1, 2, 3, 4, 5, 5, 7, 8};
-
         assertThat(rst.sort(aArr), is(bArr));
-
     }
 }
 
