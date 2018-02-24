@@ -1,10 +1,10 @@
-package ru.job4j;
+package ru.job4j.professions;
 
 import org.junit.Test;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-import ru.vsolom.professions.*;
+import ru.job4j.professions.*;
 
 public class EngineerTest {
     @Test
