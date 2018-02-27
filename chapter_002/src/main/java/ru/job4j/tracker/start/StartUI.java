@@ -71,7 +71,7 @@ public class StartUI {
                 this.createItem();
             } else if (SHOW.equals(answer)) {
                 // Показать все заявки
-                this.ShowAllItems();
+                this.showAllItems();
             } else if (EDIT.equals(answer)) {
                 // редактирование заявки
                 this.editItem();
@@ -105,7 +105,7 @@ public class StartUI {
     /**
      * Метод реализует вывод всех заявок в консоль.
      */
-    private void ShowAllItems() {
+    private void showAllItems() {
         System.out.println("------------ Все заявки --------------");
         for (Item item : this.tracker.findAll()) {
             System.out.println(item.getId() + " " + item.getName() + " " + item.getDescription());

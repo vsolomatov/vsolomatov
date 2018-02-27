@@ -20,9 +20,9 @@ public class Tracker {
      * @param item Заявка, на которую нужно заменить заявку с идентификатором id
      */
     public void replace(String id, Item item) {
-        for (int index=0; index!=this.position; index++) {
-            if (this.items[index].getId().equals(id) ) {
-                this.items[index]=item;
+        for (int index = 0; index != this.position; index++) {
+            if (this.items[index].getId().equals(id)) {
+                this.items[index] = item;
                 break;
             }
         }
@@ -33,18 +33,18 @@ public class Tracker {
      * @param id Идентификатор заявки
      *
      */
-    public void delete (String id) {
+    public void delete(String id) {
         Item[] itemarray = new Item[this.position - 1];
-        for (int index=0; index!=this.position; index++) {
-            if (this.items[index].getId().equals(id) ) {
-                if (index==0) {
+        for (int index = 0; index != this.position; index++) {
+            if (this.items[index].getId().equals(id)) {
+                if (index == 0) {
                     System.arraycopy(this.items, 1, itemarray, 0, this.position - 1);
                 } else {
                     System.arraycopy(this.items, 0, itemarray, 0, index);
-                    System.arraycopy(this.items, index + 1, itemarray, index, this.position - index - 1 );
+                    System.arraycopy(this.items, index + 1, itemarray, index, this.position - index - 1);
                 }
                 this.position--;
-                for (int i=0; i!=this.position; i++) {
+                for (int i = 0; i != this.position; i++) {
                     this.items[i] = itemarray[i];
                 }
                 break;
@@ -64,14 +64,14 @@ public class Tracker {
     public Item[] findByName(String name) {
         int qt = 0;
         Item[] temparray = new Item[this.position];
-        for (int index=0; index!=this.position; index++) {
+        for (int index = 0; index != this.position; index++) {
             if (this.items[index].getName().equals(name)) {
                 temparray[qt] = this.items[index];
                 qt++;
             }
         }
         Item[] result = new Item[qt];
-        System.arraycopy(temparray,0, result, 0, qt );
+        System.arraycopy(temparray, 0, result, 0, qt);
         return result;
     }
     String generateId() {
@@ -79,7 +79,7 @@ public class Tracker {
     }
     public Item[] findAll() {
         Item[] result = new Item[this.position];
-        for (int index=0; index!=this.position; index++) {
+        for (int index = 0; index != this.position; index++) {
             result[index] = this.items[index];
         }
         return result;

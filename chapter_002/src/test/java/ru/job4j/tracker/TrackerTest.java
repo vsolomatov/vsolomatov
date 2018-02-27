@@ -72,7 +72,7 @@ public class TrackerTest {
         tracker.delete(idDelete);
 
         // Проверяем, что заявка с таким id отсутствует
-       assertThat(tracker.findById(idDelete), is(nullValue()) );
+       assertThat(tracker.findById(idDelete), is(nullValue()));
 
         /*for (Item item : tracker.findAll()) {
             System.out.println(item.getId() + " " + item.getName() + " " + item.getDescription());
