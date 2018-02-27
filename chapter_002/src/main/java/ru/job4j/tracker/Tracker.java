@@ -43,6 +43,7 @@ public class Tracker {
                     System.arraycopy(this.items, 0, itemarray, 0, index);
                     System.arraycopy(this.items, index + 1, itemarray, index, this.position - index - 1);
                 }
+                this.items[index] = null;
                 this.position--;
                 for (int i = 0; i != this.position; i++) {
                     this.items[i] = itemarray[i];
@@ -53,7 +54,7 @@ public class Tracker {
     }
     public Item findById(String id) {
         Item result = null;
-        for (Item item : items) {
+        for (Item item : this.items) {
             if (item != null && item.getId().equals(id)) {
                 result = item;
                 break;
@@ -74,9 +75,11 @@ public class Tracker {
         System.arraycopy(temparray, 0, result, 0, qt);
         return result;
     }
+
     String generateId() {
         return String.valueOf(System.currentTimeMillis() + RN.nextInt());
     }
+
     public Item[] findAll() {
         Item[] result = new Item[this.position];
         for (int index = 0; index != this.position; index++) {
