@@ -1,7 +1,7 @@
 package ru.job4j.tracker;
 
 import java.util.*;
-import ru.job4j.models.*;
+import ru.job4j.tracker.models.*;
 
 public class Tracker {
     private final Item[] items = new Item[100];
@@ -51,7 +51,7 @@ public class Tracker {
             }
         }
     }
-    protected Item findById(String id) {
+    public Item findById(String id) {
         Item result = null;
         for (Item item : items) {
             if (item != null && item.getId().equals(id)) {
