@@ -29,6 +29,6 @@ public class TriangleTest {
                                 .toString()
                 )
         );
-        //System.out.println(triangle.draw());
+        System.out.println(triangle.draw());
     }
 }
