@@ -1,14 +1,180 @@
 package ru.job4j.tracker.start;
 
 import org.junit.Test;
+
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.core.IsNull.nullValue;
+
 import ru.job4j.tracker.*;
+import org.junit.After;
+import org.junit.Before;
 
 import ru.job4j.tracker.models.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
 public class StartUITest {
+    // поле содержит дефолтный вывод в консоль.
+    private final PrintStream stdout = System.out;
+    // буфер для результата.
+    private final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    // Сформируем строку меню
+    private final String menu = new StringBuilder()
+            .append("     МЕНЮ    ")
+            .append(System.lineSeparator())
+            .append("0. Add new Item")
+            .append(System.lineSeparator())
+            .append("1. Show all items")
+            .append(System.lineSeparator())
+            .append("2. Edit item")
+            .append(System.lineSeparator())
+            .append("3. Delete item")
+            .append(System.lineSeparator())
+            .append("4. Find item by Id")
+            .append(System.lineSeparator())
+            .append("5. Find items by name")
+            .append(System.lineSeparator())
+            .append("6. Exit Program")
+            .append(System.lineSeparator())
+            .toString();
+
+    @Before
+    public void loadOutput() {
+        System.out.println("execute before method");
+        System.setOut(new PrintStream(this.out));
+    }
+
+    @After
+    public void backOutput() {
+        System.setOut(this.stdout);
+        System.out.println("execute after method");
+    }
+
+    @Test
+    public void whenUserChooseFindAll() {
+        // создаём Tracker
+        Tracker tracker = new Tracker();
+        // Добавляем заявки в трекер. И запоминаем их id в массиве itemid.
+        Item itemnew;
+        String[] itemid = new String[3];
+
+        itemnew = new Item("test1", "testDescription1", 123L);
+        itemid[0] = tracker.add(itemnew).getId();
+
+        itemnew = new Item("test2", "testDescription2", 123L);
+        itemid[1] = tracker.add(itemnew).getId();
+
+        itemnew = new Item("test3", "testDescription3", 123L);
+        itemid[2] = tracker.add(itemnew).getId();
+
+        //создаём StubInput с последовательностью действий
+        Input input = new StubInput(new String[]{"1", "6"});
+        //   создаём StartUI и вызываем метод init()
+        new StartUI(input, tracker).init();
+        // проверяем для случая когда введен id второй заявки
+        assertThat(new String(out.toByteArray()), is(new StringBuilder()
+                .append(menu)
+                .append("------------ Все заявки --------------")
+                .append(System.lineSeparator())
+                .append(itemid[0] + " test1 testDescription1")
+                .append(System.lineSeparator())
+                .append(itemid[1] + " test2 testDescription2")
+                .append(System.lineSeparator())
+                .append(itemid[2] + " test3 testDescription3")
+                .append(System.lineSeparator())
+                .append("--------------------------------------")
+                .append(System.lineSeparator())
+                .append(menu)
+                .toString()));
+    }
+
+    @Test
+    public void whenUserChooseFindById() {
+        // создаём Tracker
+        Tracker tracker = new Tracker();
+        // Добавляем заявки в трекер. И запоминаем их id в массиве itemid.
+        Item itemnew;
+        String[] itemid = new String[3];
+
+        itemnew = new Item("test1", "testDescription1", 123L);
+        itemid[0] = tracker.add(itemnew).getId();
+
+        itemnew = new Item("test2", "testDescription2", 123L);
+        itemid[1] = tracker.add(itemnew).getId();
+
+        itemnew = new Item("test3", "testDescription3", 123L);
+        itemid[2] = tracker.add(itemnew).getId();
+
+        //создаём StubInput с последовательностью действий, проверяем для случая когда введен id второй заявки
+        // И для случая когда введен некорректный id
+        Input input = new StubInput(new String[]{"4", itemid[1], "4", "1111111111", "6"});
+
+        //   создаём StartUI и вызываем метод init()
+        new StartUI(input, tracker).init();
+
+        // проверяем
+        assertThat(new String(out.toByteArray()), is(new StringBuilder()
+                .append(menu)
+                .append("------------ Поиск заявки по Id --------------")
+                .append(System.lineSeparator())
+                .append(itemid[1] + " test2 testDescription2")
+                .append(System.lineSeparator())
+                .append("------------ Поиск заявки с Id : " + itemid[1] + " завершен -----------")
+                .append(System.lineSeparator())
+                .append(menu)
+                .append("------------ Поиск заявки по Id --------------")
+                .append(System.lineSeparator())
+                .append("Заявка с таким id отсутствует в хранилище.")
+                .append(System.lineSeparator())
+                .append("------------ Поиск заявки с Id : 1111111111 завершен -----------")
+                .append(System.lineSeparator())
+                .append(menu)
+                .toString()));
+    }
+
+    @Test
+    public void whenUserChooseFindByName() {
+        // создаём Tracker
+        Tracker tracker = new Tracker();
+        // Добавляем заявки в трекер. И запоминаем их id в массиве itemid.
+        Item itemnew;
+        String[] itemid = new String[3];
+
+        itemnew = new Item("test1", "testDescription1", 123L);
+        itemid[0] = tracker.add(itemnew).getId();
+
+        itemnew = new Item("test2", "testDescription2", 123L);
+        itemid[1] = tracker.add(itemnew).getId();
+
+        itemnew = new Item("test3", "testDescription3", 123L);
+        itemid[2] = tracker.add(itemnew).getId();
+
+        //создаём StubInput с последовательностью действий, проверяем для случая когда введен id второй заявки
+        // И для случая когда введен некорректный id
+        Input input = new StubInput(new String[]{"5", "test2", "5", "test4", "6"});
+
+        //   создаём StartUI и вызываем метод init()
+        new StartUI(input, tracker).init();
+
+        // проверяем
+        assertThat(new String(out.toByteArray()), is(new StringBuilder()
+                .append(menu)
+                .append("------------ Поиск заявки по Name --------------")
+                .append(System.lineSeparator())
+                .append(itemid[1] + " test2 testDescription2")
+                .append(System.lineSeparator())
+                .append("------------ Поиск заявки с Name : test2 завершен -----------")
+                .append(System.lineSeparator())
+                .append(menu)
+                .append("------------ Поиск заявки по Name --------------")
+                .append(System.lineSeparator())
+                .append("------------ Поиск заявки с Name : test4 завершен -----------")
+                .append(System.lineSeparator())
+                .append(menu)
+                .toString()));
+    }
 
     @Test
     public void whenUserAddItemThenTrackerHasNewItemWithSameName() {
