@@ -19,12 +19,17 @@ public class SquareTest {
                 is(
                         new StringBuilder()
                                 .append("+++++++")
+                                .append(System.lineSeparator())
                                 .append("+     +")
+                                .append(System.lineSeparator())
                                 .append("+     +")
+                                .append(System.lineSeparator())
                                 .append("+++++++")
+                                .append(System.lineSeparator())
                                 .toString()
                 )
         );
+        //System.out.println(square.draw());
     }
 }
 

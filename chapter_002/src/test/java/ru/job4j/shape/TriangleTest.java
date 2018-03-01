@@ -19,11 +19,16 @@ public class TriangleTest {
                 is(
                         new StringBuilder()
                                 .append("   +   ")
+                                .append(System.lineSeparator())
                                 .append("  + +  ")
+                                .append(System.lineSeparator())
                                 .append(" +   + ")
+                                .append(System.lineSeparator())
                                 .append("+++++++")
+                                .append(System.lineSeparator())
                                 .toString()
                 )
         );
+        //System.out.println(triangle.draw());
     }
 }
