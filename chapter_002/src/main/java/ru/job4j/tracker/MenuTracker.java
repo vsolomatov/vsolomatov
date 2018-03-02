@@ -1,12 +1,10 @@
 package ru.job4j.tracker;
 
-import ru.job4j.tracker.models.*;
-
 /**
  * Класс реализует редактирование заявки в хранилище.
  */
 class EditItem implements UserAction {
-    public int setKey() {
+    public int returnKey() {
         return 2;
     }
 
@@ -35,7 +33,7 @@ class EditItem implements UserAction {
     }
 
     public String info() {
-        return String.format("%s. %s", this.setKey(), "Edit item");
+        return String.format("%s. %s", this.returnKey(), "Edit item");
     }
 }
 
@@ -56,7 +54,7 @@ public class MenuTracker {
      * Класс реализует добавленяи новый заявки в хранилище.
      */
     private class AddItem implements UserAction {
-        public int setKey() {
+        public int returnKey() {
             return 0;
         }
 
@@ -69,7 +67,7 @@ public class MenuTracker {
         }
 
         public String info() {
-            return String.format("%s. %s", this.setKey(), "Add new Item");
+            return String.format("%s. %s", this.returnKey(), "Add new Item");
         }
     }
 
@@ -79,7 +77,7 @@ public class MenuTracker {
      * Класс реализует вывод всех заявок в консоль.
      */
     private static class ShowItems implements UserAction {
-        public int setKey() {
+        public int returnKey() {
             return 1;
         }
 
@@ -92,7 +90,7 @@ public class MenuTracker {
         }
 
         public String info() {
-            return String.format("%s. %s", this.setKey(), "Show all items");
+            return String.format("%s. %s", this.returnKey(), "Show all items");
         }
     }
 
@@ -102,7 +100,7 @@ public class MenuTracker {
      * Класс реализует удаление заявки из хранилища.
      */
     private static class DeleteItem implements UserAction {
-        public int setKey() {
+        public int returnKey() {
             return 3;
         }
 
@@ -126,7 +124,7 @@ public class MenuTracker {
         }
 
         public String info() {
-            return String.format("%s. %s", this.setKey(), "Delete item");
+            return String.format("%s. %s", this.returnKey(), "Delete item");
         }
     }
 
@@ -136,7 +134,7 @@ public class MenuTracker {
      * Класс реализует поиск заявки в хранилище по Id.
      */
     private static class FindItemById implements UserAction {
-        public int setKey() {
+        public int returnKey() {
             return 4;
         }
 
@@ -153,7 +151,7 @@ public class MenuTracker {
         }
 
         public String info() {
-            return String.format("%s. %s", this.setKey(), "Find item by Id");
+            return String.format("%s. %s", this.returnKey(), "Find item by Id");
         }
     }
 
@@ -163,7 +161,7 @@ public class MenuTracker {
      * Класс реализует поиск заявки в хранилище по имени
      */
     private static class FindItemByName implements UserAction {
-        public int setKey() {
+        public int returnKey() {
             return 5;
         }
 
@@ -177,7 +175,7 @@ public class MenuTracker {
         }
 
         public String info() {
-            return String.format("%s. %s", this.setKey(), "Find items by name");
+            return String.format("%s. %s", this.returnKey(), "Find items by name");
         }
     }
 
@@ -187,7 +185,7 @@ public class MenuTracker {
      * Класс реализует пункт меню "выход из меню"
      */
     private static class ExitFromMenu implements UserAction {
-        public int setKey() {
+        public int returnKey() {
             return 6;
         }
 
@@ -195,7 +193,7 @@ public class MenuTracker {
         }
 
         public String info() {
-            return String.format("%s. %s", this.setKey(), "Exit Program");
+            return String.format("%s. %s", this.returnKey(), "Exit Program");
         }
     }
 
@@ -207,7 +205,9 @@ public class MenuTracker {
             }
         }
     }
-
+    /**
+     * Метод реализует заполнение меню пунктами
+     */
     public void fillMenus() {
         this.menus[0] = this.new AddItem();
         this.menus[1] = new MenuTracker.ShowItems();
@@ -216,6 +216,20 @@ public class MenuTracker {
         this.menus[4] = new MenuTracker.FindItemById();
         this.menus[5] = new MenuTracker.FindItemByName();
         this.menus[6] = new MenuTracker.ExitFromMenu();
+    }
+
+    /**
+     * Метод возвращает массив номеров пунктов меню в виде целых чисел
+     */
+    public int[] menusNumber() {
+        int[] numbers = new int[this.menus.length];
+        int index = 0;
+        for (UserAction menuitem : this.menus) {
+            numbers[index] = menuitem.returnKey();
+            index++;
+            //System.out.println(menuitem.returnKey());
+        }
+        return numbers;
     }
 
     public void select(int key) {

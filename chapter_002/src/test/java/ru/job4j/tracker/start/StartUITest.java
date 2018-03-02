@@ -6,11 +6,13 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.core.IsNull.nullValue;
 
-import ru.job4j.tracker.*;
 import org.junit.After;
 import org.junit.Before;
-
-import ru.job4j.tracker.models.*;
+import ru.job4j.tracker.Input;
+import ru.job4j.tracker.Item;
+import ru.job4j.tracker.StubInput;
+import ru.job4j.tracker.Tracker;
+import ru.job4j.tracker.start.StartUI;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;

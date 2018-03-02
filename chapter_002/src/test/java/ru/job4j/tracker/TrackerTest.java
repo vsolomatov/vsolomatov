@@ -6,8 +6,6 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 
-import ru.job4j.tracker.models.*;
-
 public class TrackerTest {
     @Test
     public void whenReplaceNameThenReturnNewName() {

@@ -28,4 +28,27 @@ public class StubInput implements Input {
     public String ask(String question) {
         return this.answers[position++];
     }
+
+    @Override
+    public int ask(String question, int[] range) {
+        int key = -1;
+        try {
+            key = Integer.valueOf(this.answers[position++]);
+        } catch (NumberFormatException nfe) {
+            throw new UnsupportedOperationException("Unsupported operation");
+        }
+        boolean exist = false;
+        for (int value : range) {
+            //System.out.println(value);
+            if (value == key) {
+                exist = true;
+                break;
+            }
+        }
+        if (exist) {
+            return key;
+        } else {
+            throw new MenuOutException("Out of menu range");
+        }
+    }
 }

@@ -1,8 +1,15 @@
 package ru.job4j.tracker.start;
 
-import ru.job4j.tracker.*;
+import ru.job4j.tracker.Input;
+import ru.job4j.tracker.MenuTracker;
+import ru.job4j.tracker.Tracker;
+import ru.job4j.tracker.ValidateInput;
 
 public class StartUI {
+    /**
+     * Массив содержит номера пунктов нашего меню
+     */
+    private int[] range; // получать надо из меню (массив номеров пунктов меню)
     /**
      * Константа для выхода из цикла.
      */
@@ -38,10 +45,16 @@ public class StartUI {
         MenuTracker menu = new MenuTracker(this.input, this.tracker);
         // Заполняем меню пунктами
         menu.fillMenus();
+        this.range = menu.menusNumber();
+
+        /*System.out.println("Вывод из StartUI");
+        for (int num : this.range) {
+            System.out.println(num);
+        }*/
 
         while (!exit) {
             menu.showMenu();
-            answer = Integer.parseInt(this.input.ask("Выберите пункт меню : "));
+            answer = this.input.ask("Выберите пункт меню : ", this.range);
             if (answer == EXIT) {
                 exit = true;
             } else {
@@ -54,8 +67,9 @@ public class StartUI {
      * Запуск программы.
      *
      */
-    public static void main() {
-        new StartUI(new ConsoleInput(), new Tracker()).init();
+    public static void main(String[] args) {
+        Input input = new ValidateInput();
+        new StartUI(input, new Tracker()).init();
     }
 }
 
