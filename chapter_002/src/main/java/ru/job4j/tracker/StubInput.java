@@ -31,12 +31,8 @@ public class StubInput implements Input {
 
     @Override
     public int ask(String question, int[] range) {
-        int key = -1;
-        try {
-            key = Integer.valueOf(this.answers[position++]);
-        } catch (NumberFormatException nfe) {
-            throw new UnsupportedOperationException("Unsupported operation");
-        }
+        int key = Integer.valueOf(this.answers[position++]);
+
         boolean exist = false;
         for (int value : range) {
             //System.out.println(value);
