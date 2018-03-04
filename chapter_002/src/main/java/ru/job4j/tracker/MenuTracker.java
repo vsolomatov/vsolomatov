@@ -1,42 +1,5 @@
 package ru.job4j.tracker;
 
-/**
- * Класс реализует редактирование заявки в хранилище.
- */
-class EditItem implements UserAction {
-    public int returnKey() {
-        return 2;
-    }
-
-    public void execute(Input input, Tracker tracker) {
-        boolean exit = false;
-        String id = null;
-        System.out.println("------------ Редактирование заявки --------------");
-        while (!exit) {
-            id = input.ask("Введите id заявки, которую необходимо отредактировать :");
-            // Проверим существует ли заявка с таким id в хранилище
-            if ((tracker.findById(id) == null) && !id.equals("q")) {
-                System.out.println("Вы ввели некорректный id заявки! Проверьте свои данные и введите правильный id или q - для выхода.");
-            } else {
-                exit = true;
-            }
-        }
-        if (!id.equals("q")) {
-            String name = input.ask("Введите новое имя заявки :");
-            String desc = input.ask("Введите новое описание заявки :");
-            Item item = new Item(name, desc, 1L);
-            // у новой заявки устанавливаем тот же id
-            item.setId(id);
-            tracker.replace(id, item);
-            System.out.println("------------ Заявка с Id : " + id + " отредактирована -----------");
-        }
-    }
-
-    public String info() {
-        return String.format("%s. %s", this.returnKey(), "Edit item");
-    }
-}
-
 public class MenuTracker {
     private Input input;
     private Tracker tracker;
@@ -47,15 +10,35 @@ public class MenuTracker {
         this.input = input;
         this.tracker = tracker;
     }
+    /**
+     * Общий АБСТРАКТНЫЙ класс для действий.
+     */
+    public abstract class BaseAction implements UserAction {
+        private final int key;
+        private final String name;
 
-    // Внутренний приватный класс
+        protected BaseAction(final int key, final String name) {
+            this.key = key;
+            this.name = name;
+        }
+
+        @Override
+        public int returnKey() {
+            return this.key;
+        }
+
+        @Override
+        public String info() {
+            return String.format("%s. %s", this.key, this.name);
+        }
+    }
 
     /**
      * Класс реализует добавленяи новый заявки в хранилище.
      */
-    private class AddItem implements UserAction {
-        public int returnKey() {
-            return 0;
+    private class AddItem extends BaseAction {
+        public AddItem(int key, String name) {
+            super(key, name);
         }
 
         public void execute(Input input, Tracker tracker) {
@@ -65,22 +48,48 @@ public class MenuTracker {
             Item newItem = tracker.add(new Item(name, desc, 123L));
             System.out.println("------------ Создана новая заявка с Id : " + newItem.getId() + " -----------");
         }
-
-        public String info() {
-            return String.format("%s. %s", this.returnKey(), "Add new Item");
-        }
     }
 
-    // Внутренний приватный СТАТИЧЕСКИЙ класс
+    /**
+     * Класс реализует редактирование заявки в хранилище.
+     */
+    private class EditItem extends BaseAction {
+        public EditItem(int key, String name) {
+            super(key, name);
+        }
+
+        public void execute(Input input, Tracker tracker) {
+            boolean exit = false;
+            String id = null;
+            System.out.println("------------ Редактирование заявки --------------");
+            while (!exit) {
+                id = input.ask("Введите id заявки, которую необходимо отредактировать :");
+                // Проверим существует ли заявка с таким id в хранилище
+                if ((tracker.findById(id) == null) && !id.equals("q")) {
+                    System.out.println("Вы ввели некорректный id заявки! Проверьте свои данные и введите правильный id или q - для выхода.");
+                } else {
+                    exit = true;
+                }
+            }
+            if (!id.equals("q")) {
+                String name = input.ask("Введите новое имя заявки :");
+                String desc = input.ask("Введите новое описание заявки :");
+                Item item = new Item(name, desc, 1L);
+                // у новой заявки устанавливаем тот же id
+                item.setId(id);
+                tracker.replace(id, item);
+                System.out.println("------------ Заявка с Id : " + id + " отредактирована -----------");
+            }
+        }
+    }
 
     /**
      * Класс реализует вывод всех заявок в консоль.
      */
-    private static class ShowItems implements UserAction {
-        public int returnKey() {
-            return 1;
+    private class ShowItems extends BaseAction {
+        public ShowItems(int key, String name) {
+            super(key, name);
         }
-
         public void execute(Input input, Tracker tracker) {
             System.out.println("------------ Все заявки --------------");
             for (Item item : tracker.findAll()) {
@@ -88,22 +97,15 @@ public class MenuTracker {
             }
             System.out.println("--------------------------------------");
         }
-
-        public String info() {
-            return String.format("%s. %s", this.returnKey(), "Show all items");
-        }
     }
-
-    // Внутренний приватный СТАТИЧЕСКИЙ класс
 
     /**
      * Класс реализует удаление заявки из хранилища.
      */
-    private static class DeleteItem implements UserAction {
-        public int returnKey() {
-            return 3;
+    private class DeleteItem extends BaseAction {
+        public DeleteItem(int key, String name) {
+            super(key, name);
         }
-
         public void execute(Input input, Tracker tracker) {
             boolean exit = false;
             String id = null;
@@ -122,22 +124,15 @@ public class MenuTracker {
                 System.out.println("------------ Заявка с Id : " + id + " удалена -----------");
             }
         }
-
-        public String info() {
-            return String.format("%s. %s", this.returnKey(), "Delete item");
-        }
     }
-
-    // Внутренний приватный СТАТИЧЕСКИЙ класс
 
     /**
      * Класс реализует поиск заявки в хранилище по Id.
      */
-    private static class FindItemById implements UserAction {
-        public int returnKey() {
-            return 4;
+    private class FindItemById extends BaseAction {
+        public FindItemById(int key, String name) {
+            super(key, name);
         }
-
         public void execute(Input input, Tracker tracker) {
             System.out.println("------------ Поиск заявки по Id --------------");
             String id = input.ask("Введите id заявки, которую необходимо найти :");
@@ -149,22 +144,15 @@ public class MenuTracker {
             }
             System.out.println("------------ Поиск заявки с Id : " + id + " завершен -----------");
         }
-
-        public String info() {
-            return String.format("%s. %s", this.returnKey(), "Find item by Id");
-        }
     }
-
-    // Внутренний приватный СТАТИЧЕСКИЙ класс
 
     /**
      * Класс реализует поиск заявки в хранилище по имени
      */
-    private static class FindItemByName implements UserAction {
-        public int returnKey() {
-            return 5;
+    private class FindItemByName extends BaseAction {
+        public FindItemByName(int key, String name) {
+            super(key, name);
         }
-
         public void execute(Input input, Tracker tracker) {
             System.out.println("------------ Поиск заявки по Name --------------");
             String name = input.ask("Введите имя заявки, которую необходимо найти :");
@@ -173,27 +161,17 @@ public class MenuTracker {
             }
             System.out.println("------------ Поиск заявки с Name : " + name + " завершен -----------");
         }
-
-        public String info() {
-            return String.format("%s. %s", this.returnKey(), "Find items by name");
-        }
     }
-
-    // Внутренний приватный СТАТИЧЕСКИЙ класс
 
     /**
      * Класс реализует пункт меню "выход из меню"
      */
-    private static class ExitFromMenu implements UserAction {
-        public int returnKey() {
-            return 6;
+    private class ExitFromMenu extends BaseAction {
+        public ExitFromMenu(int key, String name) {
+            super(key, name);
         }
-
         public void execute(Input input, Tracker tracker) {
-        }
-
-        public String info() {
-            return String.format("%s. %s", this.returnKey(), "Exit Program");
+            // просто ничего не делает
         }
     }
 
@@ -209,13 +187,13 @@ public class MenuTracker {
      * Метод реализует заполнение меню пунктами
      */
     public void fillMenus() {
-        this.menus[0] = this.new AddItem();
-        this.menus[1] = new MenuTracker.ShowItems();
-        this.menus[2] = new EditItem();
-        this.menus[3] = new MenuTracker.DeleteItem();
-        this.menus[4] = new MenuTracker.FindItemById();
-        this.menus[5] = new MenuTracker.FindItemByName();
-        this.menus[6] = new MenuTracker.ExitFromMenu();
+        this.menus[0] = new AddItem(0, "Add new Item");
+        this.menus[1] = new ShowItems(1, "Show all items");
+        this.menus[2] = new EditItem(2, "Edit item");
+        this.menus[3] = new DeleteItem(3, "Delete item");
+        this.menus[4] = new FindItemById(4, "Find item by Id");
+        this.menus[5] = new FindItemByName(5, "Find items by name");
+        this.menus[6] = new ExitFromMenu(6, "Exit Program");
     }
 
     /**
