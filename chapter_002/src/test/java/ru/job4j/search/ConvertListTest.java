@@ -8,7 +8,31 @@ import java.util.List;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
+
 public class ConvertListTest {
+    @Test
+    public void whenConvertListToList() {
+        ConvertList aCL = new ConvertList();
+
+        List<int[]> aList = new ArrayList<>();
+        aList.add(new int[] {1,2});
+        aList.add(new int[] {3,4,5,6});
+
+        List<Integer> bList = new ArrayList<>();
+        bList.add(1);
+        bList.add(2);
+        bList.add(3);
+        bList.add(4);
+        bList.add(5);
+        bList.add(6);
+
+        List<Integer> resultList;
+        resultList = aCL.convert(aList);
+
+        assertThat(resultList, is(bList));
+
+    }
+
     @Test
     public void whenConvertListToArray() {
         ConvertList aCL = new ConvertList();

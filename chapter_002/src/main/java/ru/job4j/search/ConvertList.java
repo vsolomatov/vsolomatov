@@ -4,6 +4,22 @@ import java.lang.reflect.Array;
 import java.util.*;
 
 public class ConvertList {
+    /**
+     * Метод должен пройтись по всем элементам всех массивов в списке list
+     * и добавить их в один общий лист Integer.
+     *
+     * @param list список массивов
+     */
+    public List<Integer> convert (List<int[]> list) {
+        List<Integer> resultList = new ArrayList<>();
+        for (int[] listitr : list) {
+            for (int initr : listitr) {
+                resultList.add(initr);
+            }
+        }
+        return resultList;
+    }
+
     public List<Integer> toList (int[][] array) {
         List<Integer> li = new ArrayList<>();
         for (int[] outArray : array) {
