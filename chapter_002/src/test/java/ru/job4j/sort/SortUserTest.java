@@ -1,8 +1,6 @@
 package ru.job4j.sort;
 
-import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
-import ru.job4j.search.ConvertList;
 
 import java.util.*;
 
@@ -14,7 +12,7 @@ public class SortUserTest {
     public void WhenSortUser() {
         SortUser sortUser = new SortUser();
 
-        List<User> origin = Arrays.asList(new User("Ivan", 29), new User("Vyacheslav", 47), new User("Stan", 35), new User("Dmitriy", 41));
+        List<User> origin = Arrays.asList(new User("Ivan", 29), new User("Vyacheslav", 47), new User("Dmitriy", 41), new User("Stan", 35));
         //System.out.println(origin);
 
         Set<User> expected = new TreeSet<>();
