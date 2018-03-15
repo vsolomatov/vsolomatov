@@ -37,7 +37,7 @@ public class ConvertList {
         //System.out.println("Целое от деления кол-ва элементов на кол-во строк: " + fullrows);
         int lastrow = lsize % rows;
         //System.out.println("Остаток от деления кол-ва элементов на кол-во строк: " + lastrow);
-        int numElemInRow = (lastrow >= fullrows) ? fullrows + 1 : fullrows; // количество элементов в строке
+        int numElemInRow = (lastrow > 0) ? fullrows + 1 : fullrows; // количество элементов в строке
         //System.out.println("Кол-во элементов в строке: " + numElemInRow);
 
         int[][] resultArray = new int[rows][numElemInRow]; // массив-результат
