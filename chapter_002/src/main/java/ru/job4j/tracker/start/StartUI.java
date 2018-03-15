@@ -2,15 +2,17 @@ package ru.job4j.tracker.start;
 
 import ru.job4j.tracker.*;
 
+import java.util.ArrayList;
+
 public class StartUI {
     /**
      * Массив содержит номера пунктов нашего меню
      */
-    private int[] range; // получать надо из меню (массив номеров пунктов меню)
+    private ArrayList<String> range; // получать надо из меню (список ключей меню)
     /**
      * Константа для выхода из цикла.
      */
-    private static final int EXIT = 6;
+    private static final String EXIT = "70";
 
     /**
      * Получение данных от пользователя.
@@ -38,21 +40,22 @@ public class StartUI {
      */
     public void init() {
         boolean exit = false;
-        int answer;
+        String answer;
         MenuTracker menu = new MenuTracker(this.input, this.tracker);
         // Заполняем меню пунктами
         menu.fillMenus();
-        this.range = menu.menusNumber();
+        this.range = menu.keysmenu();
 
         /*System.out.println("Вывод из StartUI");
-        for (int num : this.range) {
+        for (String num : this.range) {
             System.out.println(num);
         }*/
 
         while (!exit) {
             menu.showMenu();
             answer = this.input.ask("Выберите пункт меню : ", this.range);
-            if (answer == EXIT) {
+
+            if (answer.equals(EXIT)) {
                 exit = true;
             } else {
                 menu.select(answer);

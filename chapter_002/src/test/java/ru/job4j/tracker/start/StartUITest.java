@@ -26,19 +26,19 @@ public class StartUITest {
     private final String menu = new StringBuilder()
             .append("     МЕНЮ    ")
             .append(System.lineSeparator())
-            .append("0. Add new Item")
+            .append("10. Add new Item")
             .append(System.lineSeparator())
-            .append("1. Show all items")
+            .append("20. Show all items")
             .append(System.lineSeparator())
-            .append("2. Edit item")
+            .append("30. Edit item")
             .append(System.lineSeparator())
-            .append("3. Delete item")
+            .append("40. Delete item")
             .append(System.lineSeparator())
-            .append("4. Find item by Id")
+            .append("50. Find item by Id")
             .append(System.lineSeparator())
-            .append("5. Find items by name")
+            .append("60. Find items by name")
             .append(System.lineSeparator())
-            .append("6. Exit Program")
+            .append("70. Exit Program")
             .append(System.lineSeparator())
             .toString();
 
@@ -72,7 +72,7 @@ public class StartUITest {
         itemid[2] = tracker.add(itemnew).getId();
 
         //создаём StubInput с последовательностью действий
-        Input input = new StubInput(new String[]{"1", "6"});
+        Input input = new StubInput(new String[]{"20", "70"});
         //   создаём StartUI и вызываем метод init()
         new StartUI(input, tracker).init();
         // проверяем для случая когда введен id второй заявки
@@ -111,7 +111,7 @@ public class StartUITest {
 
         //создаём StubInput с последовательностью действий, проверяем для случая когда введен id второй заявки
         // И для случая когда введен некорректный id
-        Input input = new StubInput(new String[]{"4", itemid[1], "4", "1111111111", "6"});
+        Input input = new StubInput(new String[]{"50", itemid[1], "50", "1111111111", "70"});
 
         //   создаём StartUI и вызываем метод init()
         new StartUI(input, tracker).init();
@@ -155,7 +155,7 @@ public class StartUITest {
 
         //создаём StubInput с последовательностью действий, проверяем для случая когда введен id второй заявки
         // И для случая когда введен некорректный id
-        Input input = new StubInput(new String[]{"5", "test2", "5", "test4", "6"});
+        Input input = new StubInput(new String[]{"60", "test2", "60", "test4", "70"});
 
         //   создаём StartUI и вызываем метод init()
         new StartUI(input, tracker).init();
@@ -181,9 +181,9 @@ public class StartUITest {
     @Test
     public void whenUserAddItemThenTrackerHasNewItemWithSameName() {
         Tracker tracker = new Tracker();     // создаём Tracker
-        Input input = new StubInput(new String[]{"0", "test name", "desc", "6"});   //создаём StubInput с последовательностью действий
+        Input input = new StubInput(new String[]{"10", "test name", "desc", "70"});   //создаём StubInput с последовательностью действий
         new StartUI(input, tracker).init();     //   создаём StartUI и вызываем метод init()
-        assertThat(tracker.findAll()[0].getName(), is("test name")); // проверяем, что нулевой элемент массива в трекере содержит имя, введённое при эмуляции.
+        assertThat(tracker.findAll().get(0).getName(), is("test name")); // проверяем, что нулевой элемент массива в трекере содержит имя, введённое при эмуляции.
     }
 
     @Test
@@ -194,7 +194,7 @@ public class StartUITest {
         Item item = tracker.add(new Item("test name", "desc", 1L));
 
         //создаём StubInput с последовательностью действий
-        Input input = new StubInput(new String[]{"2", item.getId(), "new test name", "new desc", "6"});
+        Input input = new StubInput(new String[]{"30", item.getId(), "new test name", "new desc", "70"});
 
         // создаём StartUI и вызываем метод init()
         new StartUI(input, tracker).init();
@@ -211,7 +211,7 @@ public class StartUITest {
         Item item = tracker.add(new Item("test name", "desc", 1L));
 
         //создаём StubInput с последовательностью действий
-        Input input = new StubInput(new String[]{"3", item.getId(), "6"});
+        Input input = new StubInput(new String[]{"40", item.getId(), "70"});
 
         // создаём StartUI и вызываем метод init()
         new StartUI(input, tracker).init();

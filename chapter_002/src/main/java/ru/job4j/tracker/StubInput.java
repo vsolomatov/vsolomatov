@@ -1,5 +1,7 @@
 package ru.job4j.tracker;
 
+import java.util.ArrayList;
+
 public class StubInput implements Input {
     /**
      * Это поле содержит последовательность ответов пользователя.
@@ -30,13 +32,13 @@ public class StubInput implements Input {
     }
 
     @Override
-    public int ask(String question, int[] range) {
-        int key = Integer.valueOf(this.answers[position++]);
-
+    public String ask(String question, ArrayList<String> range) {
+        String key = this.answers[position++];
         boolean exist = false;
-        for (int value : range) {
+
+        for (String value : range) {
             //System.out.println(value);
-            if (value == key) {
+            if (key.equals(value)) {
                 exist = true;
                 break;
             }

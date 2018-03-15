@@ -1,5 +1,7 @@
 package ru.job4j.tracker;
 
+import java.util.ArrayList;
+
 public class ValidateInput implements Input {
 
     private final Input input;
@@ -13,17 +15,15 @@ public class ValidateInput implements Input {
         return this.input.ask(question);
     }
 
-    public int ask(String question, int[] range) {
+    public String ask(String question, ArrayList<String> range) {
         boolean invalid = true;
-        int value = -1;
+        String value = "";
         do {
             try {
                 value = this.input.ask(question, range);
                 invalid = false;
             } catch (MenuOutException moe) {
                 System.out.println("Please select key from menu.");
-            } catch (NumberFormatException nfe) {
-                System.out.println("Please enter validate data again.");
             }
         } while (invalid);
         return  value;

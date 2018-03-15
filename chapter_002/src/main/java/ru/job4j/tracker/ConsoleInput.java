@@ -12,13 +12,13 @@ public class ConsoleInput implements Input {
     }
 
     @Override
-    public int ask(String question, int[] range) {
-        int key = Integer.valueOf(this.ask(question));
+    public String ask(String question, ArrayList<String> range) {
+        String key = this.ask(question);
 
         boolean exist = false;
-        for (int value : range) {
+        for (String value : range) {
             //System.out.println(value);
-            if (value == key) {
+            if (key.equals(value)) {
                 exist = true;
                 break;
             }

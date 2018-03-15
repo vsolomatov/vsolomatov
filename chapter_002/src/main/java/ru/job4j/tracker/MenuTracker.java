@@ -1,9 +1,11 @@
 package ru.job4j.tracker;
 
+import java.util.ArrayList;
+
 public class MenuTracker {
     private Input input;
     private Tracker tracker;
-    private UserAction[] menus = new UserAction[7];
+    private ArrayList<BaseAction> menus = new ArrayList<>();
 
     // Конструктор
     public MenuTracker(Input input, Tracker tracker) {
@@ -14,16 +16,16 @@ public class MenuTracker {
      * Общий АБСТРАКТНЫЙ класс для действий.
      */
     public abstract class BaseAction implements UserAction {
-        private final int key;
+        private final String key;
         private final String name;
 
-        protected BaseAction(final int key, final String name) {
+        protected BaseAction(final String key, final String name) {
             this.key = key;
             this.name = name;
         }
 
         @Override
-        public int returnKey() {
+        public String returnKey() {
             return this.key;
         }
 
@@ -37,7 +39,7 @@ public class MenuTracker {
      * Класс реализует добавленяи новый заявки в хранилище.
      */
     private class AddItem extends BaseAction {
-        public AddItem(int key, String name) {
+        AddItem(String key, String name) {
             super(key, name);
         }
 
@@ -54,7 +56,7 @@ public class MenuTracker {
      * Класс реализует редактирование заявки в хранилище.
      */
     private class EditItem extends BaseAction {
-        public EditItem(int key, String name) {
+        EditItem(String key, String name) {
             super(key, name);
         }
 
@@ -87,7 +89,7 @@ public class MenuTracker {
      * Класс реализует вывод всех заявок в консоль.
      */
     private class ShowItems extends BaseAction {
-        public ShowItems(int key, String name) {
+        ShowItems(String key, String name) {
             super(key, name);
         }
         public void execute(Input input, Tracker tracker) {
@@ -103,7 +105,7 @@ public class MenuTracker {
      * Класс реализует удаление заявки из хранилища.
      */
     private class DeleteItem extends BaseAction {
-        public DeleteItem(int key, String name) {
+        DeleteItem(String key, String name) {
             super(key, name);
         }
         public void execute(Input input, Tracker tracker) {
@@ -130,7 +132,7 @@ public class MenuTracker {
      * Класс реализует поиск заявки в хранилище по Id.
      */
     private class FindItemById extends BaseAction {
-        public FindItemById(int key, String name) {
+        FindItemById(String key, String name) {
             super(key, name);
         }
         public void execute(Input input, Tracker tracker) {
@@ -150,7 +152,7 @@ public class MenuTracker {
      * Класс реализует поиск заявки в хранилище по имени
      */
     private class FindItemByName extends BaseAction {
-        public FindItemByName(int key, String name) {
+        FindItemByName(String key, String name) {
             super(key, name);
         }
         public void execute(Input input, Tracker tracker) {
@@ -167,7 +169,7 @@ public class MenuTracker {
      * Класс реализует пункт меню "выход из меню"
      */
     private class ExitFromMenu extends BaseAction {
-        public ExitFromMenu(int key, String name) {
+        ExitFromMenu(String key, String name) {
             super(key, name);
         }
         public void execute(Input input, Tracker tracker) {
@@ -177,7 +179,7 @@ public class MenuTracker {
 
     public void showMenu() {
         System.out.println("     МЕНЮ    ");
-        for (UserAction action : this.menus) {
+        for (BaseAction action : this.menus) {
             if (action != null) {
                 System.out.println((action.info()));
             }
@@ -187,30 +189,37 @@ public class MenuTracker {
      * Метод реализует заполнение меню пунктами
      */
     public void fillMenus() {
-        this.menus[0] = new AddItem(0, "Add new Item");
-        this.menus[1] = new ShowItems(1, "Show all items");
-        this.menus[2] = new EditItem(2, "Edit item");
-        this.menus[3] = new DeleteItem(3, "Delete item");
-        this.menus[4] = new FindItemById(4, "Find item by Id");
-        this.menus[5] = new FindItemByName(5, "Find items by name");
-        this.menus[6] = new ExitFromMenu(6, "Exit Program");
+        this.menus.add(new AddItem("10", "Add new Item"));
+        this.menus.add(new ShowItems("20", "Show all items"));
+        this.menus.add(new EditItem("30", "Edit item"));
+        this.menus.add(new DeleteItem("40", "Delete item"));
+        this.menus.add(new FindItemById("50", "Find item by Id"));
+        this.menus.add(new FindItemByName("60", "Find items by name"));
+        this.menus.add(new ExitFromMenu("70", "Exit Program"));
     }
 
     /**
-     * Метод возвращает массив номеров пунктов меню в виде целых чисел
+     * Метод возвращает список ключей пунктов меню
      */
-    public int[] menusNumber() {
-        int[] numbers = new int[this.menus.length];
-        int index = 0;
-        for (UserAction menuitem : this.menus) {
-            numbers[index] = menuitem.returnKey();
-            index++;
+    public ArrayList<String> keysmenu() {
+        ArrayList<String> keys = new ArrayList<>();
+        for (BaseAction menuitem : this.menus) {
+            keys.add(menuitem.returnKey());
             //System.out.println(menuitem.returnKey());
         }
-        return numbers;
+        return keys;
     }
 
-    public void select(int key) {
-        this.menus[key].execute(this.input, this.tracker);
+    /**
+     *  Метод выполняет выбранный пункт меню
+     * @param key ключ пкнкта меню для выполнения
+     */
+    public void select(String key) {
+        for (BaseAction menuitem : this.menus) {
+            if (key.equals(menuitem.returnKey())) {
+                menuitem.execute(this.input, this.tracker);
+                break;
+            }
+        }
     }
 }
