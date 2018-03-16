@@ -26,7 +26,7 @@ public class User implements Comparable<User> {
     }
 
     public String toString() {
-        return "User "+this.hashCode()+" (Name=" + this.name+"; Age=" + this.age + ")";
+        return "User " + this.hashCode() + " (Name=" + this.name + "; Age=" + this.age + ")";
     }
 
     /**
@@ -36,8 +36,10 @@ public class User implements Comparable<User> {
      */
 
     @Override
-    public boolean equals(Object obj){
-        if(obj == this)return true; //ссылки идентичные, сравнение не требуется
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true; //ссылки идентичные, сравнение не требуется
+        }
         if (obj == null || obj.getClass() != this.getClass()) {
             return false;
         }

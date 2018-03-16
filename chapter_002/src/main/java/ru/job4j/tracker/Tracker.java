@@ -20,7 +20,7 @@ public class Tracker {
      * @param id идентификатор Item'а
      * @return индекс в списке items элемента с заданным id, возвращает -1, если элемент отсутствует
      */
-    private int FindIndexInItemsById (String id) {
+    private int findIndexInItemsById(String id) {
         int index = -1;
         for (int i = 0; i < items.size(); i++) {
             if (items.get(i).getId().equals(id)) {
@@ -49,7 +49,7 @@ public class Tracker {
      * @param item Заявка, на которую нужно заменить заявку с идентификатором id
      */
     public void replace(String id, Item item) {
-        int index = FindIndexInItemsById(id);
+        int index = findIndexInItemsById(id);
         if (index >= 0) {
             items.set(index, item);
         }
@@ -62,7 +62,7 @@ public class Tracker {
      *
      */
     public void delete(String id) {
-        int index = FindIndexInItemsById(id);
+        int index = findIndexInItemsById(id);
         if (index >= 0) {
             items.remove(index);
         }
@@ -75,10 +75,12 @@ public class Tracker {
      * @return ссылку на найденную заявку или null
      */
     public Item findById(String id) {
-        int index = FindIndexInItemsById(id);
+        int index = findIndexInItemsById(id);
         if (index >= 0) {
             return items.get(index);
-        } else return null;
+        } else {
+            return null;
+        }
     }
 
     /**

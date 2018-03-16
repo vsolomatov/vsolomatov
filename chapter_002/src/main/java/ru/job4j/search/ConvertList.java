@@ -10,7 +10,7 @@ public class ConvertList {
      *
      * @param list список массивов
      */
-    public List<Integer> convert (List<int[]> list) {
+    public List<Integer> convert(List<int[]> list) {
         List<Integer> resultList = new ArrayList<>();
         for (int[] listitr : list) {
             for (int initr : listitr) {
@@ -20,7 +20,7 @@ public class ConvertList {
         return resultList;
     }
 
-    public List<Integer> toList (int[][] array) {
+    public List<Integer> toList(int[][] array) {
         List<Integer> li = new ArrayList<>();
         for (int[] outArray : array) {
             for (int inArray : outArray) {
@@ -30,10 +30,10 @@ public class ConvertList {
         return li;
     }
 
-    public int[][] toArray (List<Integer> list, int rows) {
+    public int[][] toArray(List<Integer> list, int rows) {
         int lsize = list.size(); // размер списка
         //System.out.format("%s %02d %s %02d %n", "Длина списка: ", lsize, "Кол-во строк: ", rows);
-        int fullrows = lsize/rows;
+        int fullrows = lsize / rows;
         //System.out.println("Целое от деления кол-ва элементов на кол-во строк: " + fullrows);
         int lastrow = lsize % rows;
         //System.out.println("Остаток от деления кол-ва элементов на кол-во строк: " + lastrow);

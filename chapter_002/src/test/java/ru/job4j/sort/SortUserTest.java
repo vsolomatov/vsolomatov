@@ -9,7 +9,7 @@ import static org.junit.Assert.assertThat;
 
 public class SortUserTest {
     @Test
-    public void WhenSortUser() {
+    public void whenSortUser() {
         SortUser sortUser = new SortUser();
 
         List<User> origin = Arrays.asList(new User("I", 29), new User("V", 47), new User("D", 41), new User("S", 35));
@@ -30,7 +30,7 @@ public class SortUserTest {
     }
 
     @Test
-    public void WhenSortUserByNameLength() {
+    public void whenSortUserByNameLength() {
         SortUser sortUser = new SortUser();
 
         List<User> origin = Arrays.asList(new User("Stan", 41), new User("Vyacheslav", 47), new User("Vyacheslav", 27),
@@ -52,7 +52,7 @@ public class SortUserTest {
     }
 
     @Test
-    public void WhenSortUserByAll() {
+    public void whenSortUserByAll() {
         SortUser sortUser = new SortUser();
 
         List<User> origin = Arrays.asList(new User("Stan", 41), new User("Vyacheslav", 47), new User("Vyacheslav", 27),

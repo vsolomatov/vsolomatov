@@ -12,7 +12,7 @@ import static org.junit.Assert.assertThat;
 
 public class UserTest {
     @Test
-    public void WhenUserEquelse() {
+    public void whenUserEquelse() {
         User origin = new User("Олег", 29);
         User expected = new User("Андрей", 29);
 
