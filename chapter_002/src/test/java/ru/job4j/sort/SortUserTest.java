@@ -12,18 +12,63 @@ public class SortUserTest {
     public void WhenSortUser() {
         SortUser sortUser = new SortUser();
 
-        List<User> origin = Arrays.asList(new User("Ivan", 29), new User("Vyacheslav", 47), new User("Dmitriy", 41), new User("Stan", 35));
+        List<User> origin = Arrays.asList(new User("I", 29), new User("V", 47), new User("D", 41), new User("S", 35));
         //System.out.println(origin);
 
         Set<User> expected = new TreeSet<>();
-        expected.add(new User("Ivan", 29));
-        expected.add(new User("Stan", 35));
-        expected.add(new User("Dmitriy", 41));
         expected.add(new User("Vyacheslav", 47));
-        //System.out.println(expected);
+        expected.add(new User("Ivan", 29));
+        expected.add(new User("Stanly", 41));
+        expected.add(new User("Dmitriy", 35));
+
+        System.out.println(expected);
 
         Set<User> result = sortUser.sort(origin);
-        //System.out.println(result);
+        System.out.println(result);
+
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void WhenSortUserByNameLength() {
+        SortUser sortUser = new SortUser();
+
+        List<User> origin = Arrays.asList(new User("Stan", 41), new User("Vyacheslav", 47), new User("Vyacheslav", 27),
+                                        new User("Dmitriy", 35), new User("Stan", 29));
+        //System.out.println(origin);
+
+        List<User> expected = new ArrayList<>();
+        expected.add(new User("Stan", 41));
+        expected.add(new User("Stan", 29));
+        expected.add(new User("Dmitriy", 35));
+        expected.add(new User("Vyacheslav", 47));
+        expected.add(new User("Vyacheslav", 27));
+        System.out.println(expected);
+
+        List<User> result = sortUser.sortNameLength(origin);
+        System.out.println(result);
+
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void WhenSortUserByAll() {
+        SortUser sortUser = new SortUser();
+
+        List<User> origin = Arrays.asList(new User("Stan", 41), new User("Vyacheslav", 47), new User("Vyacheslav", 27),
+                new User("Dmitriy", 35), new User("Stan", 29));
+        //System.out.println(origin);
+
+        List<User> expected = new ArrayList<>();
+        expected.add(new User("Dmitriy", 35));
+        expected.add(new User("Stan", 29));
+        expected.add(new User("Stan", 41));
+        expected.add(new User("Vyacheslav", 27));
+        expected.add(new User("Vyacheslav", 47));
+        System.out.println(expected);
+
+        List<User> result = sortUser.sortByAllFields(origin);
+        System.out.println(result);
 
         assertThat(result, is(expected));
     }
