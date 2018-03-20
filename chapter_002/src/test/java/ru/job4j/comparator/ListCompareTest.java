@@ -7,7 +7,7 @@ import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ListCompareTest {
-    /*@Test
+    @Test
     public void whenStringsAreEqualThenZero() {
         ListCompare compare = new ListCompare();
         int rst = compare.compare(
@@ -25,6 +25,16 @@ public class ListCompareTest {
                 "Ivanova"
         );
         assertThat(rst, lessThan(0));
+    }
+
+    @Test
+    public void whenLeftGreateThanRightResultShouldBePositive() {
+        ListCompare compare = new ListCompare();
+        int rst = compare.compare(
+                "Ivanova",
+                "Ivanov"
+        );
+        assertThat(rst, greaterThan(0));
     }
 
     @Test
@@ -51,9 +61,9 @@ public class ListCompareTest {
     public void secondCharOfLeftLessThanRightShouldBeNegative() {
         ListCompare compare = new ListCompare();
         int rst = compare.compare(
-                "Patrova",
+                "Patrov",
                 "Petrov"
         );
         assertThat(rst, lessThan(0));
-    }*/
+    }
 }

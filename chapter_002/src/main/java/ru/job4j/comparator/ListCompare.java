@@ -1,29 +1,29 @@
 package ru.job4j.comparator;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
-import java.util.List;
 
 public class ListCompare implements Comparator<String> {
-    @Override
-    public int compare(String left, String right) {
-        ArrayList<String> leftList = new ArrayList(Arrays.asList(left.toCharArray()));
-        ArrayList<String> rightList = new ArrayList(Arrays.asList(right.toCharArray()));
-        //System.out.println(leftList);
-        //System.out.println(rightList);
-        boolean result = true;
-        int i = 0;
-
-        for (String leftitr : leftList) {
-            if (!rightList.get(i).equals(leftitr)) {
-                result = false;
-                break;
+        @Override
+        public int compare(String left, String right) {
+            int result = 0;
+            for (int i = 0; i < Math.min(left.length(), right.length()); i++) {
+                    if (left.charAt(i) < right.charAt(i)) {
+                        result = -1;
+                        break;
+                    } else if (left.charAt(i) > right.charAt(i)) {
+                        result = 1;
+                        break;
+                    }
             }
-            i++;
+            if (result == 0) {
+                if (left.length() < right.length()) {
+                    result = -1;
+                } else if (left.length() > right.length()) {
+                    result = 1;
+                }
+            }
+            return result;
         }
-
-        return 0;
-    }
 }
+
 
