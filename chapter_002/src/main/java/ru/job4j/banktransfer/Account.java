@@ -2,7 +2,7 @@ package ru.job4j.banktransfer;
 
 public class Account {
 
-    private double values;
+    private Double values;
     private String reqs;
 
     public Account(double values, String requisites) {
@@ -45,7 +45,7 @@ public class Account {
 
         Account account = (Account) o;
 
-        return this.reqs.equals(account.reqs);
+        return this.values.equals(account.values) && this.reqs.equals(account.reqs);
     }
 
     public int hashCode() {

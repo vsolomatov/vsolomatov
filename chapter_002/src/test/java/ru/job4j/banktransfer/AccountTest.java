@@ -36,4 +36,49 @@ public class AccountTest {
         //System.out.println(origin);
         //System.out.println(expected);
     }
+
+    @Test
+    public void whenAccountEquelse() {
+        Account origin = new Account(400, "Счет №1");
+        Account expected = new Account(400,  "Счет №1");
+
+        //System.out.println(origin);
+        //System.out.println(expected);
+
+        boolean result = origin.equals(expected);
+        assertThat(result, is(true));
+
+        //System.out.println(origin);
+        //System.out.println(expected);
+    }
+
+    @Test
+    public void whenAccountNotEquelseValue() {
+        Account origin = new Account(400, "Счет №1");
+        Account expected = new Account(600,  "Счет №1");
+
+        //System.out.println(origin);
+        //System.out.println(expected);
+
+        boolean result = origin.equals(expected);
+        assertThat(result, is(false));
+
+        //System.out.println(origin);
+        //System.out.println(expected);
+    }
+
+    @Test
+    public void whenAccountNotEquelseReqc() {
+        Account origin = new Account(400, "Счет №1");
+        Account expected = new Account(400,  "Счет №2");
+
+        //System.out.println(origin);
+        //System.out.println(expected);
+
+        boolean result = origin.equals(expected);
+        assertThat(result, is(false));
+
+        //System.out.println(origin);
+        //System.out.println(expected);
+    }
 }
