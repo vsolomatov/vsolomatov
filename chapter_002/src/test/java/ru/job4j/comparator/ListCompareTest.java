@@ -9,8 +9,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class ListCompareTest {
     @Test
     public void whenStringsAreEqualThenZero() {
-        ListCompare compare = new ListCompare();
-        int rst = compare.compare(
+        ListCompare obgListCompare = new ListCompare();
+        int rst = obgListCompare.compare(
                 "Ivanov",
                 "Ivanov"
         );
@@ -19,8 +19,8 @@ public class ListCompareTest {
 
     @Test
     public void whenLeftLessThanRightResultShouldBeNegative() {
-        ListCompare compare = new ListCompare();
-        int rst = compare.compare(
+        ListCompare obgListCompare = new ListCompare();
+        int rst = obgListCompare.compare(
                 "Ivanov",
                 "Ivanova"
         );
@@ -29,8 +29,8 @@ public class ListCompareTest {
 
     @Test
     public void whenLeftGreateThanRightResultShouldBePositive() {
-        ListCompare compare = new ListCompare();
-        int rst = compare.compare(
+        ListCompare obgListCompare = new ListCompare();
+        int rst = obgListCompare.compare(
                 "Ivanova",
                 "Ivanov"
         );
@@ -39,8 +39,8 @@ public class ListCompareTest {
 
     @Test
     public void whenLeftGreaterThanRightResultShouldBePositive() {
-        ListCompare compare = new ListCompare();
-        int rst = compare.compare(
+        ListCompare obgListCompare = new ListCompare();
+        int rst = obgListCompare.compare(
                 "Petrov",
                 "Ivanova"
         );
@@ -49,8 +49,8 @@ public class ListCompareTest {
 
     @Test
     public void secondCharOfLeftGreaterThanRightShouldBePositive() {
-        ListCompare compare = new ListCompare();
-        int rst = compare.compare(
+        ListCompare obgListCompare = new ListCompare();
+        int rst = obgListCompare.compare(
                 "Petrov",
                 "Patrov"
         );
@@ -59,8 +59,8 @@ public class ListCompareTest {
 
     @Test
     public void secondCharOfLeftLessThanRightShouldBeNegative() {
-        ListCompare compare = new ListCompare();
-        int rst = compare.compare(
+        ListCompare obgListCompare = new ListCompare();
+        int rst = obgListCompare.compare(
                 "Patrov",
                 "Petrov"
         );
