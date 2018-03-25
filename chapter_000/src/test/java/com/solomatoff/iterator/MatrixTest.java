@@ -1,7 +1,5 @@
-package com.solomatoff.matrixiterator;
+package com.solomatoff.iterator;
 
-import com.solomatoff.matrixiterator.MatrixIterator;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 

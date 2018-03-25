@@ -1,4 +1,4 @@
-package com.solomatoff.matrixiterator;
+package com.solomatoff.iterator;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;

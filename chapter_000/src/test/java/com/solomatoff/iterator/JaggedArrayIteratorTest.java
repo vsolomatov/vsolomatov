@@ -1,4 +1,4 @@
-package com.solomatoff.matrixiterator;
+package com.solomatoff.iterator;
 
 import org.junit.Before;
 import org.junit.Test;
