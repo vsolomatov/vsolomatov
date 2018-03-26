@@ -11,7 +11,7 @@ public class CoffeeMachineTest {
         CoffeeMachine newCoffeeMachine = new CoffeeMachine();
         int[] result = newCoffeeMachine.changes(5000, 35);
 
-        int[] expected = new int[] {1000, 1000, 1000, 1000, 500, 100, 100, 100, 100, 50, 10, 5};
+        int[] expected = new int[] {2000, 2000, 500, 200, 200, 50, 10, 5};
 
         assertThat(result, is(expected));
     }
@@ -21,7 +21,7 @@ public class CoffeeMachineTest {
         CoffeeMachine newCoffeeMachine = new CoffeeMachine();
         int[] result = newCoffeeMachine.changes(1000, 34);
 
-        int[] expected = new int[] {500, 100, 100, 100, 100, 50, 10, 5, 1};
+        int[] expected = new int[] {500, 200, 200, 50, 10, 5, 1};
 
         assertThat(result, is(expected));
     }
@@ -31,7 +31,7 @@ public class CoffeeMachineTest {
         CoffeeMachine newCoffeeMachine = new CoffeeMachine();
         int[] result = newCoffeeMachine.changes(1002, 34);
 
-        int[] expected = new int[] {500, 100, 100, 100, 100, 50, 10, 5, 2, 1};
+        int[] expected = new int[] {500, 200, 200, 50, 10, 5, 2, 1};
 
         assertThat(result, is(expected));
     }
@@ -41,7 +41,7 @@ public class CoffeeMachineTest {
         CoffeeMachine newCoffeeMachine = new CoffeeMachine();
         int[] result = newCoffeeMachine.changes(500, 43);
 
-        int[] expected = new int[] {100, 100, 100, 100, 50, 5, 2};
+        int[] expected = new int[] {200, 200, 50, 5, 2};
 
         assertThat(result, is(expected));
     }
