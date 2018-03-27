@@ -1,22 +1,20 @@
 package com.solomatoff.generic;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.Objects;
+
 
 /**
  *  Класс реализует коллекцию в виде массива, позволяющего хранить объекты произвольного типа T.
  * @param <T> тип хранимых объектов.
  */
-public class SimpleArray<T> implements Iterable<T> {
+class SimpleArray<T> implements Iterable<T> {
     private Object[] objects;
     private int index = 0;
     private int indexIterator = 0;
 
-    public SimpleArray(int size) {
+    SimpleArray(int size) {
         this.objects = new Object[size];
     }
 
@@ -34,7 +32,7 @@ public class SimpleArray<T> implements Iterable<T> {
      * @throws NoSuchElementException выбрасываемое исключение, если индекс для удаляемого элемента указан неверно.
      */
     public void delete(int position) throws NoSuchElementException {
-        if (position >= this.index) {
+        if ((position >= this.index) || (position < 0)) {
             throw new NoSuchElementException();
         }
         System.arraycopy(objects, position + 1, objects, position, this.index - position - 1);
@@ -49,7 +47,7 @@ public class SimpleArray<T> implements Iterable<T> {
      * @throws NoSuchElementException выбрасываемое исключение, если индекс для изменяемого элемента указан неверно.
      */
     public void set(int position, T value) throws NoSuchElementException {
-        if (position >= this.index) {
+        if ((position >= this.index) || (position < 0)) {
             throw new NoSuchElementException();
         }
         this.objects[position] = value;
@@ -62,14 +60,18 @@ public class SimpleArray<T> implements Iterable<T> {
      * @throws NoSuchElementException выбрасываемое исключение, если индекс искомого элемента указан неверно.
      */
     public T get(int position) throws NoSuchElementException {
-        if (position >= this.index) {
+        if ((position >= this.index) || (position < 0)) {
             throw new NoSuchElementException();
         }
         return (T) this.objects[position];
     }
 
-    public String toString() {
-        return Arrays.toString(objects);
+    /**
+     *  Метод позволяет получить индекс текущего элемента нашей коллекции.
+     * @return индекс текущего элемента нашей коллекции.
+     */
+    public int getCurrentIndex() {
+        return this.index;
     }
 
     /**

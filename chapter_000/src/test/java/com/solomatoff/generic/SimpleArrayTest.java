@@ -17,7 +17,7 @@ public class SimpleArrayTest {
         simpleString.add("String 2");
         simpleString.add("String 3");
         simpleString.add("String 4");
-   }
+    }
 
     @Test
     public void whenDeleteShouldValue() {
@@ -26,8 +26,6 @@ public class SimpleArrayTest {
         simpleString.add("String 1");
         simpleString.add("String 2");
         simpleString.add("String 3");
-
-        //System.out.println(simpleString.toString());
 
         simpleString.delete(1);
         simpleString.delete(1);
@@ -43,8 +41,6 @@ public class SimpleArrayTest {
         simpleInteger.add(20);
         simpleInteger.add(30);
         simpleInteger.add(40);
-
-        //System.out.println(simpleInteger.toString());
 
         simpleInteger.delete(1);
         simpleInteger.delete(2);
@@ -64,7 +60,6 @@ public class SimpleArrayTest {
         simpleString.add("String 3");
 
         simpleString.set(3, "Строка 3");
-        //System.out.println(simpleString.toString());
 
         String result = simpleString.get(3);
         assertThat(result, is("Строка 3"));
@@ -79,7 +74,6 @@ public class SimpleArrayTest {
         simpleString.add("String 3");
 
         simpleString.set(4, "Строка 4");
-        //System.out.println(simpleString.toString());
     }
 
 
@@ -91,8 +85,6 @@ public class SimpleArrayTest {
         simpleInteger.add(30);
         simpleInteger.add(40);
         Iterator it = simpleInteger.iterator();
-
-        //System.out.println(simpleInteger.toString());
 
         assertThat(it.next(), is(10));
         assertThat(it.next(), is(20));
@@ -108,8 +100,6 @@ public class SimpleArrayTest {
         simpleInteger.add(30);
         simpleInteger.add(40);
         Iterator it = simpleInteger.iterator();
-
-        //System.out.println(simpleInteger.toString());
 
         assertThat(it.hasNext(), is(true));
         assertThat(it.next(), is(10));
@@ -132,8 +122,6 @@ public class SimpleArrayTest {
         simpleString.add("String 3");
         Iterator it = simpleString.iterator();
 
-        //System.out.println(simpleString.toString());
-
         assertThat(it.hasNext(), is(true));
         assertThat(it.hasNext(), is(true));
         assertThat(it.next(), is("String 0"));
@@ -154,7 +142,6 @@ public class SimpleArrayTest {
         simpleString.delete(1);
 
         Iterator it = simpleString.iterator();
-        //System.out.println(simpleString.toString());
 
         assertThat(it.hasNext(), is(true));
         assertThat(it.hasNext(), is(true));
@@ -169,7 +156,6 @@ public class SimpleArrayTest {
         SimpleArray<String> simpleString = new SimpleArray<>(4);
 
         Iterator it = simpleString.iterator();
-        //System.out.println(simpleString.toString());
 
         assertThat(it.hasNext(), is(false));
     }
