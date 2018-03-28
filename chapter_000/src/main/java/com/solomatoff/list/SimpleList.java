@@ -7,7 +7,7 @@ import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class SimpleContainerRealization<E> implements SimpleContainer<E> {
+public class SimpleList<E> implements SimpleContainer<E> {
     // Счетчик изменений коллекции
     private int modCount = 0;
     private Object[] container = new Object[3];

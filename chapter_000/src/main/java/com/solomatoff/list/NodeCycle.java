@@ -28,3 +28,11 @@ public class NodeCycle<T> {
         return result;
     }
 }
+class Node<T> {
+    private T value;
+    Node<T> next;
+
+    public Node(T value) {
+        this.value = value;
+    }
+}

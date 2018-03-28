@@ -9,11 +9,11 @@ import java.util.NoSuchElementException;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
-public class SimpleContainerRealizationTest {
+public class SimpleListTest {
 
     @Test
     public void add() {
-        SimpleContainerRealization<Integer> oSimpleContainer = new SimpleContainerRealization<>();
+        SimpleList<Integer> oSimpleContainer = new SimpleList<>();
         oSimpleContainer.add(1);
         oSimpleContainer.add(2);
         oSimpleContainer.add(3);
@@ -25,7 +25,7 @@ public class SimpleContainerRealizationTest {
 
     @Test
     public void whenGetShouldSuccess() {
-        SimpleContainerRealization<String> oSimpleContainer = new  SimpleContainerRealization<>();
+        SimpleList<String> oSimpleContainer = new SimpleList<>();
         oSimpleContainer.add("1");
         oSimpleContainer.add("2");
         oSimpleContainer.add("3");
@@ -36,7 +36,7 @@ public class SimpleContainerRealizationTest {
 
     @Test(expected = NoSuchElementException.class)
     public void whenGetShouldException() {
-        SimpleContainerRealization<String> oSimpleContainer = new  SimpleContainerRealization<>();
+        SimpleList<String> oSimpleContainer = new SimpleList<>();
         oSimpleContainer.add("1");
         oSimpleContainer.add("2");
         oSimpleContainer.add("3");
@@ -46,7 +46,7 @@ public class SimpleContainerRealizationTest {
 
     @Test
     public void whenIteratorAndDontChangeContainer() {
-        SimpleContainerRealization<Integer> oSimpleContainer = new  SimpleContainerRealization<>();
+        SimpleList<Integer> oSimpleContainer = new SimpleList<>();
         Iterator<Integer> it;
 
         oSimpleContainer.add(10);
@@ -66,7 +66,7 @@ public class SimpleContainerRealizationTest {
 
     @Test(expected = ConcurrentModificationException.class)
     public void whenIteratorAndChangeContainer() {
-        SimpleContainerRealization<Integer> oSimpleContainer = new SimpleContainerRealization<>();
+        SimpleList<Integer> oSimpleContainer = new SimpleList<>();
         Iterator<Integer> it;
 
         oSimpleContainer.add(10);

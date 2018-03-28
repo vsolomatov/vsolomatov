@@ -9,11 +9,11 @@ import java.util.NoSuchElementException;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
-public class NodeContainerTest {
+public class SimpleLinkedTest {
 
     @Test
     public void add() {
-        NodeContainer<Integer> oSimpleContainer = new NodeContainer<>();
+        SimpleLinked<Integer> oSimpleContainer = new SimpleLinked<>();
         oSimpleContainer.add(1);
         oSimpleContainer.add(2);
         oSimpleContainer.add(3);
@@ -25,7 +25,7 @@ public class NodeContainerTest {
 
     @Test
     public void whenGetShouldSuccess() {
-        NodeContainer<String> oSimpleContainer = new NodeContainer<>();
+        SimpleLinked<String> oSimpleContainer = new SimpleLinked<>();
         oSimpleContainer.add("1");
         oSimpleContainer.add("2");
         oSimpleContainer.add("3");
@@ -36,7 +36,7 @@ public class NodeContainerTest {
 
     @Test(expected = NoSuchElementException.class)
     public void whenGetShouldException() {
-        NodeContainer<String> oSimpleContainer = new NodeContainer<>();
+        SimpleLinked<String> oSimpleContainer = new SimpleLinked<>();
         oSimpleContainer.add("1");
         oSimpleContainer.add("2");
         oSimpleContainer.add("3");
@@ -46,7 +46,7 @@ public class NodeContainerTest {
 
     @Test
     public void whenDeleteShouldSuccess() {
-        NodeContainer<String> oSimpleContainer = new NodeContainer<>();
+        SimpleLinked<String> oSimpleContainer = new SimpleLinked<>();
         oSimpleContainer.add("1");
         oSimpleContainer.add("2");
         oSimpleContainer.add("3");
@@ -58,7 +58,7 @@ public class NodeContainerTest {
 
     @Test
     public void whenDeleteFirstShouldSuccess() {
-        NodeContainer<String> oSimpleContainer = new NodeContainer<>();
+        SimpleLinked<String> oSimpleContainer = new SimpleLinked<>();
         oSimpleContainer.add("3");
         oSimpleContainer.add("2");
         oSimpleContainer.add("1");
@@ -69,7 +69,7 @@ public class NodeContainerTest {
 
     @Test
     public void whenDeleteLastShouldSuccess() {
-        NodeContainer<String> oSimpleContainer = new NodeContainer<>();
+        SimpleLinked<String> oSimpleContainer = new SimpleLinked<>();
         oSimpleContainer.add("3");
         oSimpleContainer.add("2");
         oSimpleContainer.add("1");
@@ -80,7 +80,7 @@ public class NodeContainerTest {
 
     @Test
     public void whenDeleteLastOnlyShouldSuccess() {
-        NodeContainer<String> oSimpleContainer = new NodeContainer<>();
+        SimpleLinked<String> oSimpleContainer = new SimpleLinked<>();
         oSimpleContainer.add("3");
 
         String expacted = oSimpleContainer.deleteLast();
@@ -89,7 +89,7 @@ public class NodeContainerTest {
 
     @Test
     public void whenDeleteFirstOnlyShouldSuccess() {
-        NodeContainer<String> oSimpleContainer = new NodeContainer<>();
+        SimpleLinked<String> oSimpleContainer = new SimpleLinked<>();
         oSimpleContainer.add("3");
 
         String expacted = oSimpleContainer.deleteFirst();
@@ -98,7 +98,7 @@ public class NodeContainerTest {
 
     @Test(expected = NoSuchElementException.class)
     public void whenDeleteLastOnlyShouldException() {
-        NodeContainer<String> oSimpleContainer = new NodeContainer<>();
+        SimpleLinked<String> oSimpleContainer = new SimpleLinked<>();
         oSimpleContainer.add("3");
 
         String expacted = oSimpleContainer.deleteLast();
@@ -108,7 +108,7 @@ public class NodeContainerTest {
 
     @Test(expected = NoSuchElementException.class)
     public void whenDeleteFirstOnlyShouldException() {
-        NodeContainer<String> oSimpleContainer = new NodeContainer<>();
+        SimpleLinked<String> oSimpleContainer = new SimpleLinked<>();
         oSimpleContainer.add("3");
 
         String expacted = oSimpleContainer.deleteFirst();
@@ -119,7 +119,7 @@ public class NodeContainerTest {
 
     @Test(expected = NoSuchElementException.class)
     public void whenDeleteShouldException() {
-        NodeContainer<String> oSimpleContainer = new NodeContainer<>();
+        SimpleLinked<String> oSimpleContainer = new SimpleLinked<>();
         oSimpleContainer.add("1");
         oSimpleContainer.add("2");
         oSimpleContainer.add("3");
@@ -130,7 +130,7 @@ public class NodeContainerTest {
 
     @Test(expected = NoSuchElementException.class)
     public void whenContainerIsEmptyAndDeleteShouldException() {
-        NodeContainer<String> oSimpleContainer = new NodeContainer<>();
+        SimpleLinked<String> oSimpleContainer = new SimpleLinked<>();
 
         oSimpleContainer.delete(0);
         //String result = oSimpleContainer.get(0);
@@ -138,14 +138,14 @@ public class NodeContainerTest {
 
     @Test(expected = NoSuchElementException.class)
     public void whenContainerIsEmptyAndGetShouldException() {
-        NodeContainer<String> oSimpleContainer = new NodeContainer<>();
+        SimpleLinked<String> oSimpleContainer = new SimpleLinked<>();
 
         oSimpleContainer.get(0);
     }
 
     @Test
     public void whenIteratorAndDontChangeContainer() {
-        NodeContainer<Integer> oSimpleContainer = new NodeContainer<>();
+        SimpleLinked<Integer> oSimpleContainer = new SimpleLinked<>();
         Iterator<Integer> it;
 
         oSimpleContainer.add(10);
@@ -165,7 +165,7 @@ public class NodeContainerTest {
 
     @Test(expected = ConcurrentModificationException.class)
     public void whenIteratorAndChangeAddContainer() {
-        NodeContainer<Integer> oSimpleContainer = new NodeContainer<>();
+        SimpleLinked<Integer> oSimpleContainer = new SimpleLinked<>();
         Iterator<Integer> it;
 
         oSimpleContainer.add(10);
@@ -182,7 +182,7 @@ public class NodeContainerTest {
 
     @Test(expected = ConcurrentModificationException.class)
     public void whenIteratorAndChangeDeleteContainer() {
-        NodeContainer<Integer> oSimpleContainer = new NodeContainer<>();
+        SimpleLinked<Integer> oSimpleContainer = new SimpleLinked<>();
         Iterator<Integer> it;
 
         oSimpleContainer.add(10);

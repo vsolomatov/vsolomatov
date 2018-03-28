@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-public class NodeContainer<E> implements Iterable<E> {
+public class SimpleLinked<E> implements Iterable<E> {
     // Счетчик изменений коллекции
     private int modCount = 0;
     private int size = 0;
@@ -138,4 +138,12 @@ public class NodeContainer<E> implements Iterable<E> {
             }
         };
     }
+}
+/**
+ *  Интерфейс задает структуру динамического контейнера.
+ * @param <E> параметр типа для данного вида контейнера.
+ */
+interface SimpleContainer<E> extends Iterable<E> {
+    void add(E e);
+    E get(int index);
 }
