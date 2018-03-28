@@ -25,13 +25,13 @@ public class NodeContainer<E> implements Iterable<E> {
 
     public void add(E e) {
         Node<E> newItem = new Node<>(null, e, null);
-        if (lastItem == null) {
-            firstItem = newItem;
-            lastItem = newItem;
+        if (this.lastItem == null) {
+            this.firstItem = newItem;
+            this.lastItem = newItem;
         } else {
-            lastItem.next = newItem;
+            this.lastItem.next = newItem;
             newItem.prev = lastItem;
-            lastItem = newItem;
+            this.lastItem = newItem;
         }
         this.size++;
         this.modCount++;
@@ -41,8 +41,7 @@ public class NodeContainer<E> implements Iterable<E> {
         if (position >= this.size) {
             throw new NoSuchElementException();
         }
-        E result;
-        result = this.firstItem.item;
+        E result = this.firstItem.item;
         Node<E> currItem = this.firstItem;
         for (int i = 0; i < this.size; i++) {
             if (i == position) {
@@ -50,6 +49,64 @@ public class NodeContainer<E> implements Iterable<E> {
             }
             currItem = currItem.next;
         }
+        return result;
+    }
+
+    public void delete(int position) throws NoSuchElementException {
+        if (position >= this.size) {
+            throw new NoSuchElementException();
+        }
+        Node<E> currItem = this.firstItem;
+        Node<E> prevItem = currItem.prev;
+        Node<E> nextItem = currItem.next;
+        for (int i = 0; i < this.size; i++) {
+            if (i == position) {
+                if  (currItem.prev != null) {
+                    prevItem.next = nextItem;
+                }
+                if  (currItem.next != null) {
+                    nextItem.prev = prevItem;
+                }
+                break;
+            } else {
+                prevItem = currItem;
+                currItem = currItem.next;
+                nextItem = currItem.next;
+            }
+        }
+        // Если удаляется первый элемент и он же последний
+        if ((position == 0) && (size == 1)) {
+            this.firstItem = null;
+            this.lastItem = null;
+        } else {
+            // Если удаляется первый элемент
+            if (position == 0) {
+                this.firstItem = nextItem;
+            }
+            // Если удаляется последний элемент
+            if (position == size - 1) {
+                this.lastItem = prevItem;
+            }
+        }
+        this.size--;
+        this.modCount++;
+    }
+
+    public E deleteFirst() throws NoSuchElementException {
+        if (this.size == 0) {
+            throw new NoSuchElementException();
+        }
+        E result = this.firstItem.item;
+        delete(0);
+        return result;
+    }
+
+    public E deleteLast() throws NoSuchElementException {
+        if (this.size == 0) {
+            throw new NoSuchElementException();
+        }
+        E result = this.lastItem.item;
+        delete(this.size - 1);
         return result;
     }
 
