@@ -92,7 +92,7 @@ public class SimpleHashSet<E> {
         return result;
     }
 
-    public String toString() {
+    /*public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
         String ln = System.getProperty("line.separator");
         SimpleLinked<E> currItemContainer;
@@ -109,5 +109,5 @@ public class SimpleHashSet<E> {
             stringBuilder.append(ln);
         }
         return stringBuilder.toString();
-    }
+    }*/
 }
