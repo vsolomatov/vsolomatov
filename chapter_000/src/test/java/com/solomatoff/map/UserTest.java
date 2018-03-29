@@ -18,6 +18,8 @@ public class UserTest {
         User userSecond = new User("Viacheslav Solomatov");
         System.out.println(userSecond.hashCode());
 
+        System.out.println("Объекты эквивалентны? Ответ: " + userFirst.equals(userSecond));
+
         Map<User, Object> map = new HashMap<>();
         Object objectFirst = new Object();
         Object objectSecond = new Object();
