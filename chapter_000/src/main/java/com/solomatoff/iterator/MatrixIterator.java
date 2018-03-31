@@ -3,10 +3,13 @@ package com.solomatoff.iterator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+/**
+ *  Итератор для двухмерного массива.
+ */
 public class MatrixIterator implements Iterator<Integer> {
     private final int[][] values;
-    private int i = 0;
-    private int j = 0;
+    private int row = 0;
+    private int cell = 0;
 
     public MatrixIterator(int[][] values) {
         this.values = values;
@@ -14,31 +17,22 @@ public class MatrixIterator implements Iterator<Integer> {
 
     @Override
     public boolean hasNext() {
-        boolean exist = false;
-        //System.out.println("From hasNext: i = " + i + " j = " + j);
-
-        if (i < this.values.length) {
-            if (j < this.values[i].length) {
-                exist = true;
-            }
-        }
-        return exist;
+        return (row < this.values.length) && (cell < this.values[row].length);
     }
 
     @Override
     public Integer next() throws NoSuchElementException {
         int val = 0;
-        if (i < this.values.length) {
-            val = this.values[i][j];
-            if (j < this.values[i].length - 1) {
-                j++;
+        if (row < this.values.length) {
+            val = this.values[row][cell];
+            if (cell < this.values[row].length - 1) {
+                cell++;
             } else {
-                i++;
-                j = 0;
+                row++;
+                cell = 0;
             }
         }
-        //System.out.println("From next: i = " + i + ", j = " + j);
-        if ((i == 0) && (j == 0)) {
+        if ((row == 0) && (cell == 0)) {
             throw new NoSuchElementException();
         }
         return val;
