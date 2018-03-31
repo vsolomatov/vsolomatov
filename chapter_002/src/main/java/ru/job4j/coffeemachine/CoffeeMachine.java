@@ -3,7 +3,7 @@ package ru.job4j.coffeemachine;
 import java.util.*;
 
 public class CoffeeMachine {
-    private ArrayList<Integer> money = new ArrayList<>(Arrays.asList(1, 2, 5, 10, 50, 100, 200, 500, 1000, 2000, 5000));
+    private ArrayList<Integer> money = new ArrayList<>(Arrays.asList(5000, 2000, 1000, 500, 200, 100, 50, 10, 5, 2, 1));
 
     /**
      * Метод выдачи сдачи для автомата.
@@ -13,23 +13,18 @@ public class CoffeeMachine {
      */
      public int[] changes(int value, int price) {
         int changeSum = value - price;
-        Integer smallBankNote = 0;
-        int numBankNote;
+        int numBankNote, currBankNote, indexMoney = 0;
         ArrayList<Integer> changeList = new ArrayList<>();
         while (changeSum > 0) {
-            // Находим наибольшую банкноту, меньшую по номиналу, чем сумма сдачи
-            for (Integer iMoney : money) {
-                if (iMoney <= changeSum) {
-                    smallBankNote = iMoney;
-                } else {
-                    break;
+            currBankNote = money.get(indexMoney);
+            numBankNote = changeSum / currBankNote;
+            if (numBankNote > 0) {
+                for (int i = 0; i < numBankNote; i++) {
+                    changeList.add(currBankNote);
                 }
+                changeSum = changeSum % currBankNote;
             }
-            numBankNote = changeSum / smallBankNote;
-            for (int i = 0; i < numBankNote; i++) {
-                changeList.add(smallBankNote);
-            }
-            changeSum -= smallBankNote * numBankNote;
+            indexMoney++;
         }
         int[] iArray = new int[changeList.size()];
         for (int i = 0; i < changeList.size(); i++) {
