@@ -3,26 +3,39 @@ package com.solomatoff.iterator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+/**
+ * Итератор возвращающий только простые числа.
+ */
 public class PrimeIterator implements Iterator<Integer> {
     private final int[] values;
-    private int indexNext;
+    private Boolean hasNext = null;
+    private int indexNextPrime = -1;
 
     public PrimeIterator(int[] values) {
         this.values = values;
-        this.indexNext = nextIndexPrimeNumber(-1);
     }
 
-    private int nextIndexPrimeNumber(int beginIndex) {
-        int index = -1;
-        for (int j = beginIndex + 1; j < values.length; j++) {
-            if (primeNumber(values[j])) {
-                index = j;
+    /**
+     *  Метод возвращает индекс элемента, являющегося простым числом,  в массиве values[], начиная поиск с указанной позиции beginIndex.
+     * @param beginIndex начальная позиция поиска простого элемента в массиве.
+     * @return индекс найденного простого числа, либо -1, если такого элемента не существует.
+     */
+    private int getIndexPrime(int beginIndex) {
+        int result = -1;
+        for (int index = beginIndex; index < values.length; index++) {
+            if (primeNumber(values[index])) {
+                result = index;
                 break;
             }
         }
-        return index;
+        return result;
     }
 
+    /**
+     *  Метод проверяет является ли переданное число простым.
+     * @param number - проверяемое число.
+     * @return возвращает истину, если переданное число, является простым, и ложь - в противном случае.
+     */
     private boolean primeNumber(int number) {
         boolean result = true;
         int squareRoot = (int) Math.round(Math.sqrt(number));
@@ -35,22 +48,31 @@ public class PrimeIterator implements Iterator<Integer> {
                 break;
             }
         }
-        //System.out.println(number + " простое? " + result);
         return result;
     }
 
     @Override
     public boolean hasNext() {
-        return !(this.indexNext < 0);
+        if (this.hasNext == null) {
+            this.indexNextPrime = getIndexPrime(0);
+            this.hasNext = (this.indexNextPrime >= 0);
+        }
+        return this.hasNext;
     }
 
     @Override
     public Integer next() throws NoSuchElementException {
-        if (indexNext < 0) {
+        int result;
+        if (this.hasNext == null) {
+            hasNext();
+        }
+        if (this.hasNext && (this.indexNextPrime >= 0)) {
+            result = values[this.indexNextPrime];
+        } else {
             throw new NoSuchElementException();
         }
-        int result = this.values[indexNext];
-        indexNext = nextIndexPrimeNumber(indexNext);
+        this.indexNextPrime = getIndexPrime(this.indexNextPrime + 1);
+        this.hasNext = (this.indexNextPrime >= 0);
         return result;
     }
 }
