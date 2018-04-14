@@ -1,5 +1,5 @@
 /**
- * Package for chapter_000
+ * Package for job4j
  *
  * @author Vyacheslav Solomatov(solomatoff.vaycheslav@yandex.ru)
  * @version $Id$
