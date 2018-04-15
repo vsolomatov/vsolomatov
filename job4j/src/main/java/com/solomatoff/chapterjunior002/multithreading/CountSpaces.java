@@ -1,4 +1,4 @@
-package com.solomatoff.chapter_junior_002.Multithreading;
+package com.solomatoff.chapterjunior002.multithreading;
 
 public class CountSpaces implements Runnable {
     private String text;

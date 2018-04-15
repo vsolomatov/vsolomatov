@@ -1,4 +1,4 @@
-package com.solomatoff.chapter_junior_002.Multithreading;
+package com.solomatoff.chapterjunior002.multithreading;
 
 /**
  * Класс для подсчета количества слов в тексте
