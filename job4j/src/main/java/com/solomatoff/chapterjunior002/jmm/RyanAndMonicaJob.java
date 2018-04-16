@@ -34,8 +34,7 @@ class RyanAndMonicaJob implements Runnable {
             System.out.println(Thread.currentThread().getName() + " просыпается");
             account.withdraw(amount);
             System.out.println(Thread.currentThread().getName() + " заканчивает транзакцию");
-        }
-        else {
+        } else {
             System.out.println("Извините, для клиента " + Thread.currentThread().getName() + " недостаточно денег.");
         }
     }
@@ -44,7 +43,7 @@ class RyanAndMonicaJob implements Runnable {
 class BankAccount {
     private int balance = 100;
 
-    public int getBalance () {
+    public int getBalance() {
         return balance;
     }
 

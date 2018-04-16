@@ -17,7 +17,7 @@ class DeadLock implements Runnable {
         System.out.println("Exit from run()");
     }
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         new DeadLock();
     }
 }
@@ -28,7 +28,7 @@ class A {
         System.out.println("Поток " + name + ". Вход в метод объекта A, работающий с объектом B");
         try {
             Thread.sleep(1000);
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println("Метод, работающий с объектом B прерван.");
         }
         System.out.println("Поток " + name + " пытается вызвать b.methodFromB()");
@@ -46,7 +46,7 @@ class B {
         System.out.println("Поток " + name + ". Вход в метод объекта B, работающий с объектом A");
         try {
             Thread.sleep(1000);
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println("Метод, работающий с объектом A прерван.");
         }
         System.out.println("Поток " + name + " пытается вызвать a.methodFromA()");
