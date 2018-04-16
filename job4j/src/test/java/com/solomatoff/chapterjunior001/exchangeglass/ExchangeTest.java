@@ -106,7 +106,7 @@ public class ExchangeTest {
         assertThat(result, is(8));
     }
 
-    @Test
+    /*@Test
     public void whenPrintGlases() {
         Exchange exchange = new Exchange();
         Request request = new Request(1, "Gazprom", "add", "ask", 10, 25);
@@ -135,5 +135,5 @@ public class ExchangeTest {
         report.append("     11 | 13,0000 |       0").append(ln);
         String expected = report.toString();
         assertThat(result, is(expected));
-    }
+    }*/
 }
