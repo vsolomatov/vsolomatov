@@ -1,11 +1,15 @@
 package com.solomatoff.chapterjunior001.list;
 
+import net.jcip.annotations.GuardedBy;
+import net.jcip.annotations.ThreadSafe;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-public class SimpleLinked<E> implements Iterable<E> {
+@ThreadSafe
+public class SimpleLinked<E> implements SimpleContainer<E> {
     // Счетчик изменений коллекции
+    @GuardedBy("this")
     private int modCount = 0;
     private int size = 0;
     private Node<E> lastItem = null;
@@ -23,7 +27,9 @@ public class SimpleLinked<E> implements Iterable<E> {
         }
     }
 
-    public void add(E e) {
+    synchronized public void add(E e) {
+        String threadName = Thread.currentThread().getName();
+        System.out.println("    Начинаем add " + e + " из потока " + threadName);
         Node<E> newItem = new Node<>(null, e, null);
         if (this.lastItem == null) {
             this.firstItem = newItem;
@@ -33,16 +39,27 @@ public class SimpleLinked<E> implements Iterable<E> {
             newItem.prev = lastItem;
             this.lastItem = newItem;
         }
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException ie) {
+            ie.printStackTrace();
+        }
         this.size++;
         this.modCount++;
+        System.out.println("    Заканчиваем add " + e + " из потока " + threadName);
     }
 
-    public E get(int position) throws NoSuchElementException {
+    synchronized public E get(int position) throws NoSuchElementException {
         if (position >= this.size) {
             throw new NoSuchElementException();
         }
         E result = this.firstItem.item;
         Node<E> currItem = this.firstItem;
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         for (int i = 0; i < this.size; i++) {
             if (i == position) {
                 result = currItem.item;
@@ -52,13 +69,20 @@ public class SimpleLinked<E> implements Iterable<E> {
         return result;
     }
 
-    public void delete(int position) throws NoSuchElementException {
+    synchronized public void delete(int position) throws NoSuchElementException {
+        String threadName = Thread.currentThread().getName();
+        System.out.println("        Начинаем delete с индексом " + position + " из потока " + threadName);
         if (position >= this.size) {
             throw new NoSuchElementException();
         }
         Node<E> currItem = this.firstItem;
         Node<E> prevItem = currItem.prev;
         Node<E> nextItem = currItem.next;
+        try {
+            Thread.sleep(300);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         for (int i = 0; i < this.size; i++) {
             if (i == position) {
                 if  (currItem.prev != null) {
@@ -90,6 +114,7 @@ public class SimpleLinked<E> implements Iterable<E> {
         }
         this.size--;
         this.modCount++;
+        System.out.println("        Заканчиваем delete с индексом " + position + " из потока " + threadName);
     }
 
     public E deleteFirst() throws NoSuchElementException {
@@ -112,7 +137,7 @@ public class SimpleLinked<E> implements Iterable<E> {
 
     @NotNull
     @Override
-    public Iterator<E> iterator() throws ConcurrentModificationException {
+    synchronized public Iterator<E> iterator() throws ConcurrentModificationException {
         return new Iterator<E>() {
             // Ожидаемое значение счетчика изменений коллекции
             private int expectedModCount = modCount;

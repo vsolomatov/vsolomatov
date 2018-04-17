@@ -6,6 +6,7 @@ import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import static java.lang.Thread.sleep;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
@@ -79,5 +80,45 @@ public class SimpleListTest {
 
         oSimpleContainer.add(40);
         it.next();
+    }
+    @Test
+    public void whenTwoThreadRunListGetAdd() {
+        SimpleList<Integer> oSimpleContainer = new SimpleList<>();
+        oSimpleContainer.add(10);
+        oSimpleContainer.add(20);
+        oSimpleContainer.add(150);
+        Thread threadOne = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    sleep(300);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                oSimpleContainer.add(40);
+            }
+        };
+        Thread threadTwo = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    sleep(200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                oSimpleContainer.add(50);
+            }
+        };
+        threadOne.start();
+        threadTwo.start();
+        try {
+            sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Iterator<Integer> it = oSimpleContainer.iterator();
+        while (it.hasNext()) {
+            System.out.println(it.next());
+        }
     }
 }

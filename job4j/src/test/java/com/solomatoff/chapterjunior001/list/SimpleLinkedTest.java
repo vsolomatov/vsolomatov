@@ -6,6 +6,7 @@ import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import static java.lang.Thread.sleep;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
@@ -196,4 +197,50 @@ public class SimpleLinkedTest {
         oSimpleContainer.delete(1);
         it.next();
     }
+
+    @Test
+    public void whenTwoThreadRunListDeleteGetAdd() {
+        SimpleLinked<Integer> oSimpleContainer = new SimpleLinked<>();
+        oSimpleContainer.add(10);
+        oSimpleContainer.add(20);
+        oSimpleContainer.add(150);
+        Thread threadOne = new Thread() {
+            @Override
+            public void run() {
+                oSimpleContainer.delete(0);
+                System.out.println("get возвратил: " + oSimpleContainer.get(0));
+                try {
+                    sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                oSimpleContainer.add(40);
+            }
+        };
+        Thread threadTwo = new Thread() {
+            @Override
+            public void run() {
+                oSimpleContainer.delete(0);
+                System.out.println("get возвратил: " + oSimpleContainer.get(0));
+                try {
+                    sleep(400);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                oSimpleContainer.add(50);
+            }
+        };
+        threadOne.start();
+        threadTwo.start();
+        try {
+            sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Iterator<Integer> it = oSimpleContainer.iterator();
+        while (it.hasNext()) {
+            System.out.println(it.next());
+        }
+    }
+
 }
