@@ -11,7 +11,7 @@ class Producer<T> implements Runnable {
     }
 
     public void run() {
-        while(true) {
+        while (true) {
             simpleQueue.offer(element);
             try {
                 Thread.sleep(150);

@@ -9,7 +9,7 @@ class Consumer<T> implements Runnable {
     }
 
     public void run() {
-        while(true) {
+        while (true) {
             simpleQueue.poll();
             try {
                 Thread.sleep(100);

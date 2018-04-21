@@ -1,7 +1,7 @@
 package com.solomatoff.chapterjunior002.producerconsumer;
 
 class PC {
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>();
         new Producer<>(queue, 0);
         new Producer<>(queue, 1);

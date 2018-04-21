@@ -24,10 +24,10 @@ class SimpleBlockingQueue<T> {
                 System.out.println("InterruptedException caught");
             }
         }
-        while (queue.size() < CAPACITY ) {
+        while (queue.size() < CAPACITY) {
             this.queue.offer(value);
         }
-        System.out.println("    Producer " + Thread.currentThread().getName() + " Put: " + value );
+        System.out.println("    Producer " + Thread.currentThread().getName() + " Put: " + value);
         notifyAll();
     }
 

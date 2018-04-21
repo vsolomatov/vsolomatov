@@ -25,8 +25,9 @@ public class BlockingQueueTest
 
         FileEnumerationTask enumerator = new FileEnumerationTask(queue, new File(directory));
         new Thread(enumerator).start();
-        for (int i = 1; i <= SEARCH_THREADS; i++)
+        for (int i = 1; i <= SEARCH_THREADS; i++) {
             new Thread(new SearchTask(queue, keyword)).start();
+        }
     }
 }
 
