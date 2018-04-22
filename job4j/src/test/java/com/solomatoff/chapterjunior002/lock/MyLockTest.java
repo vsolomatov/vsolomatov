@@ -2,7 +2,7 @@ package com.solomatoff.chapterjunior002.lock;
 
 import org.junit.Test;
 
-public class myLockTest {
+public class MyLockTest {
 
     @Test
     public void whenTestMyLock() {

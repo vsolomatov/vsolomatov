@@ -50,12 +50,14 @@ public class ParallelSearch {
             public void run() {
                 FillingFileQueue fillingFileQueue = new FillingFileQueue();
                 try {
-                    Files.walkFileTree (root, fillingFileQueue);
+                    Files.walkFileTree(root, fillingFileQueue);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 files.offer(DUMMY);
-                while (!finish) {}
+                while (!finish) {
+                    System.out.println("Ждем окончания нити search.");
+                }
                 System.out.println("Завершила работу нить read.");
             }
         };
