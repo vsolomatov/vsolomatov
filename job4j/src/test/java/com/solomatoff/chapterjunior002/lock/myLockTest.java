@@ -2,8 +2,6 @@ package com.solomatoff.chapterjunior002.lock;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 public class myLockTest {
 
     @Test
@@ -12,7 +10,7 @@ public class myLockTest {
             new Thread(new WorkInThread()).start();
         }
         try {
-            Thread.sleep(10000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
