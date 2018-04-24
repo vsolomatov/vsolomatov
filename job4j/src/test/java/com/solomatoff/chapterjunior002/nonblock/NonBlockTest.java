@@ -16,9 +16,9 @@ public class NonBlockTest {
         NonBlock nonBlock = new NonBlock();
         Task task1 = new Task(1, "be", "was, were been");
         nonBlock.add(task1);
-        Task task2 = new Task(2,"beat", "beat beaten");
+        Task task2 = new Task(2, "beat", "beat beaten");
         nonBlock.add(task2);
-        Task task3 = new Task(3,"become", "became become");
+        Task task3 = new Task(3, "become", "became become");
         nonBlock.add(task3);
 
         Map<Integer, Task> result = nonBlock.getContainer();
@@ -39,15 +39,15 @@ public class NonBlockTest {
         NonBlock nonBlock = new NonBlock();
         Task task1 = new Task(1, "be", "was, were been");
         nonBlock.add(task1);
-        Task task2 = new Task(2,"beat", "beat beaten");
+        Task task2 = new Task(2, "beat", "beat beaten");
         nonBlock.add(task2);
-        Task task3 = new Task(3,"become", "became become");
+        Task task3 = new Task(3, "become", "became become");
         nonBlock.add(task3);
 
-        Task taskForUpdate1 = new Task(2,"begin", "began begun");
-        Task taskForUpdate2 = new Task(2,"bend", "bent bent");
-        Task taskForUpdate3 = new Task(2,"bet", "bet bet");
-        Task taskForUpdate4 = new Task(2,"bite", "bit bitten");
+        Task taskForUpdate1 = new Task(2, "begin", "began begun");
+        Task taskForUpdate2 = new Task(2, "bend", "bent bent");
+        Task taskForUpdate3 = new Task(2, "bet", "bet bet");
+        Task taskForUpdate4 = new Task(2, "bite", "bit bitten");
         Thread thread1 = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -99,9 +99,9 @@ public class NonBlockTest {
         NonBlock nonBlock = new NonBlock();
         Task task1 = new Task(1, "be", "was, were been");
         nonBlock.add(task1);
-        Task task2 = new Task(2,"beat", "beat beaten");
+        Task task2 = new Task(2, "beat", "beat beaten");
         nonBlock.add(task2);
-        Task task3 = new Task(3,"become", "became become");
+        Task task3 = new Task(3, "become", "became become");
         nonBlock.add(task3);
         nonBlock.delete(2);
 
