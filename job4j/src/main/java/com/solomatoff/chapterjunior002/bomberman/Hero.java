@@ -61,7 +61,7 @@ public class Hero {
                 System.out.println("[" + Thread.currentThread().getName() + "] go RIGHT into [" + newLine + "," + newColumn + "] = " + result);
                 break;
              default:
-                 System.out.println("[" + Thread.currentThread().getName() + "]. Неизвестная команда" + direction);
+                 System.out.println("[" + Thread.currentThread().getName() + "]. Неизвестная команда " + direction);
         }
         if (result) {
             this.board.positionUnLock(this.line, this.column);
