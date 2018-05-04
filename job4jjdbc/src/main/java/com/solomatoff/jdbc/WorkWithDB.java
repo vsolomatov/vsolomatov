@@ -61,7 +61,7 @@ public class WorkWithDB {
                 LOG.error(e2.getMessage(), e2);
             }
             LOG.error(e.getMessage(), e);
-            System.exit(1);
+            System.exit(0);
         }
         String outputFile = "1.xml";
         System.out.println("outputFile = " + outputFile);
@@ -72,7 +72,7 @@ public class WorkWithDB {
             rs = st.executeQuery("SELECT * FROM test ORDER BY field");
         } catch (NullPointerException | SQLException e) {
             e.printStackTrace();
-            System.exit(1);
+            System.exit(0);
         } finally {
                 try {
                     conn.close();
