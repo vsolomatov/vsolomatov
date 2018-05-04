@@ -56,10 +56,11 @@ public class WorkWithDB {
                 } catch (SQLException e1) {
                     LOG.error(e1.getMessage(), e1);
                 }
-            } catch (NullPointerException | SQLException e1) {
-                LOG.error(e.getMessage(), e);
+            } catch (NullPointerException | SQLException e2) {
+                LOG.error(e2.getMessage(), e2);
             }
             LOG.error(e.getMessage(), e);
+            System.exit(0);
         }
         // формируем путь к файлу и имя файла 1.xml
         Path path = null;
@@ -86,6 +87,7 @@ public class WorkWithDB {
             rs = st.executeQuery("SELECT * FROM test ORDER BY field");
         } catch (NullPointerException | SQLException e) {
             e.printStackTrace();
+            System.exit(0);
         } finally {
                 try {
                     conn.close();
@@ -118,6 +120,10 @@ public class WorkWithDB {
             LOG.error(e.getMessage(), e);
         }
         stylesheet = dir + "1.xsl";
+        if (!new File(stylesheet).exists()) {
+            System.out.println("Файл таблицы стилей (1.xsl) не существует в указанном каталоге!");
+            System.exit(0);
+        }
         String dataFile = dir + "1.xml";
         // делаем трансформацию файла 1.xml в 2.xml при помощи 1.xsl
         Stylizer.stylizerRun(stylesheet, dataFile);
