@@ -18,6 +18,4 @@ services:
 before_script:
   - psql -c "CREATE DATABASE db_solomatov;" -U postgres
   - psql -c "CREATE USER solomatov WITH PASSWORD '123';" -U postgres  
-  - psql -c 'CREATE SCHEMA "solomatov" AUTHORIZATION solomatov;' -U postgres -d db_solomatov
-
-
+  - psql -c 'CREATE SCHEMA "solomatov" AUTHORIZATION solomatov;' -U postgres -d db_solomatov 
