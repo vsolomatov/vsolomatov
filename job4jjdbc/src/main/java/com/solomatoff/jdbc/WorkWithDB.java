@@ -43,43 +43,28 @@ public class WorkWithDB {
                 stInsert.setInt(1, index);
                 stInsert.executeUpdate();
                 ResultSet generatedKeys = stInsert.getGeneratedKeys();
-                /*if (generatedKeys.next()) {
-                    System.out.println(generatedKeys.getInt(1));
-                }*/
             }
             conn.commit();
-        } catch (SQLException e) {
+        } catch (NullPointerException | SQLException e) {
             try {
-                conn.rollback();
+                if (conn != null) {
+                    conn.rollback();
+                }
                 try {
-                    conn.close();
-                } catch (SQLException e1) {
+                    if (conn != null) {
+                        conn.close();
+                    }
+                } catch (NullPointerException | SQLException e1) {
                     LOG.error(e1.getMessage(), e1);
                 }
             } catch (NullPointerException | SQLException e2) {
                 LOG.error(e2.getMessage(), e2);
             }
             LOG.error(e.getMessage(), e);
-            System.exit(0);
+            System.exit(1);
         }
-        // формируем путь к файлу и имя файла 1.xml
-        Path path = null;
-        try {
-            path = Paths.get(WorkWithDB.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-        } catch (URISyntaxException e) {
-            LOG.error(e.getMessage(), e);
-        }
-        String dir;
-        try {
-            dir = path.toString();
-            dir = dir.substring(0, dir.lastIndexOf(File.separator) + 1);
-        } catch (NullPointerException e) {
-            dir = "";
-            LOG.error(e.getMessage(), e);
-        }
-        String outputFile = dir + "1.xml";
+        String outputFile = "1.xml";
         System.out.println("outputFile = " + outputFile);
-
         // делаем выборку из базы данных
         ResultSet rs = null;
         try {
@@ -87,7 +72,7 @@ public class WorkWithDB {
             rs = st.executeQuery("SELECT * FROM test ORDER BY field");
         } catch (NullPointerException | SQLException e) {
             e.printStackTrace();
-            System.exit(0);
+            System.exit(1);
         } finally {
                 try {
                     conn.close();
@@ -95,7 +80,6 @@ public class WorkWithDB {
                     LOG.error(e.getMessage(), e);
                 }
         }
-
         // Для формирования файла 1.xml
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setNamespaceAware(true);
@@ -119,19 +103,19 @@ public class WorkWithDB {
         } catch (NullPointerException | SQLException | ParserConfigurationException e) {
             LOG.error(e.getMessage(), e);
         }
-        stylesheet = dir + "1.xsl";
+        stylesheet = "1.xsl";
+        System.out.println("stylesheet = " + stylesheet);
         if (!new File(stylesheet).exists()) {
             System.out.println("Файл таблицы стилей (1.xsl) не существует в указанном каталоге!");
-            System.exit(0);
+            System.exit(1);
         }
-        String dataFile = dir + "1.xml";
+        String dataFile = "1.xml";
         // делаем трансформацию файла 1.xml в 2.xml при помощи 1.xsl
         Stylizer.stylizerRun(stylesheet, dataFile);
-
-        // Делаем разбор 2.xml и считаем сумму
+        // Делаем разбор 2.xml с помощью JAXB и считаем сумму
         JAXBXMLtoEntry jaxbxmLtoEntry = new JAXBXMLtoEntry();
         Entries entries;
-        entries = jaxbxmLtoEntry.xmlToEntry(dir + "2.xml");
+        entries = jaxbxmLtoEntry.xmlToEntry("2.xml");
         ArrayList<Entry> list = entries.getList();
         long sumEntries = 0;
         for (Entry entry : list) {
