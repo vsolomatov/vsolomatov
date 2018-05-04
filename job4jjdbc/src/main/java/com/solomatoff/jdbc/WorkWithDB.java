@@ -28,11 +28,14 @@ public class WorkWithDB {
         Connection conn = null;
         Statement st;
         try {
+            // создаем подключение к базе данных
             conn = DriverManager.getConnection(url, username, password);
-            conn.setAutoCommit(false);
             st = conn.createStatement();
             // создаем таблицу TEST
-            st.execute("CREATE TABLE IF NOT EXISTS test(field integer)");
+            String stCreateTable = "CREATE TABLE IF NOT EXISTS " + username + ".test(field integer)";
+            System.out.println("stCreateTable = " + stCreateTable);
+            st.execute(stCreateTable);
+            conn.setAutoCommit(false);
             // очищаем таблицу TEST
             st.executeUpdate("DELETE FROM test");
             conn.commit();

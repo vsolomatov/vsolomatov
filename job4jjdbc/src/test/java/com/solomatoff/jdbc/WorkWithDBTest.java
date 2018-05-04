@@ -8,7 +8,7 @@ public class WorkWithDBTest {
 
     @Test
     public void whenMainTest() {
-        String[] args = new String[] {"jdbc:postgresql://localhost:5432/my_db", "postgres", "password", "100"};
+        String[] args = new String[] {"jdbc:postgresql://localhost:5432/db_solomatov", "solomatov", "123", "100"};
         WorkWithDB.main(args);
     }
 }
