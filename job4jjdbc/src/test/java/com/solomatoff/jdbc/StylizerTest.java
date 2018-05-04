@@ -6,6 +6,6 @@ public class StylizerTest {
 
     @Test
     public void whenStylizerRunTest() {
-        Stylizer.stylizerRun("./target/1.xsl", "./target/1.xml");
+        Stylizer.stylizerRun("1.xsl", "1.xml");
         }
 }
