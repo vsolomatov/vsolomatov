@@ -1,6 +1,5 @@
 package com.solomatoff.chapterjunior002.monitore;
 
-import net.jcip.annotations.GuardedBy;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

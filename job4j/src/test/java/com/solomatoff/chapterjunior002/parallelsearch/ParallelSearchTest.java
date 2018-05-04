@@ -12,8 +12,8 @@ public class ParallelSearchTest {
     @Test
     public void whenParallelSearchTxtAndJava() {
         String directory = "c:/projects";
-        String keyword = "Thread";
-        List<String> exts = new ArrayList<>(Arrays.asList("txt", "java"));
+        String keyword = "StartUI";
+        List<String> exts = new ArrayList<>(Arrays.asList("txt", "java", "xml"));
 
         ParallelSearch parallelSearch = new ParallelSearch(directory, keyword, exts);
         parallelSearch.init();
@@ -31,8 +31,8 @@ public class ParallelSearchTest {
     @Test
     public void whenParallelSearchTxt() {
         String directory = "c:/projects";
-        String keyword = "Thread";
-        List<String> exts = new ArrayList<>(Arrays.asList("txt"));
+        String keyword = "StartUI";
+        List<String> exts = new ArrayList<>(Arrays.asList("xml"));
 
         ParallelSearch parallelSearch = new ParallelSearch(directory, keyword, exts);
         parallelSearch.init();

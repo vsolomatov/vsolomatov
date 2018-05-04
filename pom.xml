@@ -16,7 +16,6 @@
     <modules>
         <module>job4j</module>
         <module>job4jjdbc</module>
-        <module>job4jxmlxslt</module>
     </modules>
 	
 	<dependencies>

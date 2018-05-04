@@ -56,7 +56,7 @@ public class ParallelSearch {
                 }
                 files.offer(DUMMY);
                 while (!finish) {
-                    System.out.println("Ждем окончания нити search.");
+                    int i = 0;
                 }
                 System.out.println("Завершила работу нить read.");
             }
@@ -81,7 +81,7 @@ public class ParallelSearch {
                 extension = "";
             }
             if (exts.contains(extension)) {
-                System.out.println("Добавляем в очередь files [" + file + "]");
+                //System.out.println("Добавляем в очередь files [" + file + "]");
                 files.offer(file);
             }
             return CONTINUE;
@@ -123,7 +123,7 @@ public class ParallelSearch {
          */
         private void search(Path file) {
             try {
-                System.out.println("    Осуществляем поиск текста в [" + file + "]");
+                //System.out.println("    Осуществляем поиск текста в [" + file + "]");
                 Scanner in = new Scanner(file.toFile());
                 while (in.hasNextLine()) {
                     String line = in.nextLine();

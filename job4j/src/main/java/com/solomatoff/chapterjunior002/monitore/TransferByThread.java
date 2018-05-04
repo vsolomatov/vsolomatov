@@ -1,7 +1,5 @@
 package com.solomatoff.chapterjunior002.monitore;
 
-import java.util.Random;
-
 public class TransferByThread implements Runnable {
     private UserStorage userStorage;
     private User userOne;
