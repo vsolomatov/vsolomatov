@@ -83,16 +83,4 @@ class Task {
     int getVersion() {
         return version;
     }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
-    }
 }
