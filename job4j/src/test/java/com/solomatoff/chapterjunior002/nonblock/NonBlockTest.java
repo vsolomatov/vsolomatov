@@ -1,11 +1,12 @@
 package com.solomatoff.chapterjunior002.nonblock;
 
 import org.junit.Test;
-
+import javax.persistence.OptimisticLockException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.lang.Thread.sleep;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
@@ -37,61 +38,35 @@ public class NonBlockTest {
     @Test
     public void update() {
         NonBlock nonBlock = new NonBlock();
-        Task task1 = new Task(1, "be", "was, were been");
+        Task task1 = new Task(1, "be", "was,were been");
         nonBlock.add(task1);
         Task task2 = new Task(2, "beat", "beat beaten");
         nonBlock.add(task2);
         Task task3 = new Task(3, "become", "became become");
         nonBlock.add(task3);
 
-        Task taskForUpdate1 = new Task(2, "begin", "began begun");
-        Task taskForUpdate2 = new Task(2, "bend", "bent bent");
-        Task taskForUpdate3 = new Task(2, "bet", "bet bet");
-        Task taskForUpdate4 = new Task(2, "bite", "bit bitten");
-        Thread thread1 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                nonBlock.update(2, taskForUpdate1);
-            }
-        }, "begin");
-        Thread thread2 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                nonBlock.update(2, taskForUpdate2);
-            }
-        }, "bend");
-        Thread thread3 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                nonBlock.update(2, taskForUpdate3);
-            }
-        }, "bet");
-        Thread thread4 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                nonBlock.update(2, taskForUpdate4);
-            }
-        }, "bite");
-        thread1.start();
-        thread2.start();
-        thread3.start();
-        thread4.start();
+        for (int index = 0; index < 14; index++) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        nonBlock.update(2, Thread.currentThread().getName(), Thread.currentThread().getName());
+                    } catch (OptimisticLockException e) {
+                        System.out.println("Не удалось обновить задачу из потока " + Thread.currentThread().getName());
+                    }
+                }
+            }).start();
+        }
 
         try {
-            Thread.sleep(3000);
+            sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         Collection<Task> collection = nonBlock.getContainer().values();
-        int[] result = new int[3];
-        int index = 0;
         for (Task task : collection) {
-            result[index] = task.getVersion();
-            System.out.println(task.getName() + " " + task.getDesc() + " " + task.getVersion());
-            index++;
+            System.out.println(task.getId() + " " + task.getName() + " " + task.getDesc() + " " + task.getVersion());
         }
-        int[] expected = {0, 4, 0};
-        assertThat(result, is(expected));
     }
 
     @Test

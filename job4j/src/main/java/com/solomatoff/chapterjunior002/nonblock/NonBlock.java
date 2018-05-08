@@ -1,42 +1,36 @@
 package com.solomatoff.chapterjunior002.nonblock;
 
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import javax.persistence.OptimisticLockException;
 
+import static java.lang.Thread.sleep;
+
 public class NonBlock {
     private Map<Integer, Task> container = new ConcurrentHashMap<>();
-
-    private BiFunction<Integer, Task, Task> remappingFunction = new BiFunction<Integer, Task, Task>() {
-        @Override
-        public Task apply(Integer id, Task task) {
-            return new Task(id, task.getName(), task.getDesc(), task.getVersion() + 1);
-        }
-    };
 
     public boolean add(Task task) {
         return (container.putIfAbsent(task.getId(), task) == null);
     }
 
-    public void update(Integer id, Task newTask) throws OptimisticLockException, NoSuchElementException {
-        // берем новые значения полей
-        String newName = newTask.getName();
-        String newDesc = newTask.getDesc();
-        // запоминаем версию задачи
-        int version = container.get(id).getVersion();
-        System.out.println("[" + Thread.currentThread().getName() + "] До изменения коллеции. version = " + version);
-        Task currentTask = container.get(id);
-        currentTask.setName(newName);
-        currentTask.setDesc(newDesc);
-        Task updatedTask = container.computeIfPresent(id, remappingFunction); // этот метод изменяет элемент коллекции
-        int updatedVersion = container.get(id).getVersion();
-        System.out.println("    [" + Thread.currentThread().getName() + "] После изменения коллекции. version = " + updatedVersion);
-        System.out.println("        [" + Thread.currentThread().getName() + "] " + updatedTask.getName() + " " + updatedTask.getDesc() + " " + updatedTask.getVersion());
-        if (updatedVersion != version + 1) {
-            throw new OptimisticLockException();
-        }
+    public void update(Integer id, String newName, String newDesc) throws OptimisticLockException {
+        BiFunction<Integer, Task, Task> remappingFunction = new BiFunction<Integer, Task, Task>() {
+            // Определяем анонимный класс реализующий этот интерфейс
+            @Override
+            public Task apply(Integer id, Task task) {
+                Integer newVersion = task.getVersion() + 1;
+                System.out.printf("[%9s]. Изменяем задачу: %9s. Версия: %2d   на задачу  %9s. Версия: %2d%n", Thread.currentThread().getName(), task.getName(), task.getVersion(), newName, newVersion);
+                // проверяем версию (вдруг кто-то уже изменил элемент)
+                if (container.get(id).getVersion() != newVersion - 1) {
+                    throw new OptimisticLockException();
+                }
+                return new Task(id, newName, newDesc, newVersion);
+            }
+        };
+        // Этот метод изменяет элемент коллекции с ключом id вызывая метод apply() объекта remappingFunction
+        // В метод apply() в качестве аргументов будет передан текущий ключ id и текущее отображаемое значение, т.е. task соответствующая этому ключу
+        container.computeIfPresent(id, remappingFunction);
     }
 
     public boolean delete(Integer id) {
@@ -64,7 +58,7 @@ class Task {
         this.id = id;
         this.name = name;
         this.desc = desc;
-        this.version = 0;
+        this.version = 1;
     }
 
     Task(int id, String name, String desc, int version) {
@@ -77,6 +71,7 @@ class Task {
     int getId() {
         return id;
     }
+
     String getName() {
         return name;
     }
@@ -89,15 +84,15 @@ class Task {
         return version;
     }
 
-    public void setVersion(int version) {
-        this.version = version;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 }
