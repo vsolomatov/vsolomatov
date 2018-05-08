@@ -7,9 +7,11 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import static java.nio.file.FileVisitResult.CONTINUE;
+import static java.nio.file.FileVisitResult.TERMINATE;
 
 @ThreadSafe
 public class ParallelSearch {
@@ -18,11 +20,12 @@ public class ParallelSearch {
     private final List<String> exts;
     private static final Path DUMMY = Paths.get("");
     private volatile boolean finish = false;
+    private int capacity;
 
     @GuardedBy("this")
     private final BlockingQueue<Path> files = new LinkedBlockingQueue<>();
     @GuardedBy("this")
-    private final List<String> paths = new ArrayList<>();
+    private final BlockingQueue<String> paths;
 
     /**
      *  Конструктор
@@ -30,47 +33,42 @@ public class ParallelSearch {
      * @param text искомый текст
      * @param fileEctsions расширения файлов (для поиска только в таких файлах)
      */
-    ParallelSearch(String root, String text, List<String> fileEctsions) {
+    ParallelSearch(String root, String text, List<String> fileEctsions, int capacity) {
         this.root = Paths.get(root);
         this.text = text;
         this.exts = fileEctsions;
+        this.capacity = capacity;
+        this.paths = new ArrayBlockingQueue<>(capacity);
     }
 
     public void init() {
-        Thread search = new Thread() {
-            @Override
-            public void run() {
-                searchTask();
-                finish = true;
-                System.out.println("Завершила работу нить search.");
+        Thread search = new Thread(() -> {
+            searchTask();
+            finish = true;
+            System.out.println("Завершила работу нить search.");
+        });
+        Thread read = new Thread(() -> {
+            FillingFileQueue fillingFileQueue = new FillingFileQueue();
+            try {
+                Files.walkFileTree(root, fillingFileQueue);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        };
-        Thread read = new Thread() {
-            @Override
-            public void run() {
-                FillingFileQueue fillingFileQueue = new FillingFileQueue();
-                try {
-                    Files.walkFileTree(root, fillingFileQueue);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                files.offer(DUMMY);
-                while (!finish) {
-                    int i = 0;
-                }
-                System.out.println("Завершила работу нить read.");
+            files.offer(DUMMY);
+            while (!finish) {
+                int i = 0;
             }
-        };
+            System.out.println("Завершила работу нить read.");
+        });
         search.start();
         read.start();
     }
 
-    synchronized List<String> result() {
+    public BlockingQueue<String> result() {
         return this.paths;
     }
 
     class FillingFileQueue extends SimpleFileVisitor<Path> {
-
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attr) {
             String fileName = file.getFileName().toString();
@@ -94,24 +92,27 @@ public class ParallelSearch {
         // is thrown.
         @Override
         public FileVisitResult visitFileFailed(Path file, IOException exc) {
-            System.err.println(exc);
+            System.err.println(exc.toString());
             return CONTINUE;
         }
     }
 
-    /**
-     * This task searches files for a given keyword.
-     */
-
+        /**
+         * This task searches files for a given keyword.
+        */
         private void searchTask() {
             boolean done = false;
+            FileVisitResult result;
             while (!done) {
                 Path file = files.poll();
                 if (file != null) {
                     if (file == DUMMY) {
                         done = true;
                     } else {
-                        search(file);
+                        result = search(file);
+                        if (result == TERMINATE) {
+                            done = true;
+                        }
                     }
                 }
             }
@@ -121,20 +122,27 @@ public class ParallelSearch {
          * Searches a file for a given keyword and prints all matching lines.
          * @param file the file to search
          */
-        private void search(Path file) {
+        private FileVisitResult search(Path file) {
+            FileVisitResult result = CONTINUE;
             try {
                 //System.out.println("    Осуществляем поиск текста в [" + file + "]");
                 Scanner in = new Scanner(file.toFile());
                 while (in.hasNextLine()) {
                     String line = in.nextLine();
                     if (line.contains(this.text)) {
-                        paths.add(file.toString());
+                        try {
+                            paths.add(file.toString());
+                        } catch (IllegalStateException e) {
+                            System.out.println("Поиск остановлен, т.к. ограничен заданной емкостью результата (" + this.capacity + ")");
+                            result = TERMINATE;
+                        }
                         break;
                     }
                 }
             } catch (FileNotFoundException | NullPointerException e) {
                 e.printStackTrace();
             }
+            return result;
         }
 
 
