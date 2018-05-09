@@ -1,5 +1,5 @@
 ﻿CREATE TABLE solomatov.company(id integer NOT NULL, name character varying, CONSTRAINT company_pkey PRIMARY KEY (id));
-CREATE TABLE solomatov.person(id integer NOT NULL, name character varying, company_id integer,CONSTRAINT person_pkey PRIMARY KEY (id));
+CREATE TABLE solomatov.person(id integer NOT NULL, name character varying, company_id integer, CONSTRAINT person_pkey PRIMARY KEY (id));
 insert into solomatov.company (id, name) VALUES(1, 'ПАО "ГАЗПРОМ"');
 insert into solomatov.company (id, name) VALUES(2, 'ПАО "РОСНЕФТЬ"');
 insert into solomatov.company (id, name) VALUES(3, 'ПАО "ЛУКОЙЛ"');
@@ -22,7 +22,7 @@ select c.name, a.numberperson from (select company_id, count(id) numberperson fr
 	where a.numberperson = (select max(numberperson)
 				                    from (select company_id, count(id) numberperson
 				                          from solomatov.person
-				                          group  by company_id) as b)
+				                          group by company_id) as b)
 	      and c.id = a.company_id;
 -- второй вариант второго задания
 with count_person as
