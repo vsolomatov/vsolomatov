@@ -36,8 +36,6 @@ public class StartUI {
     public void init() {
         boolean exit = false;
         String answer;
-        // создаем таблицу в базе данных, для этого читаем настройки из tracker.properties
-
         MenuTracker menu = new MenuTracker(this.input, this.tracker);
         // Заполняем меню пунктами
         menu.fillMenus();
