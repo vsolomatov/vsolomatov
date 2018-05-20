@@ -2,9 +2,7 @@ package com.solomatoff.parser;
 
 import org.junit.Test;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.Timestamp;
+import java.sql.*;
 
 import static org.junit.Assert.*;
 
@@ -12,37 +10,43 @@ public class ParserSqlRuTest {
 
     @Test
     public void putIntoDateKeeper() {
-        Connection conn = ParserSqlRu.createConnection();
+        Connection conn = null;
+        // читаем настройки из parser.properties
+        String url = ParserProperty.getProperty("url");
+        String username = ParserProperty.getProperty("username");
+        String password = ParserProperty.getProperty("password");
+        // коннектимся к базе данных
+        try {
+            conn = DriverManager.getConnection(url, username, password);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         Timestamp vacancyDate = new Timestamp(System.currentTimeMillis());
-        ParserSqlRu.putIntoDateKeeper(vacancyDate, conn);
-        ParserSqlRu.closeConnection(conn);
+        ParserSqlRu parserSqlRu = new ParserSqlRu();
+        parserSqlRu.putIntoDateKeeper(vacancyDate, conn);
+        try {
+            conn.close();
+        } catch (SQLException | NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void runWork() {
-        Connection conn = ParserSqlRu.createConnection();
-        ParserSqlRu.init(conn);
-        ParserSqlRu.closeConnection(conn);
-        ParserSqlRu.runWork();
+        ParserSqlRu parserSqlRu = new ParserSqlRu();
+        parserSqlRu.init();
+        parserSqlRu.runWork();
     }
 
     @Test
     public void init() {
-        Connection conn = ParserSqlRu.createConnection();
-        ParserSqlRu.init(conn);
-        ParserSqlRu.closeConnection(conn);
+        ParserSqlRu parserSqlRu = new ParserSqlRu();
+        parserSqlRu.init();
     }
 
     @Test
     public void createConnection() {
-        Connection conn = ParserSqlRu.createConnection();
-        ParserSqlRu.closeConnection(conn);
-    }
-
-    @Test
-    public void closeConnection() {
-        Connection conn = ParserSqlRu.createConnection();
-        ParserSqlRu.closeConnection(conn);
-
+        ParserSqlRu parserSqlRu = new ParserSqlRu();
+        parserSqlRu.createConnection();
     }
 }

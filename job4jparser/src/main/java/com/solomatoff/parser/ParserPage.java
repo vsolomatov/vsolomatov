@@ -8,232 +8,303 @@ import java.text.SimpleDateFormat;
 import java.time.Month;
 import java.util.Calendar;
 import java.util.Date;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
+ * Класс для результата выполнения разбора страницы
+ */
+class ResultParserPage {
+    public Timestamp vacancyDate = null;
+    public boolean flagFinish = false;
+}
+
+/**
  * Класс для распарсивания страниц сайта sql.ru
  * @author Vyacheslav Solomatov
  */
 public class ParserPage {
+    // Коннект к базе данных
+    private Connection conn;
+
+    public ParserPage(Connection conn) {
+        this.conn = conn;
+    }
+
     /**
      * Метод для распарсивания одной страницы с таблицей вакансий сайта sql.ru
-     * @param url адрес страницы вакансий
+     *
+     * @param url            адрес страницы вакансий
+     * @param completionDate дата завершения процесса разбора
+     * @return объект класса ResultParserPage, содержащий дату последней вакансии (на данной странице - url) и флаг продолжения или остановки разбора
      */
-    public static ResultParserPage parserForumTable(String url, Timestamp completionDate, Connection conn) {
-        Document doc;
+    public ResultParserPage parserForumTable(String url, Timestamp completionDate) {
         ResultParserPage resultParserPage = new ResultParserPage();
+        Document doc;
+        Elements trAll = null;
         try {
             doc = Jsoup.connect(url).userAgent("Mozilla").get();
             Elements forumTable = doc.body().getElementsByClass("forumTable");
-            Elements trAll = forumTable.first().getElementsByTag("tr");
-            String textVacancy;
+            trAll = forumTable.first().getElementsByTag("tr");
+        } catch (IOException e) {
+            ParserSqlRu.LOGGERPARSER.error(e.getMessage(), e);
+        }
+        if (trAll != null) {
+            ParserVacancy parserVacancy = new ParserVacancy();
             int i = 0;
             for (Element trRecord : trAll) {
+                //System.out.println("trRecord.text() = " + trRecord.text());
                 String nameVacancy = null;
                 String urlVacancy = null;
                 String authorVacancy = null;
                 Timestamp createdVacancy = null;
-                // первые четыре строки нам не нужны, так как это заголовок таблицы и темы от модераторов
-                if (i > 3) {
-                    Elements  elementsTdFromRecord = trRecord.getElementsByTag("td");
+                String textVacancy;
+                if (i > 3) { // первые четыре строки нам не нужны, так как это заголовок таблицы и темы от модераторов
+                    Elements elementsTdFromRecord = trRecord.getElementsByTag("td");
                     int j = 0;
-                    // формируем данные для вставки строки в таблицу vacancies
                     for (Element elementTdFromRecord : elementsTdFromRecord) {
                         switch (j) {
                             case 1:
-                                // наименование топика (вакансии)
-                                nameVacancy = elementTdFromRecord.text();
-                                // убираем апострофы, мешают при добавлении в таблицы
-                                nameVacancy = nameVacancy.replaceAll("'", " ");
-                                // ссылка на форум топика (вакансию)
+                                nameVacancy = elementTdFromRecord.text(); // наименование топика (вакансии)
+                                nameVacancy = nameVacancy.replaceAll("'", " "); // убираем апострофы, мешают при добавлении в таблицы
                                 if (elementTdFromRecord.children().size() > 0) {
                                     Element tdElement = elementTdFromRecord.children().first();
-                                    urlVacancy = tdElement.attr("abs:href");
+                                    urlVacancy = tdElement.attr("abs:href"); // ссылка на форум топика (url-вакансии)
+                                    //System.out.println("    urlVacancy = " + urlVacancy);
                                 }
                                 break;
                             case 2:
-                                // автор топика (вакансии)
-                                authorVacancy = elementTdFromRecord.text();
+                                authorVacancy = elementTdFromRecord.text(); // автор топика (вакансии)
                                 break;
                             case 5:
-                                // дата создания топика (вакансии)
-                                // предварительно преобразуем к нужному типу
-                                createdVacancy = new Timestamp(parserDate(elementTdFromRecord.text()).getTime());
+                                String stringDate; // дата создания топика (вакансии)
+                                try {
+                                    stringDate = elementTdFromRecord.text();
+                                    createdVacancy = new Timestamp(parserDate(stringDate).getTime());
+                                    //System.out.println("    createdVacancy = " + createdVacancy);
+                                } catch (NullPointerException e) {
+                                    ParserSqlRu.LOGGERPARSER.warn(String.format("     < У вакансии (%s) будет пустая дата >      %n", nameVacancy));
+                                }
+                                break;
                             default:
                         }
                         j++;
                     }
-                    // Заканчиваем процесс если дата очередной вакансии уже меньше чем дата, до которой мы должны проверять
-                    if ((createdVacancy != null) && (createdVacancy.before(completionDate))) {
+                    // Добавляем в loggerParser информацию о вакансии (даже если она нам не подходит) - просто информация что мы ее анализировали
+                    ParserSqlRu.LOGGERPARSER.info(String.format("Анализировали: <%s> (author=%s) (created=%3$ty-%3$tm-%3$td %3$tH:%3$tM)%n", nameVacancy, authorVacancy, createdVacancy));
+                    if (i == 4) { // т.е. это первая (верхняя в таблице топиков) вакансия при текущем разборе
+                        resultParserPage.vacancyDate = createdVacancy;
+                    }
+                    // Заканчиваем процесс, если дата очередной вакансии уже меньше чем дата, до которой мы должны проверять
+                    if ((createdVacancy != null) && (createdVacancy.before(completionDate) || createdVacancy.equals(completionDate))) {
                         resultParserPage.flagFinish = true;
                         break;
                     }
-                    // идем по ссылке, чтобы забрать полный текст вакансии, если она нам подходит
-                    if (ParserVacancy.checkVacancyText(urlVacancy)) {
-                        textVacancy = ParserVacancy.getVacancyText(urlVacancy);
-                        // убираем апострофы, указатель на элемент списка; мешают при добавлении в таблицы
-                        textVacancy = textVacancy.replaceAll("'", " ");
-                        textVacancy = textVacancy.replaceAll("\u0306", "");
-                        // Первычный ключ таблицы vacancies не даст втсавить строки с одинаковыми vacancy_name, vacancy_author, vacancy_created
-                        String insertvacancies = ParserProperty.getProperty("insertvacancies");
-                        try (PreparedStatement stInsert = conn.prepareStatement(insertvacancies)) {
-                            stInsert.setString(1, nameVacancy);
-                            stInsert.setString(2, urlVacancy);
-                            stInsert.setString(3, authorVacancy);
-                            stInsert.setTimestamp(4, createdVacancy);
-                            stInsert.setString(5, textVacancy);
-                            //System.out.println("    stInsert = " + stInsert);
-                            // добавляем строку о вакансии в таблицу vacancies
-                            stInsert.executeUpdate();
-                            // добавляем в loggerRoot информацию о подходящей вакансии
-                            ParserSqlRu.LOGGERROOR.info(String.format("<%-130s> %s", trRecord.text(), textVacancy));
-                        } catch (SQLException e) {
-                            ParserSqlRu.LOGGERPARSER.error(String.format("<   %s   > %s", e.getMessage(), nameVacancy), e);
-                        }
+                    if (parserVacancy.checkVacancyText(urlVacancy)) { // Проверяем содержит ли текст вакансии нужные нам слова
+                        textVacancy = parserVacancy.getVacancyText(urlVacancy);
+                        // добавляем вакансию в таблицу вакансий
+                        insertVacancyIntoTable(nameVacancy, urlVacancy, authorVacancy, createdVacancy, textVacancy);
+                        // добавляем в loggerRoot информацию о подходящей вакансии
+                        ParserSqlRu.LOGGERROOT.info(String.format("<%-130s> %s", trRecord.text(), textVacancy));
                     }
-                    if (i == 4) { // т.е. это первая вакансия при текущем разборе
-                        resultParserPage.vacancyDate = createdVacancy;
-                        //System.out.println("        ParserPage: vacancyDate = " + resultParserPage.vacancyDate);
-                    }
-                    // добавляем в loggerParser информацию о вакансии (даже если она нам не подходит - просто информация что мы ее анализировали)
-                    ParserSqlRu.LOGGERPARSER.info(String.format("Анализировали: <%s> (author=%s) (created=%3$ty-%3$tm-%3$td %3$tH:%3$tM)%n", nameVacancy, authorVacancy, createdVacancy));
                 }
                 i++;
             }
-        } catch (IOException e) {
-            ParserSqlRu.LOGGERPARSER.error(e.getMessage(), e);
         }
         return resultParserPage;
     }
 
     /**
+     * Метод добавляет в таблицу вакансий информацию о подходящей вакансии
+     */
+    private void insertVacancyIntoTable(String nameVacancy, String urlVacancy, String authorVacancy, Timestamp createdVacancy, String textVacancy) {
+        String insertvacancies = ParserProperty.getProperty("insertvacancies");
+        try (PreparedStatement stInsert = conn.prepareStatement(insertvacancies)) {
+            stInsert.setString(1, nameVacancy);
+            stInsert.setString(2, urlVacancy);
+            stInsert.setString(3, authorVacancy);
+            stInsert.setTimestamp(4, createdVacancy);
+            stInsert.setString(5, textVacancy);
+            // Первычный ключ таблицы vacancies не даст втсавить строки с одинаковыми vacancy_name, vacancy_author, vacancy_created
+            stInsert.executeUpdate();
+        } catch (SQLException e) {
+            ParserSqlRu.LOGGERPARSER.error(String.format("<   %s   > %s (author=%s) (created=%4$ty-%4$tm-%4$td %4$tH:%4$tM)%n", e.getMessage(), nameVacancy, authorVacancy, createdVacancy), e);
+        }
+    }
+
+    /**
      * Метод преобразует строку вида "10 май 18, 15:35" в дату
-     * @param textFromTd строка с датой
+     *
+     * @param stringDate строка с датой
      * @return дату
      */
-    public static Date parserDate(String textFromTd) {
-        // формируем массив "дата, время"
-        String[] arrayDateTime;
+    public Date parserDate(String stringDate) throws NullPointerException {
+        Date dateResult;
+        // Выделяем подстроку со временем
+        String stringDateOrTime;
         try {
-            arrayDateTime = textFromTd.split(",");
-        } catch (NullPointerException e) {
-            arrayDateTime = new String[] {"", "00:00"};
+            stringDateOrTime = getSubstringDateOrTime(stringDate, "Time");
+        } catch (NullPointerException | ArrayIndexOutOfBoundsException | IllegalArgumentException e) {
+            ParserSqlRu.LOGGERPARSER.error(String.format("     <Невозможно преобразовать строку (%s) в дату со временем>      %n", stringDate));
+            return null;
         }
-        // формируем массив "день, месяц, год"
-        String[] arrayDayMonthYear;
-        if (arrayDateTime.length > 0) {
-            if ((arrayDateTime[0] != null) && (!arrayDateTime[0].equals(""))) {
-                arrayDayMonthYear = arrayDateTime[0].split(" ");
-            } else {
-                arrayDayMonthYear = new String[] {"D", "M", "YY"};
-            }
-        } else {
-            arrayDayMonthYear = new String[] {"D", "M", "YY"};
+        stringDateOrTime = stringDateOrTime.trim(); // удаляем пробелы
+        int[] arrayHourMinute;
+        try {
+            arrayHourMinute = getHourMinute(stringDateOrTime);
+        } catch (NullPointerException | ArrayIndexOutOfBoundsException | IllegalArgumentException e) {
+            ParserSqlRu.LOGGERPARSER.error(String.format("     <Невозможно преобразовать строку (%s) в дату со временем>      %n", stringDate));
+            return null;
         }
-        // проверяем
-        if (arrayDayMonthYear.length < 3) {
-            arrayDayMonthYear = new String[] {"D", "M", "YY"};
-        }
-        // формируем массив "часы, минуты"
-        String[] arrayHourMinute;
-        if (arrayDateTime.length > 1) {
-            try {
-                arrayHourMinute = arrayDateTime[1].split(":");
-            } catch (NullPointerException e) {
-                arrayHourMinute = new String[] {"00", "00"};
-            }
-            if (arrayHourMinute.length == 0) {
-                if ((arrayDateTime[1] != null) && (!arrayDateTime[1].equals(""))) {
-                    arrayHourMinute = new String[] {arrayDateTime[1], "00"};
-                } else {
-                    arrayHourMinute = new String[] {"00", "00"};
-                }
-            } else {
-                if (arrayHourMinute.length == 1) {
-                    arrayHourMinute = new String[] {arrayHourMinute[0], "00"};
-                }
-            }
-            // убираем пробелы, если есть
-            arrayHourMinute[0] = arrayHourMinute[0].trim();
-            arrayHourMinute[1] = arrayHourMinute[1].trim();
-            // проверяем еще раз
-            if (arrayHourMinute[0].equals("")) {
-                arrayHourMinute[0] = "00";
-            }
-            if (arrayHourMinute[1].equals("")) {
-                arrayHourMinute[1] = "00";
-            }
-        } else {
-            arrayHourMinute = new String[] {"00", "00"};
-        }
-        // формируем объект cal с текущей датой, устанавливаем нужное время
+        // Формируем объект Calendar с текущей датой
         Calendar cal = Calendar.getInstance();
-        cal.setTime(new java.util.Date(System.currentTimeMillis())); // текущая дата
+        cal.setTime(new Date(System.currentTimeMillis())); // текущая дата
         cal.clear(Calendar.SECOND);
         cal.clear(Calendar.MILLISECOND);
-        cal.clear(Calendar.HOUR_OF_DAY);
-        cal.clear(Calendar.MINUTE);
+        // Устанавливаем нужное время
+        cal.set(Calendar.HOUR_OF_DAY, arrayHourMinute[0]);
+        cal.set(Calendar.MINUTE, arrayHourMinute[1]);
+        // Выделяем подстроку с датой
         try {
-            cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(arrayHourMinute[0]));
-            cal.set(Calendar.MINUTE, Integer.parseInt(arrayHourMinute[1]));
-        } catch (NumberFormatException e) {
-            arrayHourMinute[0] = "00";
-            arrayHourMinute[1] = "00";
+            stringDateOrTime = getSubstringDateOrTime(stringDate, "Date");
+        } catch (NullPointerException | ArrayIndexOutOfBoundsException | IllegalArgumentException e) {
+            ParserSqlRu.LOGGERPARSER.error(String.format("     <Невозможно преобразовать строку (%s) в дату со временем>      %n", stringDate));
+            return null;
         }
-        // формируем дату
-        Date date = null;
-        if (arrayDateTime[0].equals("сегодня")) {
-            date = cal.getTime();
+        if (stringDateOrTime.equals("сегодня")) {
+            dateResult = cal.getTime();
         } else {
-            if (arrayDateTime[0].equals("вчера")) {
+            if (stringDateOrTime.equals("вчера")) {
                 cal.add(Calendar.DATE, -1);
-                date = cal.getTime();
+                dateResult = cal.getTime();
             } else {
-                String sDay = arrayDayMonthYear[0];
-                String sMonth = arrayDayMonthYear[1];
-                String sYear = arrayDayMonthYear[2];
-                Month mMonth = null;
-                if (sMonth.equals("январь") || sMonth.equals("янв")) {
-                    mMonth = Month.JANUARY;
+                int[] arrayDayMonthYear;
+                try {
+                    arrayDayMonthYear = getDayMonthYear(stringDateOrTime);
+                } catch (NullPointerException | ArrayIndexOutOfBoundsException | IllegalArgumentException e) {
+                    ParserSqlRu.LOGGERPARSER.error(String.format("     <Невозможно преобразовать строку (%s) в дату со временем>      %n", stringDate));
+                    return null;
+                }
+                cal.set(Calendar.DAY_OF_MONTH, arrayDayMonthYear[0]);
+                cal.set(Calendar.MONTH, arrayDayMonthYear[1] - 1); // уменьшаем, потому что здесь месяцы нумеруются от 0 до 11
+                cal.set(Calendar.YEAR, arrayDayMonthYear[2] + 2000); // увеличиваем, чтобы получить 2018 вместо 18
+                dateResult = cal.getTime();
+            }
+        }
+        //ParserSqlRu.LOGGERPARSER.info(String.format("Строка <%s> date = %2$ty-%2$tm-%2$td %2$tH:%2$tM%n", stringDate, dateResult));
+        return dateResult;
+    }
+
+    /**
+     * Метод извлекает подстроку, содержащую "дату" или "время" из строки вида "10 май 18, 15:35"
+     *
+     * @param stringDateTime строка, содержащая дату и время
+     * @param flagDateOrTime признак того, что нужно выбрать "Date" - "дату", иначе "время"
+     * @return подстрока, содержащая дату или время в зависимомти от параметра flagDateOrTime
+     */
+    private String getSubstringDateOrTime(String stringDateTime, String flagDateOrTime) {
+        String[] arrayDateTime;
+        try {
+            arrayDateTime = stringDateTime.split(",");
+        } catch (NullPointerException e) {
+            arrayDateTime = new String[]{stringDateTime, "00:00"};
+        }
+        // проверяем
+        if (arrayDateTime[0] == null || arrayDateTime[1] == null || arrayDateTime.length != 2) {
+            throw new IllegalArgumentException();
+        }
+        return flagDateOrTime.equals("Date") ? arrayDateTime[0] : arrayDateTime[1];
+    }
+
+    /**
+     * Метод извлекает "дату" из строки вида "10 май 18"
+     *
+     * @param stringDate строка, содержащая дату
+     * @return массив из трех числовых значений: число, месяц, год
+     */
+    private int[] getDayMonthYear(String stringDate) {
+        String[] arrayDayMonthYear;
+        arrayDayMonthYear = stringDate.split(" ");
+        // проверяем
+        if (arrayDayMonthYear[0] == null || arrayDayMonthYear[1] == null || arrayDayMonthYear[2] == null || arrayDayMonthYear.length != 3) {
+            throw new IllegalArgumentException();
+        }
+        // Получаем данные в виде чисел
+        int iDay = Integer.parseInt(arrayDayMonthYear[0]);
+        int iMonth = getMonth(arrayDayMonthYear[1]);
+        if (iMonth == -1) {
+            throw new IllegalArgumentException();
+        }
+        int iYear = Integer.parseInt(arrayDayMonthYear[2]);
+        int[] arrayResult = {iDay, iMonth, iYear};
+        return arrayResult;
+    }
+
+    /**
+     * Метод извлекает "время" из строки вида "15:35"
+     *
+     * @param stringTime строка, содержащая "время"
+     * @return массив из двух числовых значений: часы, минуты
+     */
+    private int[] getHourMinute(String stringTime) {
+        String[] arrayHourMinute;
+        arrayHourMinute = stringTime.split(":");
+        // проверяем
+        if (arrayHourMinute[0] == null || arrayHourMinute[1] == null || arrayHourMinute.length != 2) {
+            throw new IllegalArgumentException();
+        }
+        // Получаем данные в виде чисел
+        int iHour = Integer.parseInt(arrayHourMinute[0]);
+        int iMinute = Integer.parseInt(arrayHourMinute[1]);
+        int[] arrayResult = {iHour, iMinute};
+        return arrayResult;
+    }
+
+    /**
+     * Метод получает месяц в виде числа из строки
+     *
+     * @param sMonth месяц в виде строки
+     * @return месяц в виде числа от 1 до 12, или -1 если соответствие не нашлось
+     */
+    private int getMonth(String sMonth) {
+        Month mMonth = null;
+        if (sMonth.equals("январь") || sMonth.equals("янв")) {
+            mMonth = Month.JANUARY;
+        } else {
+            if (sMonth.equals("февраль") || sMonth.equals("фев")) {
+                mMonth = Month.FEBRUARY;
+            } else {
+                if (sMonth.equals("март") || sMonth.equals("мар")) {
+                    mMonth = Month.MARCH;
                 } else {
-                    if (sMonth.equals("февраль") || sMonth.equals("фев")) {
-                        mMonth = Month.FEBRUARY;
+                    if (sMonth.equals("апрель") || sMonth.equals("апр")) {
+                        mMonth = Month.APRIL;
                     } else {
-                        if (sMonth.equals("март") || sMonth.equals("мар")) {
-                            mMonth = Month.MARCH;
+                        if (sMonth.equals("май")) {
+                            mMonth = Month.MAY;
                         } else {
-                            if (sMonth.equals("апрель") || sMonth.equals("апр")) {
-                                mMonth = Month.APRIL;
+                            if (sMonth.equals("июнь") || sMonth.equals("июн")) {
+                                mMonth = Month.JUNE;
                             } else {
-                                if (sMonth.equals("май")) {
-                                    mMonth = Month.MAY;
+                                if (sMonth.equals("июль") || sMonth.equals("июл")) {
+                                    mMonth = Month.JULY;
                                 } else {
-                                    if (sMonth.equals("июнь") || sMonth.equals("июн")) {
-                                        mMonth = Month.JUNE;
+                                    if (sMonth.equals("август") || sMonth.equals("авг")) {
+                                        mMonth = Month.AUGUST;
                                     } else {
-                                        if (sMonth.equals("июль") || sMonth.equals("июл")) {
-                                            mMonth = Month.JULY;
+                                        if (sMonth.equals("сентябрь") || sMonth.equals("сен")) {
+                                            mMonth = Month.SEPTEMBER;
                                         } else {
-                                            if (sMonth.equals("август") || sMonth.equals("авг")) {
-                                                mMonth = Month.AUGUST;
+                                            if (sMonth.equals("октябрь") || sMonth.equals("окт")) {
+                                                mMonth = Month.OCTOBER;
                                             } else {
-                                                if (sMonth.equals("сентябрь") || sMonth.equals("сен")) {
-                                                    mMonth = Month.SEPTEMBER;
+                                                if (sMonth.equals("ноябрь") || sMonth.equals("ноя")) {
+                                                    mMonth = Month.NOVEMBER;
                                                 } else {
-                                                    if (sMonth.equals("октябрь") || sMonth.equals("окт")) {
-                                                        mMonth = Month.OCTOBER;
-                                                    } else {
-                                                        if (sMonth.equals("ноябрь") || sMonth.equals("ноя")) {
-                                                            mMonth = Month.NOVEMBER;
-                                                        } else {
-                                                            if (sMonth.equals("декабрь") || sMonth.equals("дек")) {
-                                                                mMonth = Month.DECEMBER;
-                                                            }
-                                                        }
+                                                    if (sMonth.equals("декабрь") || sMonth.equals("дек")) {
+                                                        mMonth = Month.DECEMBER;
                                                     }
                                                 }
                                             }
@@ -244,33 +315,13 @@ public class ParserPage {
                         }
                     }
                 }
-                int monthNumber = 0;
-                if (mMonth != null) {
-                    monthNumber = mMonth.getValue();
-                }
-                String textForParse;
-                if (monthNumber > 0 && monthNumber < 13) {
-                    textForParse = monthNumber + " " + sDay + ", " + sYear + " " + arrayHourMinute[0] + ":" + arrayHourMinute[1];
-                    DateFormat format = new SimpleDateFormat("M d, yy HH:mm");
-                    try {
-                        date = format.parse(textForParse);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    System.out.println(String.format("     Невозможно преобразовать строку (%s) в дату со временем%n", textFromTd));
-                }
             }
         }
-        //System.out.printf("date = %1$ty-%1$tm-%1$td %1$tH:%1$tM%n", date);
-        return date;
+        int monthNumber = -1;
+        if (mMonth != null) {
+            monthNumber = mMonth.getValue();
+        }
+        return monthNumber;
     }
 }
 
-/**
- * Класс для результата выполнения разбора страницы
- */
-class ResultParserPage {
-    public Timestamp vacancyDate = null;
-    public boolean flagFinish = false;
-}

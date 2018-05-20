@@ -14,48 +14,25 @@ import java.util.TimerTask;
  */
 public class ParserSqlRu {
     // Инициализация логера root
-    public static final Logger LOGGERROOR = Logger.getRootLogger();
+    public static final Logger LOGGERROOT = Logger.getRootLogger();
     // Инициализация логера loggerParser
     public static final Logger LOGGERPARSER = Logger.getLogger(ParserSqlRu.class.getName());
 
-
     public static void main(String[] args) {
+        ParserSqlRu parserSqlRu = new ParserSqlRu();
         // Инициализация приложения
-        Connection conn = createConnection();
-        init(conn);
-        // Проверяем настройки частоты запуска приложения, настраиваем таймер
-        String launchfrequency = ParserProperty.getProperty("launchfrequency");
-        String hhfrequency = launchfrequency.substring(0, 2);
-        String mmfrequency = launchfrequency.substring(3, 5);
-        // период запуска в миллисекундах
-        long period = (Integer.parseInt(hhfrequency) * 60 + Integer.parseInt(mmfrequency)) * 60 * 1000;
-        System.out.println("Период запуска в минутах: " + period / 60000);
-        // разница между текущим моментом и последней датой запуска в миллисекундах
-        Timestamp finishDate = getDateFromDateKeeper("selectmaxdatefinish", conn);
-        System.out.printf("    Предыдущая дата: %1$ty-%1$tm-%1$td %1$tH:%1$tM%n", finishDate);
-        long diffDate = getDateDiff(finishDate, new Date());
-        System.out.println("    Разница текущего времени и предыдущего запуска в минутах: " + diffDate / 60000);
-        long delay = (period - diffDate > 0) ? (period - diffDate) : 0L;
-        System.out.printf("    Отсрочка до следующего запуска в миллисекундах: %s (в минутах: %s)%n", delay, delay / 60000);
-        // планируем запуски
-        TimerTask timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                runWork();
-            }
-        };
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(timerTask, delay, period);
-        closeConnection(conn);
+        parserSqlRu.init();
+        // Настраиваем таймер
+        parserSqlRu.initTimer();
         System.out.println("Основной поток завершил работу!");
     }
 
     /**
      * Метод инициализирует приложение
      */
-    public static void init(Connection conn) {
-        // настраиваем логгеры
-        String filename = "log4j.properties"; //"log4j.xml";
+    public void init() {
+        // Настраиваем логгеры
+        String filename = "log4j.properties";
         File file = new File(filename);
         if (!file.exists()) {
             System.out.println("It is not possible to load the given log4j properties file :" + file.getAbsolutePath());
@@ -63,18 +40,56 @@ public class ParserSqlRu {
             PropertyConfigurator.configure(file.getAbsolutePath());
         }
         // Создаем таблицы, если их нет; даем права на таблицу parserlog
-        String createParserLog = ParserProperty.getProperty("createparserlog");
-        String grantParserLog = ParserProperty.getProperty("grantparserlog");
-        String createVacancies = ParserProperty.getProperty("createvacancies");
-        String createDateKeeper = ParserProperty.getProperty("createdatekeeper");
-        try (Statement st = conn.createStatement()) {
-            st.execute(createParserLog);
-            st.execute(grantParserLog);
-            st.execute(createVacancies);
-            st.execute(createDateKeeper);
+        try (Connection conn = createConnection()) {
+            String createParserLog = ParserProperty.getProperty("createparserlog");
+            String grantParserLog = ParserProperty.getProperty("grantparserlog");
+            String createVacancies = ParserProperty.getProperty("createvacancies");
+            String createDateKeeper = ParserProperty.getProperty("createdatekeeper");
+            try (Statement st = conn.createStatement()) {
+                st.execute(createParserLog);
+                st.execute(grantParserLog);
+                st.execute(createVacancies);
+                st.execute(createDateKeeper);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-            closeConnection(conn);
+            System.exit(1);
+        }
+    }
+
+    /**
+     * Метод инициализирует timer приложения
+     */
+    private void initTimer() {
+        // Проверяем настройки частоты запуска приложения
+        String launchfrequency = ParserProperty.getProperty("launchfrequency");
+        String hhfrequency = launchfrequency.substring(0, 2);
+        String mmfrequency = launchfrequency.substring(3, 5);
+        // период запуска в миллисекундах
+        long period = (Integer.parseInt(hhfrequency) * 60 + Integer.parseInt(mmfrequency)) * 60 * 1000;
+        System.out.println("Период запуска приложения в минутах: " + period / 60000);
+        // Определяем разницу между текущим моментом и последней датой запуска в миллисекундах
+        Timestamp finishDate = null;
+        try (Connection conn = createConnection()) {
+            finishDate = getDateFromDateKeeper("selectmaxdatefinish", conn);
+            System.out.printf("    Предыдущая дата запуска: %1$ty-%1$tm-%1$td %1$tH:%1$tM%n", finishDate);
+            long diffDate = getDateDiff(finishDate, new Date());
+            System.out.println("    Разница текущего времени и предыдущего запуска в минутах: " + diffDate / 60000);
+            long delay = (period - diffDate > 0) ? (period - diffDate) : 0L;
+            System.out.printf("         Отсрочка до следующего запуска в миллисекундах: %s (в минутах: %s)%n", delay, delay / 60000);
+            // планируем запуски
+            TimerTask timerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    runWork();
+                }
+            };
+            Timer timer = new Timer();
+            timer.scheduleAtFixedRate(timerTask, delay, period);
+        } catch (SQLException e) {
+            ParserSqlRu.LOGGERPARSER.error(String.format("<   %s   > %2$ty-%2$tm-%2$td %2$tH:%2$tM%n", e.getMessage(), finishDate), e);
             System.exit(1);
         }
     }
@@ -82,38 +97,41 @@ public class ParserSqlRu {
     /**
      * Метод выполняет основную работу по разбору вакансий
      */
-    public static void runWork() {
-        // коннктимся к базе данных
-        Connection conn = createConnection();
-        // Формируем дату до которой мы должны проверять вакансии
-        Timestamp completionDate = getDateFromDateKeeper("selectmaxdatevacancy", conn);
-        ResultParserPage resultParserPage = new ResultParserPage();
-        String urlPage;
+    public void runWork() {
+        String urlPage = null;
         Integer index = 1;
         Timestamp vacancyDate = null;
-        // разбираем страницы сайта в цикле
-        while (!resultParserPage.flagFinish) {
-            urlPage = "http://www.sql.ru/forum/job-offers/" + index;
-            System.out.println("Начинаем разбор страницы " + urlPage);
-            if (index == 1) { // это первая страница
-                resultParserPage = ParserPage.parserForumTable(urlPage, completionDate, conn);
-                vacancyDate = resultParserPage.vacancyDate;
-            } else {
-                resultParserPage = ParserPage.parserForumTable(urlPage, completionDate, conn);
+        Timestamp completionDate;
+        try (Connection conn = createConnection()) { // коннектимся к базе данных
+            ParserPage parserPage = new ParserPage(conn);
+            ResultParserPage resultParserPage = new ResultParserPage();
+            // Формируем дату до которой мы должны проверять вакансии
+            completionDate = getDateFromDateKeeper("selectmaxdatevacancy", conn);
+            // разбираем страницы сайта в цикле
+            while (!resultParserPage.flagFinish) {
+                urlPage = "http://www.sql.ru/forum/job-offers/" + index;
+                System.out.println("Начинаем разбор страницы " + urlPage);
+                resultParserPage = parserPage.parserForumTable(urlPage, completionDate);
+                if (index == 1) { // это первая страница
+                    vacancyDate = resultParserPage.vacancyDate;
+                }
+                index++;
             }
-            index++;
+            // добавляем в базу данных дату последнего запуска и дату последей проверенной вакансии в этом запуске
+            putIntoDateKeeper(vacancyDate, conn);
+        } catch (SQLException e) {
+            ParserSqlRu.LOGGERPARSER.error(String.format("<   %s   > %s%n", e.getMessage(), urlPage), e);
         }
-        // добавить в таблицу datekeeper дату последнего запуска и дату последей проверенной вакансии в этом запуске
-        putIntoDateKeeper(vacancyDate, conn);
-        closeConnection(conn);
     }
 
     /**
      * Метод возвращает из таблицы datekeeper дату последней проверенной вакансии на сайте
      * или дату последнего запуска приложения (в зависимости от параметра)
-     * @return возвращает дату (в зависимости от параметра)
+     * @param property ключ свойства
+     * @param conn коннекшион к базе данных
+     * @return возвращает дату (в зависимости от параметра property)
      */
-    private static Timestamp getDateFromDateKeeper(String property, Connection conn) {
+    private Timestamp getDateFromDateKeeper(String property, Connection conn) {
         Timestamp lastDate = null;
         String select = ParserProperty.getProperty(property);
         try (Statement st = conn.createStatement()) {
@@ -135,8 +153,10 @@ public class ParserSqlRu {
 
     /**
      * Метод добавляет в таблицу datekeeper дату последнего запуска и дату последей проверенной вакансии
+     *  @param vacancyDate дата последей проверенной вакансии
+     * @param conn коннекшион к базе данных
      */
-    public static void putIntoDateKeeper(Timestamp vacancyDate, Connection conn) {
+    public void putIntoDateKeeper(Timestamp vacancyDate, Connection conn) {
         String insertDateKeeper = ParserProperty.getProperty("insertdatekeeper");
         // формируем объект currentDate с текущей датой и временем
         Timestamp currentDate = new Timestamp(System.currentTimeMillis());
@@ -158,16 +178,16 @@ public class ParserSqlRu {
      * @param date2 новая дата
      * @return разницу между датами в миллисекундах
      */
-    private static long getDateDiff(Date date1, Date date2) {
+    private long getDateDiff(Date date1, Date date2) {
         return date2.getTime() - date1.getTime();
     }
 
     /**
-     * Метод открывает коннект к базе данных
+     * Метод создает коннект к базе данных
      */
-    public static Connection createConnection() {
-        // читаем настройки из parser.properties
+    public Connection createConnection() {
         Connection conn = null;
+        // читаем настройки из parser.properties
         String url = ParserProperty.getProperty("url");
         String username = ParserProperty.getProperty("username");
         String password = ParserProperty.getProperty("password");
@@ -178,16 +198,5 @@ public class ParserSqlRu {
             e.printStackTrace();
         }
         return conn;
-    }
-
-    /**
-     * Метод закрывает коннект к базе данных
-     */
-    public static void closeConnection(Connection conn) {
-        try {
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 }

@@ -20,7 +20,7 @@ public class ParserVacancy {
      * @param url адрес страницы вакансии
      * @return true, если содержит в тексте нужные нам фразы, иначе - false
      */
-    public static boolean checkVacancyText(String url) {
+    public boolean checkVacancyText(String url) {
         List<String> wordForSearch = Arrays.asList("Java", "Java,", "Java.", "Java ", "Java!", "Java(", "Java/", "Java$", "Java%", "Java@", "Java+", "Java:");
         boolean result = false;
         String textVacancy = getVacancyText(url);
@@ -56,7 +56,7 @@ public class ParserVacancy {
      * @param url адрес страницы
      * @return текст вакансии
      */
-    public static String getVacancyText(String url) {
+    public String getVacancyText(String url) {
         String result = null;
         Document doc;
         try {
@@ -65,6 +65,7 @@ public class ParserVacancy {
             Elements tdClass = msgTable.first().getElementsByClass("msgBody");
             Element trRecord = tdClass.last();
             result = trRecord.text();
+            result = result.replaceAll("'", " "); // убираем апострофы, мешают при добавлении в таблицы
             //System.out.printf("trRecord.text=<%s>%n", trRecord.text());
         } catch (IOException e) {
             e.printStackTrace();
