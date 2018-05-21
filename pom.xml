@@ -17,6 +17,7 @@
         <module>job4j</module>
         <module>job4jjdbc</module>
         <module>job4jparser</module>
+        <module>job4jservlet</module>
     </modules>
 	
 	<dependencies>

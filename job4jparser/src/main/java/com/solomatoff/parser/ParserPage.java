@@ -140,7 +140,7 @@ public class ParserPage {
      * @param stringDate строка с датой
      * @return дату
      */
-    public Date parserDate(String stringDate) throws NullPointerException {
+    public Date parserDate(String stringDate) {
         Date dateResult;
         // Выделяем подстроку со временем
         String stringDateOrTime;
