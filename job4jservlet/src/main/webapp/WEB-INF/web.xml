@@ -1,5 +1,16 @@
 <web-app>
     <servlet>
+        <servlet-name>userservlet</servlet-name>
+        <servlet-class>com.solomatoff.crudservlet.UserServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>userservlet</servlet-name>
+        <url-pattern>/userservlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>hello</servlet-name>
         <servlet-class>com.solomatoff.servlets.HelloWorldServlet</servlet-class>
     </servlet>
@@ -7,5 +18,8 @@
     <servlet-mapping>
         <servlet-name>hello</servlet-name>
         <url-pattern>/hello</url-pattern>
+
     </servlet-mapping>
+
+
 </web-app>
