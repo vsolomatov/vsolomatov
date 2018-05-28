@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-public class UserServlet extends HttpServlet {
+public class UsersServlet extends HttpServlet {
     // Ядро слоя Presentation
     private CorePresentation presentation;
     // Логгер
@@ -31,31 +31,11 @@ public class UserServlet extends HttpServlet {
      * Init's
      */
     @Override
-    public void init() {
+     public void init() {
         // Ядро слоя Presentation
         presentation = CorePresentation.getInstance();
         // Логгер
         logger = CorePresentation.getLOG();
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=utf-8");
-        String pAction = request.getParameter("action");
-        String pId = request.getParameter("id");
-        String pName = request.getParameter("name");
-        String pLogin = request.getParameter("login");
-        String pEmail = request.getParameter("email");
-        System.out.printf("action = <%s> id = %4s  name = %s  login = %s  email= %s%n", pAction, pId, pName, pLogin, pEmail);
-        User user = new User(Integer.parseInt(pId), pName, pLogin, pEmail, new Timestamp(System.currentTimeMillis()));
-        if (pAction.equals("Create User") || pAction.equals("Update User") || pAction.equals("Delete User") || pAction.equals("Find By Id")) {
-            presentation.executeAction(pAction, user);
-        }
-        try {
-            doGet(request, response);
-        } catch (IOException e) {
-            logger.error(e.getMessage(), e);
-        }
     }
 
     @Override
@@ -64,8 +44,8 @@ public class UserServlet extends HttpServlet {
         PrintWriter pw = response.getWriter();
         List<User> users = presentation.executeAction("Find All", new User());
         if (users != null) {
-            // Записываем в response.getWriter() As Xml
-            presentation.saveUsersAsXmlToPrintWriter(users, pw);
+            // Записываем в response.getWriter() As Html
+            presentation.saveUsersAsHtmlToPrintWriter(users, pw, request.getContextPath());
             // Записываем в LOGGER
             presentation.saveUsersAsXmlToLog(users, logger);
         }

@@ -22,7 +22,7 @@ public class MemoryStoreTest {
     public void add() {
         UserServlet userServlet = new UserServlet();
         userServlet.init();
-        MemoryStore memoryStore = new MemoryStore();
+        MemoryStore memoryStore = MemoryStore.getInstance();
         User user = new User(3, "name3", "login3", "email3", new Timestamp(System.currentTimeMillis()));
         memoryStore.add(user);
         List<User> list = memoryStore.findById(new User(3, null, null, null, null));
@@ -33,7 +33,7 @@ public class MemoryStoreTest {
     public void update() {
         UserServlet userServlet = new UserServlet();
         userServlet.init();
-        MemoryStore memoryStore = new MemoryStore();
+        MemoryStore memoryStore = MemoryStore.getInstance();
         memoryStore.add(new User(1, "name1", "login1", "email1", new Timestamp(System.currentTimeMillis())));
         User user = new User(1, "newname1", "newlogin1", "newemail1", new Timestamp(System.currentTimeMillis()));
         memoryStore.update(user);
@@ -45,7 +45,7 @@ public class MemoryStoreTest {
     public void delete() {
         UserServlet userServlet = new UserServlet();
         userServlet.init();
-        MemoryStore memoryStore = new MemoryStore();
+        MemoryStore memoryStore = MemoryStore.getInstance();
         memoryStore.add(new User(1, "name1", "login1", "email1", new Timestamp(System.currentTimeMillis())));
         memoryStore.add(new User(2, "name2", "login2", "email2", new Timestamp(System.currentTimeMillis())));
         memoryStore.add(new User(3, "name3", "login3", "email3", new Timestamp(System.currentTimeMillis())));
@@ -58,11 +58,11 @@ public class MemoryStoreTest {
     public void findById() {
         UserServlet userServlet = new UserServlet();
         userServlet.init();
-        MemoryStore memoryStore = new MemoryStore();
+        MemoryStore memoryStore = MemoryStore.getInstance();
         memoryStore.add(new User(2, "name2", "login2", "email2", new Timestamp(System.currentTimeMillis())));
         List<User> list = memoryStore.findById(new User(2, null, null, null, null));
         assertThat(list.get(0).getName(), is("name2"));
-        list = memoryStore.findById(new User(10, null, null, null, null));
+        list = memoryStore.findById(new User(999, null, null, null, null));
         assertThat(list.get(0), is(nullValue()));
     }
 
@@ -70,15 +70,12 @@ public class MemoryStoreTest {
     public void findAll() {
         UserServlet userServlet = new UserServlet();
         userServlet.init();
-        MemoryStore memoryStore = new MemoryStore();
+        MemoryStore memoryStore = MemoryStore.getInstance();
         memoryStore.add(new User(1, "name1", "login1", "email1", new Timestamp(System.currentTimeMillis())));
         memoryStore.add(new User(2, "name2", "login2", "email2", new Timestamp(System.currentTimeMillis())));
         memoryStore.add(new User(3, "name3", "login3", "email3", new Timestamp(System.currentTimeMillis())));
         memoryStore.add(new User(4, "name4", "login4", "email4", new Timestamp(System.currentTimeMillis())));
         List<User> list = memoryStore.findAll(new User(0, null, null, null, null));
-        int i = 0;
-        for (User user : list) {
-            assertThat(user.getId(), is(++i));
-        }
+        list.forEach(user -> System.out.printf("     <id=%s> <name=%s> <login=%s> <email=%s> <createDate=%s>%n", user.getId(), user.getName(), user.getLogin(), user.getEmail(), user.getCreateDate()));
     }
 }

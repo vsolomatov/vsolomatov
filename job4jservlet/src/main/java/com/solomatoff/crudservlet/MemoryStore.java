@@ -1,5 +1,6 @@
 package com.solomatoff.crudservlet;
 
+import org.slf4j.Logger;
 import org.w3c.dom.Document;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,11 +8,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MemoryStore implements Store {
+    // ValidateService - cлой Logic
+    private static final Logger LOG = ValidateService.getLOGGER();
+
     private static MemoryStore ourInstance = null;
-    /**
-     * Contains users
-     */
-    private static final Map<Integer, User> USER_MAP = new ConcurrentHashMap<>();
 
     public static MemoryStore getInstance() {
         if (ourInstance == null) {
@@ -23,13 +23,17 @@ public class MemoryStore implements Store {
         }
         return ourInstance;
     }
+    /**
+     * Contains users
+     */
+    private static final Map<Integer, User> USER_MAP = new ConcurrentHashMap<>();
 
     @Override
     public List<User> add(User user) {
         List<User> result = new ArrayList<>();
-        result.add(USER_MAP.put(user.getId(), user));
+        result.add(USER_MAP.put(user.getId(), user)); // add возвращает предыдущее значение  по ключу, значит null
         // Записываем в LOG
-        UserServlet.LOG.info(String.format("Add User: <%4d> <%s> <%s> <%s>", user.getId(), user.getName(), user.getLogin(), user.getEmail()));
+        LOG.info(String.format("    Add User: <%4d> <%s> <%s> <%s>", user.getId(), user.getName(), user.getLogin(), user.getEmail()));
         return result;
     }
 
@@ -38,7 +42,7 @@ public class MemoryStore implements Store {
         List<User> result = new ArrayList<>();
         result.add(USER_MAP.put(user.getId(), user));
         // Записываем в LOG
-        UserServlet.LOG.info(String.format("Update User: <%4d> <%s> <%s> <%s>", user.getId(), user.getName(), user.getLogin(), user.getEmail()));
+        LOG.info(String.format("    Update User: <%4d> <%s> <%s> <%s>", user.getId(), user.getName(), user.getLogin(), user.getEmail()));
         return result;
     }
 
@@ -47,7 +51,7 @@ public class MemoryStore implements Store {
         List<User> result = new ArrayList<>();
         result.add(USER_MAP.remove(user.getId()));
         // Записываем в LOG
-        UserServlet.LOG.info(String.format("Delete User: <%4d> <%s> <%s> <%s>", user.getId(), user.getName(), user.getLogin(), user.getEmail()));
+        LOG.info(String.format("    Delete User: <%4d> <%s> <%s> <%s>", user.getId(), user.getName(), user.getLogin(), user.getEmail()));
         return result;
     }
 
@@ -56,17 +60,15 @@ public class MemoryStore implements Store {
         List<User> result = new ArrayList<>();
         result.add(USER_MAP.get(user.getId()));
         // Записываем в LOG
-        UserServlet.LOG.info(String.format("Find User: <%4d> <%s> <%s> <%s>", user.getId(), user.getName(), user.getLogin(), user.getEmail()));
+        LOG.info(String.format("    Find User: <%4d> <%s> <%s> <%s>", user.getId(), user.getName(), user.getLogin(), user.getEmail()));
         return result;
     }
 
     @Override
     public List<User> findAll(User user) {
         List<User> result = new ArrayList<>(USER_MAP.values());
-        // Записываем всех пользователей в LOG в виде xml-структуры
-        UtilForOutput utilForOutput = new UtilForOutput();
-        Document document = utilForOutput.getUsersAsXmlDocument(result);
-        utilForOutput.documentSaveToLog(document);
+        // Записываем в LOG
+        LOG.info("  Find All Users.");
         return result;
     }
 }

@@ -1,25 +1,58 @@
 <web-app>
     <servlet>
-        <servlet-name>userservlet</servlet-name>
-        <servlet-class>com.solomatoff.crudservlet.UserServlet</servlet-class>
+        <servlet-name>RootServlet</servlet-name>
+        <servlet-class>com.solomatoff.crudservlet.UsersServlet</servlet-class>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RootServlet</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>UsersServlet</servlet-name>
+        <servlet-class>com.solomatoff.crudservlet.UsersServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
-
     <servlet-mapping>
-        <servlet-name>userservlet</servlet-name>
+        <servlet-name>UsersServlet</servlet-name>
+        <url-pattern>/list</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>UserServlet</servlet-name>
+        <servlet-class>com.solomatoff.crudservlet.UserServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserServlet</servlet-name>
         <url-pattern>/userservlet</url-pattern>
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>hello</servlet-name>
-        <servlet-class>com.solomatoff.servlets.HelloWorldServlet</servlet-class>
+        <servlet-name>UserCreateServlet</servlet-name>
+        <servlet-class>com.solomatoff.crudservlet.UserCreateServlet</servlet-class>
     </servlet>
-
     <servlet-mapping>
-        <servlet-name>hello</servlet-name>
-        <url-pattern>/hello</url-pattern>
-
+        <servlet-name>UserCreateServlet</servlet-name>
+        <url-pattern>/create</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>UserUpdateServlet</servlet-name>
+        <servlet-class>com.solomatoff.crudservlet.UserUpdateServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserUpdateServlet</servlet-name>
+        <url-pattern>/edit</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>UserDeleteServlet</servlet-name>
+        <servlet-class>com.solomatoff.crudservlet.UserUpdateServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserDeleteServlet</servlet-name>
+        <url-pattern>/delete</url-pattern>
+    </servlet-mapping>
 
 </web-app>
