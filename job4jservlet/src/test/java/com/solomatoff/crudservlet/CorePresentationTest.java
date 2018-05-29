@@ -93,7 +93,7 @@ public class CorePresentationTest {
         PrintWriter pw = new PrintWriter(stringWriter);
         Document document = corePresentation.getUsersAsXmlDocument(list);
         corePresentation.documentSaveToPrintWriter(document, pw);
-        assertThat(stringWriter.toString().substring(0, 56), is("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\r\n"));
+        assertThat(stringWriter.toString().substring(0, 54), is("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"));
     }
 
     @Test
