@@ -58,8 +58,9 @@ public class ValidateService {
     }
 
     public List<User> findById(User user) {
-        if (persistent.findById(user).get(0) != null) {
-            return persistent.findById(user);
+        List<User> users = persistent.findById(user);
+        if (users.get(0) != null) {
+            return users;
         } else {
             LOGGER.error(String.format("(FINDBYID) user with id = %4d not exists", user.getId()));
             return null;

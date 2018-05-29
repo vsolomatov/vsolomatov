@@ -14,6 +14,8 @@ import java.util.List;
 public class UserUpdateServlet extends HttpServlet {
     // Ядро слоя Presentation
     private CorePresentation presentation;
+    // Логгер
+    private static Logger logger;
 
     /**
      * Init's
@@ -22,8 +24,31 @@ public class UserUpdateServlet extends HttpServlet {
     public void init() {
         // Ядро слоя Presentation
         presentation = CorePresentation.getInstance();
+        // Логгер
+        logger = CorePresentation.getLOG();
     }
 
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType("text/html;charset=utf-8");
+        String pAction = request.getParameter("action");
+        String pId = request.getParameter("id");
+        String pName = request.getParameter("name");
+        String pLogin = request.getParameter("login");
+        String pEmail = request.getParameter("email");
+        System.out.printf("action = <%s> id = %4s  name = %s  login = %s  email= %s%n", pAction, pId, pName, pLogin, pEmail);
+        User user = new User(Integer.parseInt(pId), pName, pLogin, pEmail, new Timestamp(System.currentTimeMillis()));
+        if (pAction.equals("Create User") || pAction.equals("Update User") || pAction.equals("Delete User")) {
+            presentation.executeAction(pAction, user);
+        }
+        try {
+            response.sendRedirect(String.format("%s/list.jsp", request.getContextPath()));
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+    /* Теперь за это отвечает edit.jsp
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/html;charset=utf-8");
@@ -38,5 +63,7 @@ public class UserUpdateServlet extends HttpServlet {
         PrintWriter pw = response.getWriter();
         presentation.saveFormForActionToPrintWriter(user, pw, pAction, request.getContextPath());
         pw.flush();
+        //response.sendRedirect(String.format("%s/index.jsp", request.getContextPath()));
     }
+    */
 }

@@ -20,8 +20,8 @@ public class MemoryStoreTest {
 
     @Test
     public void add() {
-        UserServlet userServlet = new UserServlet();
-        userServlet.init();
+        UserUpdateServlet userUpdateServlet = new UserUpdateServlet();
+        userUpdateServlet.init();
         MemoryStore memoryStore = MemoryStore.getInstance();
         User user = new User(3, "name3", "login3", "email3", new Timestamp(System.currentTimeMillis()));
         memoryStore.add(user);
@@ -31,8 +31,8 @@ public class MemoryStoreTest {
 
     @Test
     public void update() {
-        UserServlet userServlet = new UserServlet();
-        userServlet.init();
+        UserUpdateServlet userUpdateServlet = new UserUpdateServlet();
+        userUpdateServlet.init();
         MemoryStore memoryStore = MemoryStore.getInstance();
         memoryStore.add(new User(1, "name1", "login1", "email1", new Timestamp(System.currentTimeMillis())));
         User user = new User(1, "newname1", "newlogin1", "newemail1", new Timestamp(System.currentTimeMillis()));
@@ -43,8 +43,8 @@ public class MemoryStoreTest {
 
     @Test
     public void delete() {
-        UserServlet userServlet = new UserServlet();
-        userServlet.init();
+        UserUpdateServlet userUpdateServlet = new UserUpdateServlet();
+        userUpdateServlet.init();
         MemoryStore memoryStore = MemoryStore.getInstance();
         memoryStore.add(new User(1, "name1", "login1", "email1", new Timestamp(System.currentTimeMillis())));
         memoryStore.add(new User(2, "name2", "login2", "email2", new Timestamp(System.currentTimeMillis())));
@@ -56,8 +56,8 @@ public class MemoryStoreTest {
 
     @Test
     public void findById() {
-        UserServlet userServlet = new UserServlet();
-        userServlet.init();
+        UserUpdateServlet userUpdateServlet = new UserUpdateServlet();
+        userUpdateServlet.init();
         MemoryStore memoryStore = MemoryStore.getInstance();
         memoryStore.add(new User(2, "name2", "login2", "email2", new Timestamp(System.currentTimeMillis())));
         List<User> list = memoryStore.findById(new User(2, null, null, null, null));
@@ -68,8 +68,8 @@ public class MemoryStoreTest {
 
     @Test
     public void findAll() {
-        UserServlet userServlet = new UserServlet();
-        userServlet.init();
+        UserUpdateServlet userUpdateServlet = new UserUpdateServlet();
+        userUpdateServlet.init();
         MemoryStore memoryStore = MemoryStore.getInstance();
         memoryStore.add(new User(1, "name1", "login1", "email1", new Timestamp(System.currentTimeMillis())));
         memoryStore.add(new User(2, "name2", "login2", "email2", new Timestamp(System.currentTimeMillis())));
