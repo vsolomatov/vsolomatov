@@ -37,7 +37,7 @@ public class DbStoreTest {
         dbStore.add(new User(21, "name1", "login1", "email1", new Timestamp(System.currentTimeMillis())));
         User user = new User(21, "newname1", "newlogin1", "newemail1", new Timestamp(System.currentTimeMillis()));
         dbStore.update(user);
-        List<User> list = dbStore.findById(new User(1, null, null, null, null));
+        List<User> list = dbStore.findById(new User(21, null, null, null, null));
         assertThat(list.get(0).getName(), is("newname1"));
     }
 
@@ -71,10 +71,10 @@ public class DbStoreTest {
         UserUpdateServlet userUpdateServlet = new UserUpdateServlet();
         userUpdateServlet.init();
         DbStore dbStore = DbStore.getInstance();
-        dbStore.add(new User(21, "name1", "login1", "email1", new Timestamp(System.currentTimeMillis())));
-        dbStore.add(new User(22, "name2", "login2", "email2", new Timestamp(System.currentTimeMillis())));
-        dbStore.add(new User(23, "name3", "login3", "email3", new Timestamp(System.currentTimeMillis())));
-        dbStore.add(new User(24, "name4", "login4", "email4", new Timestamp(System.currentTimeMillis())));
+        dbStore.add(new User(31, "name1", "login1", "email1", new Timestamp(System.currentTimeMillis())));
+        dbStore.add(new User(32, "name2", "login2", "email2", new Timestamp(System.currentTimeMillis())));
+        dbStore.add(new User(33, "name3", "login3", "email3", new Timestamp(System.currentTimeMillis())));
+        dbStore.add(new User(34, "name4", "login4", "email4", new Timestamp(System.currentTimeMillis())));
         List<User> list = dbStore.findAll(new User(0, null, null, null, null));
         list.forEach(user -> System.out.printf("     <id=%s> <name=%s> <login=%s> <email=%s> <createDate=%s>%n", user.getId(), user.getName(), user.getLogin(), user.getEmail(), user.getCreateDate()));
     }
