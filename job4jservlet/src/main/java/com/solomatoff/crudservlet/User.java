@@ -3,7 +3,7 @@ package com.solomatoff.crudservlet;
 import java.sql.Timestamp;
 
 public class User {
-    private int id;
+    private Integer id;
     private String name;
     private String login;
     private String email;
@@ -12,7 +12,7 @@ public class User {
     public User() {
     }
 
-    public User(int id, String name, String login, String email, Timestamp createDate) {
+    public User(Integer id, String name, String login, String email, Timestamp createDate) {
         this.id = id;
         this.name = name;
         this.login = login;
@@ -20,7 +20,7 @@ public class User {
         this.createDate = createDate;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 

@@ -33,22 +33,21 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
+        <!-- Annotations describe the intended thread-safety promises of a class:
+        @Immutable, @ThreadSafe, and @NotThreadSafe.
+        @Immutable means that the class is immutable, and implies @ThreadSafe.
+        @NotThreadSafe is optional; if a class is not annotated as thread-safe, it should be presumed not to be thread-safe, but if you want to make it extra clear, use @NotThreadSafe.-->
         <dependency>
             <groupId>net.jcip</groupId>
             <artifactId>jcip-annotations</artifactId>
             <version>1.0</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/javax.persistence/javax.persistence-api -->
         <dependency>
             <groupId>javax.persistence</groupId>
             <artifactId>persistence-api</artifactId>
             <version>1.0.2</version>
             <scope>provided</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/postgresql/postgresql -->
-        <dependency>
-            <groupId>postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>9.1-901-1.jdbc4</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
         <dependency>
@@ -61,6 +60,7 @@
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.7.5</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.jetbrains/annotations -->
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>

@@ -15,7 +15,7 @@ public class MemoryStore implements Store {
 
     public static MemoryStore getInstance() {
         if (ourInstance == null) {
-            synchronized (ValidateService.class) {
+            synchronized (MemoryStore.class) {
                 if (ourInstance == null) {
                     ourInstance = new MemoryStore();
                 }

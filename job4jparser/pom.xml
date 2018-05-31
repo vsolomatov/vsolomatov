@@ -3,6 +3,14 @@
     <artifactId>job4jparser</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/postgresql/postgresql -->
+        <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>9.1-901.jdbc4</version>
+        </dependency>
+    </dependencies>
     <build>
         <plugins>
             <plugin>

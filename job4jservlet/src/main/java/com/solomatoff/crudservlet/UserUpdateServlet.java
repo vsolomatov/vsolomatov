@@ -37,7 +37,12 @@ public class UserUpdateServlet extends HttpServlet {
         String pLogin = request.getParameter("login");
         String pEmail = request.getParameter("email");
         System.out.printf("action = <%s> id = %4s  name = %s  login = %s  email= %s%n", pAction, pId, pName, pLogin, pEmail);
-        User user = new User(Integer.parseInt(pId), pName, pLogin, pEmail, new Timestamp(System.currentTimeMillis()));
+        User user;
+        if (pId == null || pId.equals("")) {
+            user = new User(null, pName, pLogin, pEmail, new Timestamp(System.currentTimeMillis()));
+        } else {
+            user = new User(Integer.parseInt(pId), pName, pLogin, pEmail, new Timestamp(System.currentTimeMillis()));
+        }
         if (pAction.equals("Create User") || pAction.equals("Update User") || pAction.equals("Delete User")) {
             presentation.executeAction(pAction, user);
         }

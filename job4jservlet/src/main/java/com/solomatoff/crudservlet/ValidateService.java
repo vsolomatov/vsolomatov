@@ -12,7 +12,7 @@ public class ValidateService {
     // CorePresentation - слой Presentation
     private static final Logger LOGGER = CorePresentation.getLOG();
     // Слой Persistent
-    private final Store persistent  = MemoryStore.getInstance();
+    private final Store persistent  = DbStore.getInstance();
 
     private static ValidateService ourInstance = null;
     public static ValidateService getInstance() {
