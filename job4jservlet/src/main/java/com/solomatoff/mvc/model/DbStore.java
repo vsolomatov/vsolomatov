@@ -1,19 +1,21 @@
-package com.solomatoff.crudservlet;
+package com.solomatoff.mvc.model;
 
+import com.solomatoff.mvc.controller.Controller;
+import com.solomatoff.mvc.controller.LoggerUtil;
+import com.solomatoff.mvc.entities.User;
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.slf4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DbStore implements Store {
-    // ValidateService - cлой Logic
-    private static final Logger LOG = ValidateService.getLOGGER();
-
-    private static DbStore ourInstance = null;
+public class DbStore implements ModelStore {
     private static BasicDataSource dataSource = null;
     private static final String SCHEMA_NAME = "solomatov";
+
+    public DbStore() {
+        initDataSource();
+    }
 
     private static void initDataSource() {
         if (dataSource == null) {
@@ -32,21 +34,9 @@ public class DbStore implements Store {
                 st.execute("CREATE TABLE IF NOT EXISTS solomatov.users(id serial PRIMARY KEY, name character varying, login character varying, email character varying, createDate timestamp without time zone)");
                 st.execute(String.format("GRANT ALL ON TABLE %s.users TO public", SCHEMA_NAME));
             } catch (SQLException e) {
-                LOG.error("(getDataSourse) Сan not create table 'users'", e);
+                Controller.getInstance().getLog().error("(getDataSourse) Сan not create table 'users'", e);
             }
         }
-    }
-
-    public static DbStore getInstance() {
-        if (ourInstance == null) {
-            synchronized (DbStore.class) {
-                if (ourInstance == null) {
-                    ourInstance = new DbStore();
-                    initDataSource();
-                }
-            }
-        }
-        return ourInstance;
     }
 
     /**
@@ -84,15 +74,15 @@ public class DbStore implements Store {
                 }
                 result.add(user);
                 // Записываем в LOG
-                LOG.info(String.format("    Add User: <%4d> <%s> <%s> <%s>", newUserId, user.getName(), user.getLogin(), user.getEmail()));
+                Controller.getInstance().getLog().info(String.format("    Add User: <%4d> <%s> <%s> <%s>", newUserId, user.getName(), user.getLogin(), user.getEmail()));
             } catch (SQLException e) {
                 result.add(null);
-                LOG.error(String.format("(ADD) An error occurred while adding user with id = %4d", user.getId()), e);
+                Controller.getInstance().getLog().error(String.format("(ADD) An error occurred while adding user with id = %4d", user.getId()), e);
             }
             st.close();
         } catch (SQLException e) {
             result.add(null);
-            LOG.error(String.format("(ADD) An error occurred while adding user with id = %4d", user.getId()), e);
+            Controller.getInstance().getLog().error(String.format("(ADD) An error occurred while adding user with id = %4d", user.getId()), e);
         }
         return result;
     }
@@ -111,10 +101,10 @@ public class DbStore implements Store {
             if (recInsert == 1) {
                 result.add(user); // MemoryStore возвращает предыдущее значение, здесь новое
                 // Записываем в LOG
-                LOG.info(String.format("    Update User: <%4d> <%s> <%s> <%s>", user.getId(), user.getName(), user.getLogin(), user.getEmail()));
+                Controller.getInstance().getLog().info(String.format("    Update User: <%4d> <%s> <%s> <%s>", user.getId(), user.getName(), user.getLogin(), user.getEmail()));
             }
         } catch (SQLException e) {
-            LOG.error(String.format("(UPDATE) An error occurred while updating user with id = %4d", user.getId()), e);
+            Controller.getInstance().getLog().error(String.format("(UPDATE) An error occurred while updating user with id = %4d", user.getId()), e);
         }
         return result;
     }
@@ -129,12 +119,12 @@ public class DbStore implements Store {
             if (recInsert == 1) {
                 result.add(user);
                 // Записываем в LOG
-                LOG.info(String.format("    Delete User: <%4d> <%s> <%s> <%s>", user.getId(), user.getName(), user.getLogin(), user.getEmail()));
+                Controller.getInstance().getLog().info(String.format("    Delete User: <%4d> <%s> <%s> <%s>", user.getId(), user.getName(), user.getLogin(), user.getEmail()));
             } else {
                 result.add(null);
             }
         } catch (SQLException e) {
-            LOG.error(String.format("(UPDATE) An error occurred while updating user with id = %4d", user.getId()), e);
+            Controller.getInstance().getLog().error(String.format("(UPDATE) An error occurred while updating user with id = %4d", user.getId()), e);
         }
         return result;
     }
@@ -154,12 +144,12 @@ public class DbStore implements Store {
                 user = new User(id, name, login, email, createDate);
                 result.add(user);
                 // Записываем в LOG
-                LOG.info(String.format("    Find User: <%4d> <%s> <%s> <%s>", user.getId(), user.getName(), user.getLogin(), user.getEmail()));
+                Controller.getInstance().getLog().info(String.format("    Find User: <%4d> <%s> <%s> <%s>", user.getId(), user.getName(), user.getLogin(), user.getEmail()));
             } else {
                 result.add(null);
             }
         } catch (SQLException e) {
-            LOG.error(String.format("(findById) An error occurred while adding user with id = %4d", user.getId()), e);
+            Controller.getInstance().getLog().error(String.format("(findById) An error occurred while adding user with id = %4d", user.getId()), e);
         }
         return result;
     }
@@ -180,10 +170,11 @@ public class DbStore implements Store {
                 result.add(user);
              }
         } catch (SQLException e) {
-            LOG.error("(findAll) An error occurred while find all users", e);
+            Controller.getInstance().getLog().error("(findAll) An error occurred while find all users", e);
         }
         // Записываем в LOG
-        LOG.info("  Find All Users.");
+        Controller.getInstance().getLog().info("  Find All Users:");
+        new LoggerUtil().saveUsersToLog(result, Controller.getInstance().getLog());
         return result;
     }
 }

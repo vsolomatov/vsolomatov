@@ -1,7 +1,4 @@
-package com.solomatoff.servlets;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package com.solomatoff;
 
 import java.io.IOException;
 import java.io.PrintWriter;

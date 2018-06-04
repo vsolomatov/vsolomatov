@@ -1,4 +1,4 @@
-package com.solomatoff.crudservlet;
+package com.solomatoff.mvc.entities;
 
 import java.sql.Timestamp;
 
@@ -38,5 +38,17 @@ public class User {
 
     public Timestamp getCreateDate() {
         return createDate;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

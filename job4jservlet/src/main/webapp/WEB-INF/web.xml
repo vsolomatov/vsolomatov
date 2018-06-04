@@ -1,10 +1,30 @@
 <web-app>
     <servlet>
-        <servlet-name>UserUpdateServlet</servlet-name>
-        <servlet-class>com.solomatoff.crudservlet.UserUpdateServlet</servlet-class>
+        <servlet-name>MainServlet</servlet-name>
+        <servlet-class>com.solomatoff.mvc.controller.MainServlet</servlet-class>
+        <load-on-startup>0</load-on-startup>
     </servlet>
     <servlet-mapping>
-        <servlet-name>UserUpdateServlet</servlet-name>
-        <url-pattern>/edit</url-pattern>
+        <servlet-name>MainServlet</servlet-name>
+        <url-pattern>/list</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CreateUser</servlet-name>
+        <servlet-class>com.solomatoff.mvc.controller.CrudServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CreateUser</servlet-name>
+        <url-pattern>/create</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>RudUser</servlet-name>
+        <servlet-class>com.solomatoff.mvc.controller.CrudServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RudUser</servlet-name>
+        <url-pattern>/rud</url-pattern>
+    </servlet-mapping>
+
 </web-app>

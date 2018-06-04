@@ -1,0 +1,59 @@
+<web-app>
+    <!-- С помощью mime-mapping можем задавать значения для Mime-типов файлов. -->
+    <!-- mime-type - это просто строки. Мы можем написать что угодно, но есть общепринятые значения. -->
+    <!-- Например: -->
+    <!-- text/cmd: команды -->
+    <!-- text/css: Cascading Style Sheets -->
+    <!-- text/csv: CSV  -->
+    <!-- text/html: HTML   -->
+    <!-- text/javascript JavaScript -->
+    <!-- text/plain: текстовые данные -->
+    <!-- text/php: Скрипт языка PHP -->
+    <!-- text/xml: Extensible Markup Language -->
+    <!-- text/cache-manifest: файл манифеста -->
+    <mime-mapping>
+        <extension>html</extension>
+        <mime-type>Это html-файл</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>jsp</extension>
+        <mime-type>Это jsp-файл</mime-type>
+    </mime-mapping>
+
+    <servlet>
+        <display-name>Controller</display-name>
+        <servlet-name>controller</servlet-name>
+        <servlet-class>com.solomatoff.chapt17.ContServlet</servlet-class>
+        <init-param>
+            <param-name>myParam1</param-name>
+            <param-value>valueMyParam1</param-value>
+        </init-param>
+        <init-param>
+            <param-name>myParam2</param-name>
+            <param-value>valueMyParam2</param-value>
+        </init-param>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>controller</servlet-name>
+        <url-pattern>/serv</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>botServlet</servlet-name>
+        <servlet-class>com.solomatoff.bot.BotServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>botServlet</servlet-name>
+        <url-pattern>/bot</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ReqServlet</servlet-name>
+        <servlet-class>com.solomatoff.chapt18.RequestServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ReqServlet</servlet-name>
+        <url-pattern>/RequestServlet</url-pattern>
+    </servlet-mapping>
+</web-app>
