@@ -1,5 +1,9 @@
 package com.solomatoff.mvc.model;
 
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
 import com.solomatoff.mvc.controller.Controller;
 import com.solomatoff.mvc.entities.User;
 import com.solomatoff.mvc.model.MemoryStore;
@@ -16,7 +20,6 @@ public class MemoryStoreTest {
 
     @Test
     public void add() {
-        Controller controller = Controller.getInstance();
         MemoryStore memoryStore = new MemoryStore();
         User user = new User(3, "name3", "login3", "email3", new Timestamp(System.currentTimeMillis()));
         memoryStore.add(user);
@@ -26,7 +29,6 @@ public class MemoryStoreTest {
 
     @Test
     public void update() {
-        Controller controller = Controller.getInstance();
         MemoryStore memoryStore = new MemoryStore();
         memoryStore.add(new User(1, "name1", "login1", "email1", new Timestamp(System.currentTimeMillis())));
         User user = new User(1, "newname1", "newlogin1", "newemail1", new Timestamp(System.currentTimeMillis()));
@@ -37,7 +39,6 @@ public class MemoryStoreTest {
 
     @Test
     public void delete() {
-        Controller controller = Controller.getInstance();
         MemoryStore memoryStore = new MemoryStore();
         memoryStore.add(new User(1, "name1", "login1", "email1", new Timestamp(System.currentTimeMillis())));
         memoryStore.add(new User(2, "name2", "login2", "email2", new Timestamp(System.currentTimeMillis())));
@@ -49,7 +50,6 @@ public class MemoryStoreTest {
 
     @Test
     public void findById() {
-        Controller controller = Controller.getInstance();
         MemoryStore memoryStore = new MemoryStore();
         memoryStore.add(new User(2, "name2", "login2", "email2", new Timestamp(System.currentTimeMillis())));
         List<User> list = memoryStore.findById(new User(2, null, null, null, null));
@@ -60,7 +60,6 @@ public class MemoryStoreTest {
 
     @Test
     public void findAll() {
-        Controller controller = Controller.getInstance();
         MemoryStore memoryStore = new MemoryStore();
         memoryStore.add(new User(1, "name1", "login1", "email1", new Timestamp(System.currentTimeMillis())));
         memoryStore.add(new User(2, "name2", "login2", "email2", new Timestamp(System.currentTimeMillis())));

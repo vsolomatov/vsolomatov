@@ -4,6 +4,7 @@ import com.solomatoff.mvc.controller.Controller;
 import com.solomatoff.mvc.entities.User;
 import com.solomatoff.mvc.model.DbStore;
 import org.junit.Test;
+import org.junit.Before;
 
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.hamcrest.core.Is.is;
@@ -16,7 +17,6 @@ public class DbStoreTest {
 
     @Test
     public void add() {
-        Controller.getInstance();
         DbStore dbStore = new DbStore();
         User user = new User(13, "name3", "login3", "email3", new Timestamp(System.currentTimeMillis()));
         dbStore.add(user);
@@ -26,7 +26,6 @@ public class DbStoreTest {
 
     @Test
     public void update() {
-        Controller.getInstance();
         DbStore dbStore = new DbStore();
         dbStore.add(new User(20, "name1", "login1", "email1", new Timestamp(System.currentTimeMillis())));
         User user = new User(20, "newname1", "newlogin1", "newemail1", new Timestamp(System.currentTimeMillis()));
@@ -37,7 +36,6 @@ public class DbStoreTest {
 
     @Test
     public void delete() {
-        Controller.getInstance();
         DbStore dbStore = new DbStore();
         dbStore.add(new User(21, "name1", "login1", "email1", new Timestamp(System.currentTimeMillis())));
         dbStore.add(new User(22, "name2", "login2", "email2", new Timestamp(System.currentTimeMillis())));
@@ -49,7 +47,6 @@ public class DbStoreTest {
 
     @Test
     public void findById() {
-        Controller.getInstance();
         DbStore dbStore = new DbStore();
         dbStore.add(new User(22, "name2", "login2", "email2", new Timestamp(System.currentTimeMillis())));
         List<User> list = dbStore.findById(new User(22, null, null, null, null));
@@ -61,7 +58,6 @@ public class DbStoreTest {
 
     @Test
     public void findAll() {
-        Controller.getInstance();
         DbStore dbStore = new DbStore();
         dbStore.add(new User(31, "name1", "login1", "email1", new Timestamp(System.currentTimeMillis())));
         dbStore.add(new User(32, "name2", "login2", "email2", new Timestamp(System.currentTimeMillis())));
