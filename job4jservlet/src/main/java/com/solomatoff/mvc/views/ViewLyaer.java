@@ -10,4 +10,8 @@ public interface ViewLyaer {
     void showListUsers(HttpServletRequest request, HttpServletResponse response);
     void showCreateUser(HttpServletRequest request, HttpServletResponse response);
     void showRudUser(HttpServletRequest request, HttpServletResponse response);
+
+    void showListRoles(HttpServletRequest request, HttpServletResponse response);
+    void showCreateRole(HttpServletRequest request, HttpServletResponse response);
+    void showRudRole(HttpServletRequest request, HttpServletResponse response);
 }

@@ -1,7 +1,8 @@
 package com.solomatoff.mvc.model;
 
 import com.solomatoff.mvc.controller.Controller;
-import com.solomatoff.mvc.controller.LoggerUtil;
+import com.solomatoff.mvc.controller.LoggerApp;
+import com.solomatoff.mvc.entities.Role;
 import com.solomatoff.mvc.entities.User;
 import org.apache.commons.dbcp2.BasicDataSource;
 
@@ -28,13 +29,25 @@ public class DbStore implements ModelStore {
             ds.setMaxIdle(10);
             ds.setMaxOpenPreparedStatements(100);
             dataSource = ds;
-            // Если таблица users не существует, то создать ее
+            // Если таблицы не существуют, то создать их и заполнить
             try (Connection connection = dataSource.getConnection();
                  Statement st = connection.createStatement()) {
-                st.execute("CREATE TABLE IF NOT EXISTS solomatov.users(id serial PRIMARY KEY, name character varying, login character varying, email character varying, createDate timestamp without time zone)");
+                st.execute(String.format("CREATE TABLE IF NOT EXISTS %s.roles(id serial PRIMARY KEY, name character varying, is_admin boolean NOT NULL)", SCHEMA_NAME));
+                st.execute(String.format("GRANT ALL ON TABLE %s.roles TO public", SCHEMA_NAME));
+                st.execute(String.format("CREATE TABLE IF NOT EXISTS %s.users(id serial PRIMARY KEY, name character varying, login character varying NOT NULL, password character varying NOT NULL, email character varying, createDate timestamp without time zone, id_role integer NOT NULL REFERENCES %s.roles)", SCHEMA_NAME, SCHEMA_NAME));
                 st.execute(String.format("GRANT ALL ON TABLE %s.users TO public", SCHEMA_NAME));
+                try {
+                    st.executeUpdate(String.format("INSERT INTO %s.roles VALUES (0, 'Administrator', true)", SCHEMA_NAME));
+                } catch (SQLException e) {
+                    LoggerApp.getInstance().getLog().info("(ModelStore) Role Administrator already exists");
+                }
+                try {
+                    st.executeUpdate(String.format("INSERT INTO %s.users VALUES (0, 'Solomatov Vyacheslav', 'root', 'root', 'solomatoff.vyacheslav@yandex.ru', now(), 0)", SCHEMA_NAME));
+                } catch (SQLException e) {
+                    LoggerApp.getInstance().getLog().info("(ModelStore) User root already exists");
+                }
             } catch (SQLException e) {
-                Controller.getInstance().getLog().error("(getDataSourse) Сan not create table 'users'", e);
+                LoggerApp.getInstance().getLog().error("(ModelStore) Сan not create tables", e);
             }
         }
     }
@@ -45,136 +58,410 @@ public class DbStore implements ModelStore {
      * @return список List<User>, состоящий из добавленного user
      */
     @Override
-    public List<User> add(User user) {
+    public List<User> addUser(User user) {
         List<User> result = new ArrayList<>();
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement st;
-            if (user.getId() == null) {
-                st = connection.prepareStatement(String.format("INSERT INTO %s.users(name, login, email, createDate) VALUES (?, ?, ?, ?)", SCHEMA_NAME));
-                st.setString(1, user.getName());
-                st.setString(2, user.getLogin());
-                st.setString(3, user.getEmail());
-                st.setTimestamp(4, user.getCreateDate());
-            } else {
-                st = connection.prepareStatement(String.format("INSERT INTO %s.users(id, name, login, email, createDate) VALUES (?, ?, ?, ?, ?)", SCHEMA_NAME));
+            if (user.getId() == null) { // Если id не задан
+                String stringInsert = String.format("INSERT INTO %s.users(name, login, password, email, createDate, id_role) VALUES (?, ?, ?, ?, ?, ?)", SCHEMA_NAME);
+                st = connection.prepareStatement(stringInsert, Statement.RETURN_GENERATED_KEYS);
+                st = prepareStatForInsOrUpdUser(st, user);
+                // Определим максимальный id пользователей в таблице
+                Statement st2 = connection.createStatement();
+                st2.executeQuery(String.format("SELECT max(id) FROM %s.users", SCHEMA_NAME));
+                ResultSet resultSet = st2.getResultSet();
+                if (resultSet.next()) {
+                    int nextIdUser = resultSet.getInt(1) + 1;
+                    alterSequenceUsersIdSeq(nextIdUser);
+                }
+                st2.close();
+            } else { // Если id задан
+                st = connection.prepareStatement(String.format("INSERT INTO %s.users(id, name, login, password, email, createDate, id_role) VALUES (?, ?, ?, ?, ?, ?, ?)", SCHEMA_NAME));
                 st.setInt(1, user.getId());
                 st.setString(2, user.getName());
                 st.setString(3, user.getLogin());
-                st.setString(4, user.getEmail());
-                st.setTimestamp(5, user.getCreateDate());
+                st.setString(4, user.getPassword());
+                st.setString(5, user.getEmail());
+                st.setTimestamp(6, user.getCreateDate());
+                st.setInt(7, user.getIdRole());
+            }
+            try {
+                // Собственно добавление пользователя в таблицу
+                int recInsert = st.executeUpdate();
+                if (recInsert > 0) {
+                    ResultSet autoGenerated = st.getGeneratedKeys();
+                    Integer userId;
+                    if (autoGenerated.next()) {
+                        userId = autoGenerated.getInt(1);
+                    } else {
+                        userId = user.getId();
+                    }
+                    user.setId(userId);
+                    // Добавление нового пользователя в результат (список)
+                    result.add(user);
+                    // Записываем в LOG
+                    LoggerApp.getInstance().getLog().info(String.format("    Add: %s", user));
+                }
+            } catch (SQLException e) {
+                LoggerApp.getInstance().getLog().error(String.format("(ADD) An error occurred while adding user with id = %4d (User already exists)", user.getId()));
+            }
+            st.close();
+        } catch (SQLException e) {
+            LoggerApp.getInstance().getLog().error(String.format("(ADD) An error occurred while adding user with id = %4d", user.getId()), e);
+        }
+        return result;
+    }
+
+    @Override
+    public List<User> updateUser(User user) {
+        List<User> result = new ArrayList<>();
+        // Вначале выберем старые значения полей пользователя, чтобы вернуть их
+        try (Connection connection = dataSource.getConnection();
+             Statement st = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+             ResultSet rs = st.executeQuery(String.format("SELECT * FROM %s.users WHERE id=%d", SCHEMA_NAME, user.getId()))) {
+            result = getUsersFromResultSet(rs);
+            if (result.size() > 0) {
+                // Записываем в LOG
+                LoggerApp.getInstance().getLog().info(String.format("    Before Update: %s", result.get(0)));
+            }
+        } catch (SQLException e) {
+            LoggerApp.getInstance().getLog().error(String.format("(UPDATE User) An error occurred while updating user with id = %4d", user.getId()), e);
+        }
+        // Теперь выполним собственно Update
+        if (result.size() > 0) {
+            try (Connection connection = dataSource.getConnection()) {
+                PreparedStatement st = connection.prepareStatement(String.format("UPDATE %s.users SET name=?, login=?, password=?, email=?, createDate=?, id_role=? WHERE id=?", SCHEMA_NAME));
+                st = prepareStatForInsOrUpdUser(st, user);
+                st.setInt(7, user.getId());
+                st.executeUpdate();
+                // Записываем в LOG
+                LoggerApp.getInstance().getLog().info(String.format("    After Update: %s", user));
+                st.close();
+            } catch (SQLException e) {
+                LoggerApp.getInstance().getLog().error(String.format("(UPDATE User) An error occurred while updating user with id = %4d", user.getId()), e);
+            }
+        } else {
+            LoggerApp.getInstance().getLog().error(String.format("(UPDATE User) An error occurred while updating user with id = %4d (User not exists)", user.getId()));
+        }
+        return result;
+    }
+
+    @Override
+    public List<User> deleteUser(User user) {
+        List<User> result = new ArrayList<>();
+        // Вначале выберем старые значения полей пользователя, чтобы вернуть их
+        try (Connection connection = dataSource.getConnection();
+             Statement st = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+             ResultSet rs = st.executeQuery(String.format("SELECT * FROM %s.users WHERE id=%d", SCHEMA_NAME, user.getId()))) {
+            result = getUsersFromResultSet(rs);
+        } catch (SQLException e) {
+            LoggerApp.getInstance().getLog().error(String.format("(DELETE User) An error occurred while deleting user with id = %4d", user.getId()), e);
+        }
+        // Теперь выполним собственно Delete
+        if (result.size() > 0) {
+            try (Connection connection = dataSource.getConnection();
+                 PreparedStatement st = connection.prepareStatement(String.format("DELETE FROM %s.users WHERE id=?", SCHEMA_NAME))) {
+                st.setInt(1, user.getId());
+                st.executeUpdate();
+                // Записываем в LOG
+                LoggerApp.getInstance().getLog().info(String.format("           Delete: %s", result.get(0)));
+            } catch (SQLException e) {
+                LoggerApp.getInstance().getLog().error(String.format("(DELETE User) An error occurred while deleting user with id = %4d", user.getId()), e);
+            }
+        } else {
+            LoggerApp.getInstance().getLog().error(String.format("(DELETE User) An error occurred while deleting user with id = %4d (User not exists)", user.getId()));
+        }
+        return result;
+    }
+
+    @Override
+    public List<User> findByIdUser(User user) {
+        List<User> result = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection();
+             Statement st = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+             ResultSet rs = st.executeQuery(String.format("SELECT * FROM %s.users WHERE id=%d", SCHEMA_NAME, user.getId()))) {
+            result = getUsersFromResultSet(rs);
+        } catch (SQLException e) {
+            LoggerApp.getInstance().getLog().error(String.format("(findByIdUser) An error occurred while finding by id user with id = %4d", user.getId()), e);
+        }
+        if (result.size() > 0) {
+            // Записываем в LOG
+            LoggerApp.getInstance().getLog().info(String.format("Find By Id: %s", result.get(0)));
+        }
+        return result;
+    }
+
+    @Override
+    public List<User> findAllUsers(User user) {
+        List<User> result = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection();
+             Statement st = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+             ResultSet rs = st.executeQuery(String.format("SELECT * FROM %s.users ORDER BY id", SCHEMA_NAME))) {
+            result = getUsersFromResultSet(rs);
+        } catch (SQLException e) {
+            LoggerApp.getInstance().getLog().error("(findAllUsers) An error occurred while finding all users", e);
+        }
+        // Записываем в LOG
+        LoggerApp.getInstance().getLog().info("  Find All Users.");
+        return result;
+    }
+
+    /**
+     * Метод добавляет role в таблицу roles
+     * @param role добавляемая роль
+     * @return список List<Role>, состоящий из добавленной role
+     */
+    @Override
+    public List<Role> addRole(Role role) {
+        List<Role> result = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement st;
+            if (role.getId() == null) {
+                st = connection.prepareStatement(String.format("INSERT INTO %s.roles(name, is_admin) VALUES (?, ?)", SCHEMA_NAME), Statement.RETURN_GENERATED_KEYS);
+                // Определим максимальный id ролей в таблице
+                Statement st2 = connection.createStatement();
+                st2.executeQuery(String.format("SELECT max(id) FROM %s.roles", SCHEMA_NAME));
+                ResultSet resultSet = st2.getResultSet();
+                if (resultSet.next()) {
+                    int nextIdRole = resultSet.getInt(1) + 1;
+                    alterSequenceRolesIdSeq(nextIdRole);
+                }
+                st2.close();
+                st.setString(1, role.getName());
+                st.setBoolean(2, role.getIsAdmin());
+            } else {
+                st = connection.prepareStatement(String.format("INSERT INTO %s.roles(id, name, is_admin) VALUES (?, ?, ?)", SCHEMA_NAME));
+                st.setInt(1, role.getId());
+                st.setString(2, role.getName());
+                st.setBoolean(3, role.getIsAdmin());
             }
             try {
                 st.executeUpdate();
                 ResultSet autoGenerated = st.getGeneratedKeys();
-                Integer newUserId;
+                Integer roleId;
                 if (autoGenerated.next()) {
-                    newUserId = autoGenerated.getInt(1);
+                    roleId = autoGenerated.getInt(1);
                 } else {
-                    newUserId = user.getId();
+                    roleId = role.getId();
                 }
-                result.add(user);
+                role.setId(roleId);
+                // Добавляем роль в результирующий список
+                result.add(role);
                 // Записываем в LOG
-                Controller.getInstance().getLog().info(String.format("    Add User: <%4d> <%s> <%s> <%s>", newUserId, user.getName(), user.getLogin(), user.getEmail()));
+                LoggerApp.getInstance().getLog().info(String.format("    Add: %s", role));
             } catch (SQLException e) {
-                result.add(null);
-                Controller.getInstance().getLog().error(String.format("(ADD) An error occurred while adding user with id = %4d", user.getId()), e);
+                LoggerApp.getInstance().getLog().error(String.format("(ADD Role) An error occurred while adding role with id = %4d (Role already exists)", role.getId()));
             }
             st.close();
         } catch (SQLException e) {
-            result.add(null);
-            Controller.getInstance().getLog().error(String.format("(ADD) An error occurred while adding user with id = %4d", user.getId()), e);
+            LoggerApp.getInstance().getLog().error(String.format("(ADD) An error occurred while adding user with id = %4d", role.getId()), e);
         }
         return result;
     }
 
     @Override
-    public List<User> update(User user) {
-        List<User> result = new ArrayList<>();
+    public List<Role> updateRole(Role role) {
+        List<Role> result = new ArrayList<>();
+        // Получим предыдущее значение полей роли
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement st = connection.prepareStatement(String.format("UPDATE %s.users SET name=?, login=?, email=?, createDate=? WHERE id=?", SCHEMA_NAME))) {
-            st.setString(1, user.getName());
-            st.setString(2, user.getLogin());
-            st.setString(3, user.getEmail());
-            st.setTimestamp(4, user.getCreateDate());
-            st.setInt(5, user.getId());
-            int recInsert = st.executeUpdate();
-            if (recInsert == 1) {
-                result.add(user); // MemoryStore возвращает предыдущее значение, здесь новое
+             Statement st = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+             ResultSet rs = st.executeQuery(String.format("SELECT * FROM %s.roles WHERE id=%d", SCHEMA_NAME, role.getId()))) {
+            result = getRolesFromResultSet(rs);
+            if (result.size() > 0) {
                 // Записываем в LOG
-                Controller.getInstance().getLog().info(String.format("    Update User: <%4d> <%s> <%s> <%s>", user.getId(), user.getName(), user.getLogin(), user.getEmail()));
+                LoggerApp.getInstance().getLog().info(String.format("    Before Update: %s", result.get(0)));
             }
         } catch (SQLException e) {
-            Controller.getInstance().getLog().error(String.format("(UPDATE) An error occurred while updating user with id = %4d", user.getId()), e);
+            LoggerApp.getInstance().getLog().error(String.format("(UpdateRole) An error occurred while updating role with id = %4d", role.getId()), e);
         }
-        return result;
-    }
-
-    @Override
-    public List<User> delete(User user) {
-        List<User> result = new ArrayList<>();
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement st = connection.prepareStatement(String.format("DELETE FROM %s.users WHERE id=?", SCHEMA_NAME))) {
-            st.setInt(1, user.getId());
-            int recInsert = st.executeUpdate();
-            if (recInsert == 1) {
-                result.add(user);
-                // Записываем в LOG
-                Controller.getInstance().getLog().info(String.format("    Delete User: <%4d> <%s> <%s> <%s>", user.getId(), user.getName(), user.getLogin(), user.getEmail()));
-            } else {
-                result.add(null);
+        // Собственно изменяем
+        if (result.size() > 0) {
+            try (Connection connection = dataSource.getConnection();
+                 PreparedStatement st = connection.prepareStatement(String.format("UPDATE %s.roles SET name=?, is_admin=? WHERE id=?", SCHEMA_NAME))) {
+                st.setString(1, role.getName());
+                st.setBoolean(2, role.getIsAdmin());
+                st.setInt(3, role.getId());
+                // Изменяем роль
+                int recInsert = st.executeUpdate();
+                if (recInsert > 0) {
+                    // Записываем в LOG
+                    LoggerApp.getInstance().getLog().info(String.format("   After Update: %s", role));
+                }
+            } catch (SQLException e) {
+                LoggerApp.getInstance().getLog().error(String.format("(UPDATE Role) An error occurred while updating role with id = %4d", role.getId()), e);
             }
-        } catch (SQLException e) {
-            Controller.getInstance().getLog().error(String.format("(UPDATE) An error occurred while updating user with id = %4d", user.getId()), e);
         }
         return result;
     }
 
     @Override
-    public List<User> findById(User user) {
-        List<User> result = new ArrayList<>();
+    public List<Role> deleteRole(Role role) {
+        List<Role> result = new ArrayList<>();
+        // Получим предыдущее значение полей роли
         try (Connection connection = dataSource.getConnection();
-             Statement st = connection.createStatement();
-             ResultSet rs = st.executeQuery(String.format("SELECT * FROM %s.users WHERE id=%d", SCHEMA_NAME, user.getId()))) {
-            if (rs.next()) {
-                int id = rs.getInt(1);
-                String name = rs.getString(2);
-                String login = rs.getString(3);
-                String email = rs.getString(4);
-                Timestamp createDate = rs.getTimestamp(5);
-                user = new User(id, name, login, email, createDate);
-                result.add(user);
-                // Записываем в LOG
-                Controller.getInstance().getLog().info(String.format("    Find User: <%4d> <%s> <%s> <%s>", user.getId(), user.getName(), user.getLogin(), user.getEmail()));
-            } else {
-                result.add(null);
+             Statement st = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+             ResultSet rs = st.executeQuery(String.format("SELECT * FROM %s.roles WHERE id=%d", SCHEMA_NAME, role.getId()))) {
+            result = getRolesFromResultSet(rs);
+        } catch (SQLException e) {
+            LoggerApp.getInstance().getLog().error(String.format("(DeleteRole) An error occurred while deleting role with id = %4d", role.getId()), e);
+        }
+        // Собственно удаляем
+        if (result.size() > 0) {
+            try (Connection connection = dataSource.getConnection();
+                 PreparedStatement st = connection.prepareStatement(String.format("DELETE FROM %s.roles WHERE id=?", SCHEMA_NAME))) {
+                st.setInt(1, role.getId());
+                int recDelete = st.executeUpdate();
+                if (recDelete > 0) {
+                    result.add(role);
+                    // Записываем в LOG
+                    LoggerApp.getInstance().getLog().info(String.format("           Delete: %s", result.get(0)));
+                }
+            } catch (SQLException e) {
+                LoggerApp.getInstance().getLog().error(String.format("(DELETE Role) An error occurred while deleting role with id = %4d", role.getId()), e);
             }
-        } catch (SQLException e) {
-            Controller.getInstance().getLog().error(String.format("(findById) An error occurred while adding user with id = %4d", user.getId()), e);
         }
         return result;
     }
 
     @Override
-    public List<User> findAll(User user) {
-        List<User> result = new ArrayList<>();
+    public List<Role> findByIdRole(Role role) {
+        List<Role> result = new ArrayList<>();
         try (Connection connection = dataSource.getConnection();
-             Statement st = connection.createStatement();
-             ResultSet rs = st.executeQuery(String.format("SELECT * FROM %s.users ORDER BY id", SCHEMA_NAME))) {
-             while (rs.next()) {
-                int id = rs.getInt(1);
-                String name = rs.getString(2);
-                String login = rs.getString(3);
-                String email = rs.getString(4);
-                Timestamp createDate = rs.getTimestamp(5);
-                user = new User(id, name, login, email, createDate);
-                result.add(user);
-             }
+             Statement st = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+             ResultSet rs = st.executeQuery(String.format("SELECT * FROM %s.roles WHERE id=%d", SCHEMA_NAME, role.getId()))) {
+            result = getRolesFromResultSet(rs);
         } catch (SQLException e) {
-            Controller.getInstance().getLog().error("(findAll) An error occurred while find all users", e);
+            LoggerApp.getInstance().getLog().error(String.format("(findByIdRole) An error occurred while finding role with id = %4d", role.getId()), e);
+        }
+        if (result.size() > 0) {
+            // Записываем в LOG
+            LoggerApp.getInstance().getLog().info(String.format("Find By Id: %s", result.get(0)));
+        }
+        return result;
+    }
+
+    @Override
+    public List<Role> findAllRoles(Role role) {
+        List<Role> result = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection();
+             Statement st = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+             ResultSet rs = st.executeQuery(String.format("SELECT * FROM %s.roles ORDER BY id", SCHEMA_NAME))) {
+            result = getRolesFromResultSet(rs);
+        } catch (SQLException e) {
+            LoggerApp.getInstance().getLog().error("(findAllRole) An error occurred while finding all roles", e);
         }
         // Записываем в LOG
-        Controller.getInstance().getLog().info("  Find All Users:");
-        new LoggerUtil().saveUsersToLog(result, Controller.getInstance().getLog());
+        LoggerApp.getInstance().getLog().info("  Find All Roles.");
         return result;
+    }
+
+    /**
+     * Метод формирует список пользователей из объекта-результата запросов к базе данных ResultSet
+     * @param resultSet объект-результата запросов к базе данных
+     * @return список пользователей из объекта-результата запросов к базе данных ResultSet
+     */
+    private List<User> getUsersFromResultSet(ResultSet resultSet) {
+        List<User> result = new ArrayList<>();
+        int id;
+        String name;
+        String login;
+        String password;
+        String email;
+        Timestamp createDate;
+        int idRole;
+        User user;
+        try {
+            resultSet.beforeFirst();
+            while (resultSet.next()) {
+                id = resultSet.getInt(1);
+                name = resultSet.getString(2);
+                login = resultSet.getString(3);
+                password = resultSet.getString(4);
+                email = resultSet.getString(5);
+                createDate = resultSet.getTimestamp(6);
+                idRole = resultSet.getInt(7);
+                user = new User(id, name, login, password, email, createDate, idRole);
+                result.add(user);
+                //System.out.printf("         User from ResultSet: <id=%s> <name=%s> <login=%s> <email=%s> <createDate=%s>%n", user.getId(), user.getName(), user.getLogin(), user.getEmail(), user.getCreateDate());
+            }
+        } catch (SQLException e) {
+            LoggerApp.getInstance().getLog().error("(getUsersFromResultSet) An error occurred while get users from ResultSet", e);
+        }
+        return result;
+    }
+
+    /**
+     * Метод формирует список ролей из объекта-результата запросов к базе данных ResultSet
+     * @param resultSet объект-результата запросов к базе данных
+     * @return список ролей из объекта-результата запросов к базе данных ResultSet
+     */
+    private List<Role> getRolesFromResultSet(ResultSet resultSet) {
+        List<Role> result = new ArrayList<>();
+        int id;
+        String name;
+        boolean isAdmin;
+        Role role;
+        try {
+            resultSet.beforeFirst();
+            while (resultSet.next()) {
+                id = resultSet.getInt(1);
+                name = resultSet.getString(2);
+                isAdmin = resultSet.getBoolean(3);
+                role = new Role(id, name, isAdmin);
+                result.add(role);
+                //System.out.printf("         Role from ResultSet: <id=%s> <name=%s> <isAdmin=%s>%n", role.getId(), role.getName(), role.getIsAdmin());
+            }
+        } catch (SQLException e) {
+            LoggerApp.getInstance().getLog().error("(getRolesFromResultSet) An error occurred while get roles from ResultSet", e);
+        }
+        return result;
+    }
+
+    /**
+     * Вспомогательный метод для формирования запроса к базе данных
+     * @param st запрос
+     * @param user пользователь для запроса
+     * @return видоизмененный запрос к базе данных
+     */
+    private PreparedStatement prepareStatForInsOrUpdUser(PreparedStatement st, User user) {
+        try {
+            st.setString(1, user.getName());
+            st.setString(2, user.getLogin());
+            st.setString(3, user.getPassword());
+            st.setString(4, user.getEmail());
+            st.setTimestamp(5, user.getCreateDate());
+            st.setInt(6, user.getIdRole());
+        } catch (SQLException e) {
+            LoggerApp.getInstance().getLog().error("(prepareStatForInsOrUpdUser) An error occurred while prepared statement", e);
+        }
+        return st;
+    }
+
+    /**
+     * Метод для изменения последовательности для первичного ключа таблицы users
+     * @param restartWith начальный элемент последовательности
+     */
+    private void alterSequenceUsersIdSeq(int restartWith) {
+        String stringAlter = String.format("ALTER SEQUENCE %s.users_id_seq RESTART WITH %s", SCHEMA_NAME, restartWith);
+        try (Connection connection = dataSource.getConnection();
+             Statement st = connection.createStatement()) {
+            st.executeUpdate(stringAlter);
+        } catch (SQLException e) {
+            LoggerApp.getInstance().getLog().error("(alterSequenceUsersIdSeq) An error occurred while alter sequence", e);
+        }
+    }
+
+    /**
+     * Метод для изменения последовательности для первичного ключа таблицы roles
+     * @param restartWith начальный элемент последовательности
+     */
+    private void alterSequenceRolesIdSeq(int restartWith) {
+        String stringAlter = String.format("ALTER SEQUENCE %s.roles_id_seq RESTART WITH %s", SCHEMA_NAME, restartWith);
+        try (Connection connection = dataSource.getConnection();
+             Statement st = connection.createStatement()) {
+            st.executeUpdate(stringAlter);
+        } catch (SQLException e) {
+            LoggerApp.getInstance().getLog().error("(alterSequenceRolesIdSeq) An error occurred while alter sequence", e);
+        }
     }
 }

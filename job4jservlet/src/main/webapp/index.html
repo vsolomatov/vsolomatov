@@ -12,8 +12,10 @@
 
 <div>       <!-- content -->
     <div>    <!-- buttons holder -->
-        <button onclick="location.href='/items/list?typeview=jsp'">List users as JSP</button>
-        <button onclick="location.href='/items/list?typeview=html'">List users as HTML</button>
+        <button onclick="location.href='/items/protected/list?typeview=jsp&typestorage=db'">List users as JSP (storage in the database)</button>
+        <button onclick="location.href='/items/protected/list?typeview=html&typestorage=memory'">List users as HTML (storage in memory)</button><br><br>
+        <button onclick="location.href='/items/protected/list?typeview=jsp&typestorage=memory'">List users as JSP (storage in memory)</button>
+        <button onclick="location.href='/items/protected/list?typeview=html&typestorage=db'">List users as HTML (storage in the database)</button>
     </div>
 </div>
 </body>

@@ -1,69 +1,297 @@
 package com.solomatoff.mvc.model;
 
-import com.solomatoff.mvc.controller.Controller;
+import com.solomatoff.mvc.entities.Role;
 import com.solomatoff.mvc.entities.User;
-import com.solomatoff.mvc.model.DbStore;
-import org.junit.Test;
 import org.junit.Before;
-
-import static org.hamcrest.core.IsNull.nullValue;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.*;
+
 public class DbStoreTest {
+    private static final DbStore DB_STORE = new DbStore();
 
-    @Test
-    public void add() {
-        DbStore dbStore = new DbStore();
-        User user = new User(13, "name3", "login3", "email3", new Timestamp(System.currentTimeMillis()));
-        dbStore.add(user);
-        List<User> list = dbStore.findById(new User(13, null, null, null, null));
-        assertThat(list.get(0).getId(), is(user.getId()));
+    @Before
+    public void setUp() {
+        //System.out.println("Start setUp");
+        deleteAllandAddTree();
+    }
+
+    private void deleteAllandAddTree() {
+        // Удаляем всех пользователей
+        DB_STORE.deleteUserAll(new User());
+        // Удаляем все роли
+        DB_STORE.deleteRoleAll(new Role());
+
+        // Добавляем новые три роли
+        DB_STORE.addRole(new Role(1, "role1", true));
+        DB_STORE.addRole(new Role(2, "role2", false));
+        DB_STORE.addRole(new Role(3, "role3", false));
+
+        // Добавляем новых трех пользователей
+        DB_STORE.addUser(new User(1, "user1", "login1", "password", "email1", new Timestamp(System.currentTimeMillis()), 1));
+        DB_STORE.addUser(new User(2, "user2", "login2", "password", "email2", new Timestamp(System.currentTimeMillis()), 2));
+        DB_STORE.addUser(new User(3, "user3", "login3", "password", "email3", new Timestamp(System.currentTimeMillis()), 3));
     }
 
     @Test
-    public void update() {
-        DbStore dbStore = new DbStore();
-        dbStore.add(new User(20, "name1", "login1", "email1", new Timestamp(System.currentTimeMillis())));
-        User user = new User(20, "newname1", "newlogin1", "newemail1", new Timestamp(System.currentTimeMillis()));
-        dbStore.update(user);
-        List<User> list = dbStore.findById(new User(20, null, null, null, null));
-        assertThat(list.get(0).getName(), is("newname1"));
+    public void addUser() {
+        User user4 = new User(4, "name4", "login4", "password", "email4", new Timestamp(System.currentTimeMillis()), 1);
+        List<User> expected = new ArrayList<>();
+        expected.add(user4);
+
+        // Добавляем первый раз user4
+        List<User> result = DB_STORE.addUser(user4);
+        assertThat(result, is(expected));
+
+        // Добавляем пользователя с пустым id
+        User userWithNullId = new User(null, "name5", "login5", "password", "email5", new Timestamp(System.currentTimeMillis()), 1);
+        result = DB_STORE.addUser(userWithNullId);
+        assertThat(result.size(), is(1));
+
+        // Добавляем второй раз user4, теперь список должен быть пустой, т.к. пользователь второй раз не добавится
+        result = DB_STORE.addUser(user4);
+        assertThat(result.size(), is(0));
+
+        // Добавляем пользователя с пустым id
+        userWithNullId = new User(null, "name6", "login6", "password", "email6", new Timestamp(System.currentTimeMillis()), 1);
+        result = DB_STORE.addUser(userWithNullId);
+        assertThat(result.size(), is(1));
     }
 
     @Test
-    public void delete() {
-        DbStore dbStore = new DbStore();
-        dbStore.add(new User(21, "name1", "login1", "email1", new Timestamp(System.currentTimeMillis())));
-        dbStore.add(new User(22, "name2", "login2", "email2", new Timestamp(System.currentTimeMillis())));
-        dbStore.add(new User(23, "name3", "login3", "email3", new Timestamp(System.currentTimeMillis())));
-        dbStore.delete(new User(22, "", "", "", new Timestamp(System.currentTimeMillis())));
-        List<User> list = dbStore.findById(new User(22, null, null, null, null));
-        assertThat(list.get(0), is(nullValue()));
+    public void updateUser() {
+        User user = new User();
+        user.setId(3);
+        List<User> expected = DB_STORE.findByIdUser(user);
+
+        // Обновим пользователя с id=3
+        User newUser3 = new User(3, "newname3", "newlogin3", "password", "newemail3", new Timestamp(System.currentTimeMillis()), 2);
+        List<User> result = DB_STORE.updateUser(newUser3);
+        assertThat(result.get(0).getName(), is(expected.get(0).getName()));
+
+        // Попытаемся обновить не существующего пользователя
+        user = new User();
+        user.setId(8);
+        result = DB_STORE.updateUser(user);
+        assertThat(result.size(), is(0));
     }
 
     @Test
-    public void findById() {
-        DbStore dbStore = new DbStore();
-        dbStore.add(new User(22, "name2", "login2", "email2", new Timestamp(System.currentTimeMillis())));
-        List<User> list = dbStore.findById(new User(22, null, null, null, null));
-        assertThat(list.get(0).getName(), is("name2"));
+    public void deleteUser() {
+        User user = new User();
+        user.setId(2);
+        List<User> expected = DB_STORE.findByIdUser(user);
 
-        list = dbStore.findById(new User(999, null, null, null, null));
-        assertThat(list.get(0), is(nullValue()));
+        // Удалим пользователя с id = 2
+        List<User> result = DB_STORE.deleteUser(user);
+        assertThat(result.get(0).getName(), is(expected.get(0).getName()));
+
+        // Попытаемся удалить не существующего пользователя
+        user = new User();
+        user.setId(8);
+        result = DB_STORE.deleteUser(user);
+        assertThat(result.size(), is(0));
     }
 
     @Test
-    public void findAll() {
-        DbStore dbStore = new DbStore();
-        dbStore.add(new User(31, "name1", "login1", "email1", new Timestamp(System.currentTimeMillis())));
-        dbStore.add(new User(32, "name2", "login2", "email2", new Timestamp(System.currentTimeMillis())));
-        dbStore.add(new User(33, "name3", "login3", "email3", new Timestamp(System.currentTimeMillis())));
-        dbStore.add(new User(34, "name4", "login4", "email4", new Timestamp(System.currentTimeMillis())));
-        List<User> list = dbStore.findAll(new User(0, null, null, null, null));
-        list.forEach(user -> System.out.printf("     <id=%s> <name=%s> <login=%s> <email=%s> <createDate=%s>%n", user.getId(), user.getName(), user.getLogin(), user.getEmail(), user.getCreateDate()));
+    public void deleteUserAll() {
+        List<User> expected = new ArrayList<>();
+        User user = new User();
+        user.setId(1);
+        User user1 = DB_STORE.findByIdUser(user).get(0);
+        expected.add(user1);
+        user = new User();
+        user.setId(2);
+        User user2 = DB_STORE.findByIdUser(user).get(0);
+        expected.add(user2);
+        user = new User();
+        user.setId(3);
+        User user3 = DB_STORE.findByIdUser(user).get(0);
+        expected.add(user3);
+        List<User> result = DB_STORE.deleteUserAll(user);
+        int i = 0;
+        for (User userloop : result) {
+            assertThat(userloop.getName(), is(expected.get(i).getName()));
+            i++;
+        }
+    }
+
+    @Test
+    public void findByIdUser() {
+        User user1 = new User(1, "user1", "login1", "password", "email1", new Timestamp(System.currentTimeMillis()), 1);
+        User result = DB_STORE.findByIdUser(user1).get(0);
+        assertThat(result.getName(), is(user1.getName()));
+    }
+
+    @Test
+    public void findByLoginUser() {
+        User user1 = new User(2, "user2", "login2", "password", "email2", new Timestamp(System.currentTimeMillis()), 2);
+        User result = DB_STORE.findByLoginUser(user1).get(0);
+        assertThat(result.getName(), is(user1.getName()));
+    }
+
+    @Test
+    public void findAllUsers() {
+        List<User> expected = new ArrayList<>();
+        User user = new User();
+        user.setId(1);
+        User user1 = DB_STORE.findByIdUser(user).get(0);
+        expected.add(user1);
+        user = new User();
+        user.setId(2);
+        User user2 = DB_STORE.findByIdUser(user).get(0);
+        expected.add(user2);
+        user = new User();
+        user.setId(3);
+        User user3 = DB_STORE.findByIdUser(user).get(0);
+        expected.add(user3);
+        List<User> result = DB_STORE.findAllUsers(user);
+        int i = 0;
+        for (User userloop : result) {
+            assertThat(userloop.getName(), is(expected.get(i).getName()));
+            i++;
+        }
+    }
+
+    @Test
+    public void addRole() {
+        Role role4 = new Role(4, "name4",  true);
+        List<Role> expected = new ArrayList<>();
+        expected.add(role4);
+
+        // Добавляем первый раз role4
+        List<Role> result = DB_STORE.addRole(role4);
+        assertThat(result, is(expected));
+
+        // Добавляем роль с пустым id
+        Role roleWithNullId = new Role(null, "name5", false);
+        result = DB_STORE.addRole(roleWithNullId);
+        assertThat(result.size(), is(1));
+
+        // Добавляем второй раз role4, теперь список должен быть пустой, т.к. пользователь второй раз не добавится
+        result = DB_STORE.addRole(role4);
+        assertThat(result.size(), is(0));
+
+        // Добавляем роль с пустым id
+        roleWithNullId = new Role(null, "name6",  false);
+        result = DB_STORE.addRole(roleWithNullId);
+        assertThat(result.size(), is(1));
+    }
+
+    @Test
+    public void updateRole() {
+        Role role = new Role();
+        role.setId(3);
+        List<Role> expected = DB_STORE.findByIdRole(role);
+
+        // Обновим роль с id=3
+        Role newRole3 = new Role(3, "newname3",  true);
+        List<Role> result = DB_STORE.updateRole(newRole3);
+        assertThat(result.get(0).getName(), is(expected.get(0).getName()));
+
+        // Попытаемся обновить не существующего роль
+        role = new Role();
+        role.setId(8);
+        result = DB_STORE.updateRole(role);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void deleteRole() {
+        // Перед удалением роли, удалим пользователя с этой ролью
+        User user = new User();
+        user.setId(2);
+        DB_STORE.deleteUser(user);
+        Role role = new Role();
+        role.setId(2);
+        List<Role> expected = DB_STORE.findByIdRole(role);
+        // Удалим роль с id = 2
+        List<Role> result = DB_STORE.deleteRole(role);
+        assertThat(result.get(0).getName(), is(expected.get(0).getName()));
+
+        // Попытаемся удалить не существующего роль
+        role = new Role();
+        role.setId(8);
+        result = DB_STORE.deleteRole(role);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void deleteRoleAll() {
+        // Перед удалением ролей, удалим всех пользователей
+        DB_STORE.deleteUserAll(new User());
+        List<Role> expected = new ArrayList<>();
+        Role role = new Role();
+        role.setId(1);
+        Role role1 = DB_STORE.findByIdRole(role).get(0);
+        expected.add(role1);
+        role = new Role();
+        role.setId(2);
+        Role role2 = DB_STORE.findByIdRole(role).get(0);
+        expected.add(role2);
+        role = new Role();
+        role.setId(3);
+        Role role3 = DB_STORE.findByIdRole(role).get(0);
+        expected.add(role3);
+        List<Role> result = DB_STORE.deleteRoleAll(role);
+        int i = 0;
+        for (Role roleloop : result) {
+            assertThat(roleloop.getName(), is(expected.get(i).getName()));
+            i++;
+        }
+    }
+
+    @Test
+    public void findByIdRole() {
+        Role role1 = new Role(1, "role1", false);
+        Role result = DB_STORE.findByIdRole(role1).get(0);
+        assertThat(result.getName(), is(role1.getName()));
+    }
+
+    @Test
+    public void findAllRoles() {
+        List<Role> expected = new ArrayList<>();
+        Role role = new Role();
+        role.setId(1);
+        Role role1 = DB_STORE.findByIdRole(role).get(0);
+        expected.add(role1);
+        role = new Role();
+        role.setId(2);
+        Role role2 = DB_STORE.findByIdRole(role).get(0);
+        expected.add(role2);
+        role = new Role();
+        role.setId(3);
+        Role role3 = DB_STORE.findByIdRole(role).get(0);
+        expected.add(role3);
+        List<Role> result = DB_STORE.findAllRoles(role);
+        int i = 0;
+        for (Role roleloop : result) {
+            assertThat(roleloop.getName(), is(expected.get(i).getName()));
+            i++;
+        }
+    }
+
+    @Test
+    public void isCredentional() {
+        String login = "login1";
+        String password = "password";
+        boolean result = DB_STORE.isCredentional(login, password);
+        assertThat(result, is(true));
+
+        login = "login1";
+        password = "pass";
+        result = DB_STORE.isCredentional(login, password);
+        assertThat(result, is(false));
+
+        login = "login4";
+        password = "password";
+        result = DB_STORE.isCredentional(login, password);
+        assertThat(result, is(false));
     }
 }
