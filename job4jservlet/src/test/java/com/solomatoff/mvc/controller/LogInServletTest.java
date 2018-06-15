@@ -20,6 +20,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.is;
@@ -123,10 +124,16 @@ public class LogInServletTest {
 
         servlet.doPost(request, response);
 
-        System.out.println("    session.login = " + session.getAttribute("login"));
-        System.out.println("    session.typeuser = " + session.getAttribute("typeuser"));
-        assertThat(session.getAttribute("login"), is("login1"));
-        assertThat(session.getAttribute("typeuser"), is("admin"));
+        String sessionLogin = (String) session.getAttribute("login");
+        String sessionTypeuser = (String) session.getAttribute("typeuser");
+        System.out.println("sessionLogin = " + sessionLogin);
+        System.out.println("sessionTypeuser = " + sessionTypeuser);
+        System.out.println("CONTROLLER.getLogic().getPersistent() = " + CONTROLLER.getLogic().getPersistent());
+        List<User> list = CONTROLLER.getLogic().findAllUsers(new User());
+        System.out.println("list = " + list);
+
+        assertThat(sessionLogin, is("login1"));
+        assertThat(sessionTypeuser, is("admin"));
     }
 
     /**
