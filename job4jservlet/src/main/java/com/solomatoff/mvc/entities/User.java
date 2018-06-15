@@ -92,6 +92,10 @@ public class User {
 
     @Override
     public String toString() {
-        return String.format("User: [%2d] [%s] [%s] [%s] [%s] [%s] [%s] <%s>", this.id, this.name, this.login, this.password, this.email, this.createDate, this.idRole, this.getNameRole());
+        try {
+            return String.format("User: [%2d] [%s] [%s] [%s] [%s] [%s] [%s] <%s>", this.id, this.name, this.login, this.password, this.email, this.createDate, this.idRole, this.getNameRole());
+        } catch (Exception e) {
+            return String.format("User Error getNameRole(): [%2d] [%s] [%s] [%s] [%s] [%s] [%s]", this.id, this.name, this.login, this.password, this.email, this.createDate, this.idRole);
+        }
     }
 }

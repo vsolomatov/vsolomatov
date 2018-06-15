@@ -1,5 +1,7 @@
 package com.solomatoff.mvc.model;
 
+import com.solomatoff.mvc.controller.Controller;
+import com.solomatoff.mvc.controller.ControllerTest;
 import com.solomatoff.mvc.entities.Role;
 import com.solomatoff.mvc.entities.User;
 import org.junit.Before;
@@ -14,29 +16,12 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.*;
 
 public class DbStoreTest {
-    private static final DbStore DB_STORE = new DbStore();
+    private final static ModelStore DB_STORE = DbStore.getInstance();
 
     @Before
     public void setUp() {
-        //System.out.println("Start setUp");
-        deleteAllandAddTree();
-    }
-
-    private void deleteAllandAddTree() {
-        // Удаляем всех пользователей
-        DB_STORE.deleteUserAll(new User());
-        // Удаляем все роли
-        DB_STORE.deleteRoleAll(new Role());
-
-        // Добавляем новые три роли
-        DB_STORE.addRole(new Role(1, "role1", true));
-        DB_STORE.addRole(new Role(2, "role2", false));
-        DB_STORE.addRole(new Role(3, "role3", false));
-
-        // Добавляем новых трех пользователей
-        DB_STORE.addUser(new User(1, "user1", "login1", "password", "email1", new Timestamp(System.currentTimeMillis()), 1));
-        DB_STORE.addUser(new User(2, "user2", "login2", "password", "email2", new Timestamp(System.currentTimeMillis()), 2));
-        DB_STORE.addUser(new User(3, "user3", "login3", "password", "email3", new Timestamp(System.currentTimeMillis()), 3));
+        ControllerTest.clearAndCreateData();
+        Controller.getInstance().getLogic().setPersistent(DB_STORE);
     }
 
     @Test

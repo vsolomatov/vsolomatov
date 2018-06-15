@@ -1,8 +1,9 @@
 package com.solomatoff.mvc.model;
 
+import com.solomatoff.mvc.controller.Controller;
+import com.solomatoff.mvc.controller.ControllerTest;
 import com.solomatoff.mvc.entities.Role;
 import com.solomatoff.mvc.entities.User;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,29 +16,12 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.*;
 
 public class MemoryStoreTest {
-    private static final MemoryStore MEMORY_STORE = new MemoryStore();
+    private static final ModelStore MEMORY_STORE = MemoryStore.getInstance();
 
     @Before
     public void setUp() {
-        //System.out.println("Start setUp");
-        deleteAllandAddTree();
-    }
-
-    private void deleteAllandAddTree() {
-        // Удаляем всех пользователей
-        MEMORY_STORE.deleteUserAll(new User());
-        // Удаляем все роли
-        MEMORY_STORE.deleteRoleAll(new Role());
-
-        // Добавляем новые три роли
-        MEMORY_STORE.addRole(new Role(4, "role4", true));
-        MEMORY_STORE.addRole(new Role(5, "role5", false));
-        MEMORY_STORE.addRole(new Role(6, "role6", false));
-
-        // Добавляем новых трех пользователей
-        MEMORY_STORE.addUser(new User(4, "user4", "login4", "password", "email4", new Timestamp(System.currentTimeMillis()), 4));
-        MEMORY_STORE.addUser(new User(5, "user5", "login5", "password", "email5", new Timestamp(System.currentTimeMillis()), 5));
-        MEMORY_STORE.addUser(new User(6, "user6", "login6", "password", "email6", new Timestamp(System.currentTimeMillis()), 6));
+        ControllerTest.clearAndCreateData();
+        Controller.getInstance().getLogic().setPersistent(MEMORY_STORE);
     }
 
     @Test
@@ -46,11 +30,11 @@ public class MemoryStoreTest {
         List<User> expected = new ArrayList<>();
         expected.add(user7);
 
-        // Добавляем первый раз user4
+        // Добавляем первый раз user7
         List<User> result = MEMORY_STORE.addUser(user7);
         assertThat(result, is(expected));
 
-        // Добавляем второй раз user4, теперь список должен быть пустой, т.к. пользователь второй раз не добавится
+        // Добавляем второй раз user7, теперь список должен быть пустой, т.к. пользователь второй раз не добавится
         result = MEMORY_STORE.addUser(user7);
         assertThat(result.size(), is(0));
     }
@@ -65,12 +49,6 @@ public class MemoryStoreTest {
         User newUser6 = new User(6, "newname6", "newlogin6", "password", "newemail6", new Timestamp(System.currentTimeMillis()), 6);
         List<User> result = MEMORY_STORE.updateUser(newUser6);
         assertThat(result.get(0).getName(), is(expected.get(0).getName()));
-
-        // Попытаемся обновить не существующего пользователя
-        user = new User();
-        user.setId(8);
-        result = MEMORY_STORE.updateUser(user);
-        assertThat(result.size(), is(0));
     }
 
     @Test
@@ -220,8 +198,8 @@ public class MemoryStoreTest {
         role.setId(6);
         Role role6 = MEMORY_STORE.findByIdRole(role).get(0);
         expected.add(role6);
-        List<Role> result = MEMORY_STORE.deleteRoleAll(role);
         int i = 0;
+        List<Role> result = MEMORY_STORE.deleteRoleAll(role);
         for (Role roleloop : result) {
             assertThat(roleloop.getName(), is(expected.get(i).getName()));
             i++;
