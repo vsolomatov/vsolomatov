@@ -83,7 +83,7 @@ public class TrackerTest {
 
        //System.out.println("Список заявок ДО УДАЛЕНИЯ");
         for (Item itemLoop : tracker.findAll()) {
-           //System.out.println("    " + itemLoop.getId() + " " + itemLoop.getName() + " " + itemLoop.getDescription() + " " + itemLoop.getCreated() + " " + itemLoop.commentsToString());
+            System.out.println("    " + itemLoop.getId() + " " + itemLoop.getName() + " " + itemLoop.getDescription() + " " + itemLoop.getCreated() + " " + itemLoop.commentsToString());
         }
 
        //System.out.println("Удаляем заявку с itemId = " + itemId);
@@ -95,7 +95,7 @@ public class TrackerTest {
 
        //System.out.println("Список заявок ПОСЛЕ УДАЛЕНИЯ");
         for (Item itemLoop : tracker.findAll()) {
-           //System.out.println("    " + itemLoop.getId() + " " + itemLoop.getName() + " " + itemLoop.getDescription() + " " + itemLoop.getCreated() + " " + itemLoop.commentsToString());
+            System.out.println("    " + itemLoop.getId() + " " + itemLoop.getName() + " " + itemLoop.getDescription() + " " + itemLoop.getCreated() + " " + itemLoop.commentsToString());
         }
     }
 
@@ -111,7 +111,7 @@ public class TrackerTest {
         // Находим такие заявки в трекере.
        //System.out.println("Список заявок c name = test5");
         for (Item itemLoop : tracker.findByName("test5")) {
-           //System.out.println("    " + itemLoop.getId() + " " + itemLoop.getName() + " " + itemLoop.getDescription() + " " + itemLoop.getCreated() + " " + itemLoop.commentsToString());
+            System.out.println("    " + itemLoop.getId() + " " + itemLoop.getName() + " " + itemLoop.getDescription() + " " + itemLoop.getCreated() + " " + itemLoop.commentsToString());
         }
     }
 }

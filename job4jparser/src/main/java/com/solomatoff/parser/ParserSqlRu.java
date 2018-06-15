@@ -35,7 +35,7 @@ public class ParserSqlRu {
         String filename = "log4j.properties";
         File file = new File(filename);
         if (!file.exists()) {
-           //System.out.println("It is not possible to load the given log4j properties file :" + file.getAbsolutePath());
+            System.out.println("It is not possible to load the given log4j properties file :" + file.getAbsolutePath());
         } else {
             PropertyConfigurator.configure(file.getAbsolutePath());
         }

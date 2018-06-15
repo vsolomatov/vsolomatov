@@ -22,9 +22,9 @@ public class CountChar implements Runnable {
             }
         }
         if (count == charArray.length) {
-           //System.out.println("Кол-во символов в тексте: " + count);
+           System.out.println("Кол-во символов в тексте: " + count);
         } else {
-           //System.out.println("Программа не успела посчитать кол-во символов в тексте!");
+           System.out.println("Программа не успела посчитать кол-во символов в тексте!");
         }
     }
 }

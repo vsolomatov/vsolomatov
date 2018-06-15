@@ -13,7 +13,7 @@ import java.io.PrintStream;
 
 public class StartUITest {
     // поле содержит дефолтный вывод в консоль.
-    private final PrintStream stdout =//System.out;
+    private final PrintStream stdout = System.out;
     // буфер для результата.
     private final ByteArrayOutputStream out = new ByteArrayOutputStream();
     // Сформируем строку меню

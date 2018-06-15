@@ -20,7 +20,7 @@ public class Tracker implements AutoCloseable {
         try {
             this.conn = DriverManager.getConnection(url, username, password);
         } catch (SQLException e) {
-           //System.out.println("Невозможно подключиться к базе данных " + url);
+            System.out.println("Невозможно подключиться к базе данных " + url);
             e.printStackTrace();
             System.exit(1);
         }
@@ -60,7 +60,7 @@ public class Tracker implements AutoCloseable {
                 }
             }
         } catch (NullPointerException | SQLException e) {
-           //System.out.println("Невозможно добавить новую заявку " + item.getName() + " " + item.getDescription());
+            System.out.println("Невозможно добавить новую заявку " + item.getName() + " " + item.getDescription());
             e.printStackTrace();
         }
         return itemIdAsString;
@@ -79,7 +79,7 @@ public class Tracker implements AutoCloseable {
             stInsertComment.setInt(2, itemId);
             stInsertComment.executeUpdate();
         } catch (SQLException e) {
-           //System.out.println("Невозможно добавить комментарий в заявку " + itemId);
+            System.out.println("Невозможно добавить комментарий в заявку " + itemId);
             e.printStackTrace();
         }
     }
@@ -115,7 +115,7 @@ public class Tracker implements AutoCloseable {
             stUpdareItem.setInt(3, itemId);
             stUpdareItem.executeUpdate();
         } catch (SQLException e) {
-           //System.out.println("Невозможно обновить заявку " + id);
+            System.out.println("Невозможно обновить заявку " + id);
             e.printStackTrace();
         }
     }
@@ -132,7 +132,7 @@ public class Tracker implements AutoCloseable {
             stDeleteComments.setInt(1, itemId);
             stDeleteComments.executeUpdate();
         } catch (SQLException e) {
-           //System.out.println("Невозможно удалить комментарии заявки " + id);
+            System.out.println("Невозможно удалить комментарии заявки " + id);
             e.printStackTrace();
         }
         String deleteItems = trackerProperty.getProperty("deleteitems");
@@ -154,14 +154,14 @@ public class Tracker implements AutoCloseable {
         try (PreparedStatement stDeleteComments = conn.prepareStatement(deleteComments)) {
             stDeleteComments.executeUpdate();
         } catch (SQLException e) {
-           //System.out.println("Невозможно удалить комментарии ВСЕХ заявок");
+            System.out.println("Невозможно удалить комментарии ВСЕХ заявок");
             e.printStackTrace();
         }
         String deleteItems = trackerProperty.getProperty("deleteitems");
         try (PreparedStatement stDeleteItems = conn.prepareStatement(deleteItems)) {
             stDeleteItems.executeUpdate();
         } catch (SQLException e) {
-           //System.out.println("Невозможно удалить ВСЕ заявки");
+            System.out.println("Невозможно удалить ВСЕ заявки");
             e.printStackTrace();
         }
     }

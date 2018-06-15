@@ -87,28 +87,22 @@ public class SimpleListTest {
         oSimpleContainer.add(10);
         oSimpleContainer.add(20);
         oSimpleContainer.add(150);
-        Thread threadOne = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    sleep(300);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                oSimpleContainer.add(40);
+        Thread threadOne = new Thread(() -> {
+            try {
+                sleep(300);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        };
-        Thread threadTwo = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    sleep(200);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                oSimpleContainer.add(50);
+            oSimpleContainer.add(40);
+        });
+        Thread threadTwo = new Thread(() -> {
+            try {
+                sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        };
+            oSimpleContainer.add(50);
+        });
         threadOne.start();
         threadTwo.start();
         try {
@@ -116,9 +110,8 @@ public class SimpleListTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        Iterator<Integer> it = oSimpleContainer.iterator();
-        while (it.hasNext()) {
-           //System.out.println(it.next());
+        for (Integer anOSimpleContainer : oSimpleContainer) {
+            System.out.println(anOSimpleContainer);
         }
     }
 }

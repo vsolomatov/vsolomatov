@@ -23,7 +23,7 @@ public class Board {
         }
         //System.out.println("Ссылка на фигуру в ячейке - " + ourfigure);
         if (ourfigure == null) {
-            //System.out.println("Ссылка: " + ourfigure);
+            System.out.println("Ссылка: " + ourfigure);
             throw new FigureNotFoundException("В заданной ячейке фигура отсутствует");
         }
         return ourfigure;
@@ -41,7 +41,7 @@ public class Board {
                 free = false;
             } catch (FigureNotFoundException fnfe) {
                 // Это означает что фигуры в ячейке нет - ячейка свободна
-                //System.out.println("Ячейка: "+ Integer.toString(cell.x) + "," + Integer.toString(cell.y) + " свободна.");
+                System.out.println("Ячейка: " + Integer.toString(cell.x) + "," + Integer.toString(cell.y) + " свободна.");
                 fnfe.getStackTrace();
             }
         }
@@ -117,9 +117,9 @@ public class Board {
      *  Метод печатает координаты списка данного класса figures
      * */
     public void printcoordinates() {
-       //System.out.println("Список занятых ячеек:");
+        System.out.println("Список занятых ячеек:");
         for (Figure figure : this.figures) {
-           //System.out.println(figure.position.x + ":" + figure.position.y);
+           System.out.println(figure.position.x + ":" + figure.position.y);
         }
     }
 }

@@ -204,32 +204,26 @@ public class SimpleLinkedTest {
         oSimpleContainer.add(10);
         oSimpleContainer.add(20);
         oSimpleContainer.add(150);
-        Thread threadOne = new Thread() {
-            @Override
-            public void run() {
-                oSimpleContainer.delete(0);
-               //System.out.println("get возвратил: " + oSimpleContainer.get(0));
-                try {
-                    sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                oSimpleContainer.add(40);
+        Thread threadOne = new Thread(() -> {
+            oSimpleContainer.delete(0);
+           //System.out.println("get возвратил: " + oSimpleContainer.get(0));
+            try {
+                sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        };
-        Thread threadTwo = new Thread() {
-            @Override
-            public void run() {
-                oSimpleContainer.delete(0);
-               //System.out.println("get возвратил: " + oSimpleContainer.get(0));
-                try {
-                    sleep(400);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                oSimpleContainer.add(50);
+            oSimpleContainer.add(40);
+        });
+        Thread threadTwo = new Thread(() -> {
+            oSimpleContainer.delete(0);
+           //System.out.println("get возвратил: " + oSimpleContainer.get(0));
+            try {
+                sleep(400);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        };
+            oSimpleContainer.add(50);
+        });
         threadOne.start();
         threadTwo.start();
         try {
@@ -237,9 +231,8 @@ public class SimpleLinkedTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        Iterator<Integer> it = oSimpleContainer.iterator();
-        while (it.hasNext()) {
-           //System.out.println(it.next());
+        for (Integer anOSimpleContainer : oSimpleContainer) {
+            System.out.println(anOSimpleContainer);
         }
     }
 

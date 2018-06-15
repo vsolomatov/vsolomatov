@@ -76,7 +76,7 @@ public class Hero {
         boolean result;
         for (String command : commandList) {
            if (!moveOneStep(command)) {
-              //System.out.println("     Команда " + command + " не может быть выполнена!");
+              System.out.println("     Команда " + command + " не может быть выполнена!");
            }
         }
     }

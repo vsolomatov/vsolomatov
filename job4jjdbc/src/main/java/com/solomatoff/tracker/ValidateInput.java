@@ -23,7 +23,7 @@ public class ValidateInput implements Input {
                 value = this.input.ask(question, range);
                 invalid = false;
             } catch (MenuOutException moe) {
-               //System.out.println("Please select key from menu.");
+                System.out.println("Please select key from menu.");
             }
         } while (invalid);
         return  value;

@@ -73,7 +73,7 @@ public class TransferByThreadTest {
         }
 
         for (User currentUser : userStorage.getUserContainer()) {
-           //System.out.println("id: " + currentUser.id + " amount: " + currentUser.amount);
+           System.out.println("id: " + currentUser.id + " amount: " + currentUser.amount);
         }
     }
 }

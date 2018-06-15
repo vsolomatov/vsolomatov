@@ -18,7 +18,7 @@ import static org.hamcrest.Matchers.is;
  */
 public class ValidateInputTest {
     private final ByteArrayOutputStream mem = new ByteArrayOutputStream();
-    private final PrintStream out =//System.out;
+    private final PrintStream out = System.out;
 
     @Before
     public void loadMem() {

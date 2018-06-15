@@ -30,7 +30,7 @@ public class NonBlockTest {
         expected.put(task3.getId(), task3);
 
         for (Task task : result.values()) {
-           //System.out.println(task.getName() + " " + task.getDesc());
+            System.out.println(task.getName() + " " + task.getDesc());
         }
         assertThat(result, is(expected));
     }
@@ -52,7 +52,7 @@ public class NonBlockTest {
                     try {
                         nonBlock.update(2, Thread.currentThread().getName(), Thread.currentThread().getName());
                     } catch (OptimisticLockException e) {
-                       //System.out.println("Не удалось обновить задачу из потока " + Thread.currentThread().getName());
+                        System.out.println("Не удалось обновить задачу из потока " + Thread.currentThread().getName());
                     }
                 }
             }).start();
@@ -65,7 +65,7 @@ public class NonBlockTest {
         }
         Collection<Task> collection = nonBlock.getContainer().values();
         for (Task task : collection) {
-           //System.out.println(task.getId() + " " + task.getName() + " " + task.getDesc() + " " + task.getVersion());
+            System.out.println(task.getId() + " " + task.getName() + " " + task.getDesc() + " " + task.getVersion());
         }
     }
 
@@ -87,7 +87,7 @@ public class NonBlockTest {
         expected.put(task3.getId(), task3);
 
         for (Task task : result.values()) {
-           //System.out.println(task.getName() + " " + task.getDesc());
+            System.out.println(task.getName() + " " + task.getDesc());
         }
         assertThat(result, is(expected));
     }
