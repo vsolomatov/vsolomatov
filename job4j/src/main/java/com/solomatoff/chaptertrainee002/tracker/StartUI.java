@@ -46,7 +46,7 @@ public class StartUI {
 
         /*System.out.println("Вывод из StartUI");
         for (String num : this.range) {
-            System.out.println(num);
+           //System.out.println(num);
         }*/
 
         while (!exit) {

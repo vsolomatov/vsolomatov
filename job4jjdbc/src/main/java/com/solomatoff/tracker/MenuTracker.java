@@ -44,11 +44,11 @@ public class MenuTracker {
         }
 
         public void execute(Input input, Tracker tracker) {
-            System.out.println("------------ Добавление новой заявки --------------");
+           //System.out.println("------------ Добавление новой заявки --------------");
             String name = input.ask("Введите имя заявки :");
             String desc = input.ask("Введите описание заявки :");
             String newItemId = tracker.add(new Item(null, name, desc, null, null));
-            System.out.println("------------ Создана новая заявка с Id : " + newItemId + " -----------");
+           //System.out.println("------------ Создана новая заявка с Id : " + newItemId + " -----------");
         }
     }
 
@@ -63,12 +63,12 @@ public class MenuTracker {
         public void execute(Input input, Tracker tracker) {
             boolean exit = false;
             String id = null;
-            System.out.println("------------ Редактирование заявки --------------");
+           //System.out.println("------------ Редактирование заявки --------------");
             while (!exit) {
                 id = input.ask("Введите id заявки, которую необходимо отредактировать :");
                 // Проверим существует ли заявка с таким id в хранилище
                 if ((tracker.findById(id) == null) && !id.equals("q")) {
-                    System.out.println("Вы ввели некорректный id заявки! Проверьте свои данные и введите правильный id или q - для выхода.");
+                   //System.out.println("Вы ввели некорректный id заявки! Проверьте свои данные и введите правильный id или q - для выхода.");
                 } else {
                     exit = true;
                 }
@@ -78,7 +78,7 @@ public class MenuTracker {
                 String desc = input.ask("Введите новое описание заявки :");
                 Item item = new Item(Integer.getInteger(id), name, desc, null, null);
                 tracker.replace(id, item);
-                System.out.println("------------ Заявка с Id : " + id + " отредактирована -----------");
+               //System.out.println("------------ Заявка с Id : " + id + " отредактирована -----------");
             }
         }
     }
@@ -91,11 +91,11 @@ public class MenuTracker {
             super(key, name);
         }
         public void execute(Input input, Tracker tracker) {
-            System.out.println("------------ Все заявки --------------");
+           //System.out.println("------------ Все заявки --------------");
             for (Item item : tracker.findAll()) {
-                System.out.println(item.getId() + " " + item.getName() + " " + item.getDescription());
+               //System.out.println(item.getId() + " " + item.getName() + " " + item.getDescription());
             }
-            System.out.println("--------------------------------------");
+           //System.out.println("--------------------------------------");
         }
     }
 
@@ -109,19 +109,19 @@ public class MenuTracker {
         public void execute(Input input, Tracker tracker) {
             boolean exit = false;
             String id = null;
-            System.out.println("------------ Удаление заявки --------------");
+           //System.out.println("------------ Удаление заявки --------------");
             while (!exit) {
                 id = input.ask("Введите id заявки, которую необходимо удалить :");
                 // Проверим существует ли заявка с таким id в хранилище
                 if ((tracker.findById(id) == null) && !id.equals("q")) {
-                    System.out.println("Вы ввели некорректный id заявки! Проверьте свои данные и введите правильный id или q - для выхода.");
+                   //System.out.println("Вы ввели некорректный id заявки! Проверьте свои данные и введите правильный id или q - для выхода.");
                 } else {
                     exit = true;
                 }
             }
             if (!id.equals("q")) {
                 tracker.delete(id);
-                System.out.println("------------ Заявка с Id : " + id + " удалена -----------");
+               //System.out.println("------------ Заявка с Id : " + id + " удалена -----------");
             }
         }
     }
@@ -134,15 +134,15 @@ public class MenuTracker {
             super(key, name);
         }
         public void execute(Input input, Tracker tracker) {
-            System.out.println("------------ Поиск заявки по Id --------------");
+           //System.out.println("------------ Поиск заявки по Id --------------");
             String id = input.ask("Введите id заявки, которую необходимо найти :");
             Item item = tracker.findById(id);
             if (item == null) {
-                System.out.println("Заявка с таким id отсутствует в хранилище.");
+               //System.out.println("Заявка с таким id отсутствует в хранилище.");
             } else {
-                System.out.println(item.getId() + " " + item.getName() + " " + item.getDescription());
+               //System.out.println(item.getId() + " " + item.getName() + " " + item.getDescription());
             }
-            System.out.println("------------ Поиск заявки с Id : " + id + " завершен -----------");
+           //System.out.println("------------ Поиск заявки с Id : " + id + " завершен -----------");
         }
     }
 
@@ -154,12 +154,12 @@ public class MenuTracker {
             super(key, name);
         }
         public void execute(Input input, Tracker tracker) {
-            System.out.println("------------ Поиск заявки по Name --------------");
+           //System.out.println("------------ Поиск заявки по Name --------------");
             String name = input.ask("Введите имя заявки, которую необходимо найти :");
             for (Item item : tracker.findByName(name)) {
-                System.out.println(item.getId() + " " + item.getName() + " " + item.getDescription());
+               //System.out.println(item.getId() + " " + item.getName() + " " + item.getDescription());
             }
-            System.out.println("------------ Поиск заявки с Name : " + name + " завершен -----------");
+           //System.out.println("------------ Поиск заявки с Name : " + name + " завершен -----------");
         }
     }
 
@@ -176,10 +176,10 @@ public class MenuTracker {
     }
 
     public void showMenu() {
-        System.out.println("     МЕНЮ    ");
+       //System.out.println("     МЕНЮ    ");
         for (BaseAction action : this.menus) {
             if (action != null) {
-                System.out.println((action.info()));
+               //System.out.println((action.info()));
             }
         }
     }

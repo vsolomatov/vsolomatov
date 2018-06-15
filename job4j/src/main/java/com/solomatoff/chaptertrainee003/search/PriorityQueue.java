@@ -40,9 +40,9 @@ public class PriorityQueue {
         this.tasks.add(index, task);
 
         /*for (Task task1 : tasks) {
-            System.out.print(task1.getDesc() + " ");
+           //System.out.print(task1.getDesc() + " ");
         }
-        System.out.println(" ");*/
+       //System.out.println(" ");*/
     }
 
     public Task take() {

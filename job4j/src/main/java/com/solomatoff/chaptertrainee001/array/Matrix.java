@@ -20,9 +20,9 @@ public class Matrix {
                 arr[i][j] = (i + 1) * (j + 1);
             }
             /*for (int x : arr[i]) {
-                System.out.print(x + " ");
+               //System.out.print(x + " ");
             }
-            System.out.println(" ");*/
+           //System.out.println(" ");*/
         }
         return arr;
     }

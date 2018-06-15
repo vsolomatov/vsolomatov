@@ -16,7 +16,7 @@ public class TurnTest {
         assertThat(rst.back(aArr), is(bArr));
 
         /*for (int x : aArr ) {
-            System.out.println(x);
+           //System.out.println(x);
         }*/
     }
     @Test
@@ -29,7 +29,7 @@ public class TurnTest {
         assertThat(rst.back(aArr), is(bArr));
 
         /*for (int x : aArr ) {
-            System.out.println(x);
+           //System.out.println(x);
         }*/
     }
 }

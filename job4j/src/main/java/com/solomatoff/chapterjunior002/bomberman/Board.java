@@ -22,10 +22,10 @@ public class Board {
         try {
             result = boardContainer[row][col].tryLock(500, TimeUnit.MILLISECONDS);
             /*if (result) {
-                System.out.println("[" + Thread.currentThread().getName() + "]. [" + row + "," + col + "] заблокирована потоком = " + result + "(getHoldCount = " + boardContainer[row][col].getHoldCount() + ")");
+               //System.out.println("[" + Thread.currentThread().getName() + "]. [" + row + "," + col + "] заблокирована потоком = " + result + "(getHoldCount = " + boardContainer[row][col].getHoldCount() + ")");
             }*/
         } catch (InterruptedException e) {
-            System.out.println("InterruptedException");
+           //System.out.println("InterruptedException");
             result = false;
         }
         return result;
@@ -41,7 +41,7 @@ public class Board {
             result = false;
         }
         /*if (result) {
-            System.out.println("[" + Thread.currentThread().getName() + "]. [" + row + "," + col + "] разблокирована потоком. (getHoldCount = " + boardContainer[row][col].getHoldCount() + ")");
+           //System.out.println("[" + Thread.currentThread().getName() + "]. [" + row + "," + col + "] разблокирована потоком. (getHoldCount = " + boardContainer[row][col].getHoldCount() + ")");
         }*/
         return result;
     }

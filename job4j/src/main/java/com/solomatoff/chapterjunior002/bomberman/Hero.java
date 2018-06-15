@@ -34,7 +34,7 @@ public class Hero {
                 if (newLine >= 0) {
                     result = this.board.positionLock(newLine, newColumn);
                 }
-                System.out.println("[" + Thread.currentThread().getName() + "] go UP into [" + newLine + "," + newColumn + "] = " + result);
+               //System.out.println("[" + Thread.currentThread().getName() + "] go UP into [" + newLine + "," + newColumn + "] = " + result);
                 break;
             case "DOWN":
                 newLine = this.line + 1;
@@ -42,7 +42,7 @@ public class Hero {
                 if (newLine < Board.ROW) {
                     result = this.board.positionLock(newLine, newColumn);
                 }
-                System.out.println("[" + Thread.currentThread().getName() + "] go DOWN into [" + newLine + "," + newColumn + "] = " + result);
+               //System.out.println("[" + Thread.currentThread().getName() + "] go DOWN into [" + newLine + "," + newColumn + "] = " + result);
                 break;
             case "LEFT":
                 newLine = this.line;
@@ -50,7 +50,7 @@ public class Hero {
                 if (newColumn >= 0) {
                     result = this.board.positionLock(newLine, newColumn);
                 }
-                System.out.println("[" + Thread.currentThread().getName() + "] go LEFT into [" + newLine + "," + newColumn + "] = " + result);
+               //System.out.println("[" + Thread.currentThread().getName() + "] go LEFT into [" + newLine + "," + newColumn + "] = " + result);
                 break;
             case "RIGHT":
                 newLine = this.line;
@@ -58,10 +58,10 @@ public class Hero {
                 if (newColumn < Board.COL) {
                     result = this.board.positionLock(newLine, newColumn);
                 }
-                System.out.println("[" + Thread.currentThread().getName() + "] go RIGHT into [" + newLine + "," + newColumn + "] = " + result);
+               //System.out.println("[" + Thread.currentThread().getName() + "] go RIGHT into [" + newLine + "," + newColumn + "] = " + result);
                 break;
              default:
-                 System.out.println("[" + Thread.currentThread().getName() + "]. Неизвестная команда " + direction);
+                //System.out.println("[" + Thread.currentThread().getName() + "]. Неизвестная команда " + direction);
         }
         if (result) {
             this.board.positionUnLock(this.line, this.column);
@@ -76,7 +76,7 @@ public class Hero {
         boolean result;
         for (String command : commandList) {
            if (!moveOneStep(command)) {
-               System.out.println("     Команда " + command + " не может быть выполнена!");
+              //System.out.println("     Команда " + command + " не может быть выполнена!");
            }
         }
     }

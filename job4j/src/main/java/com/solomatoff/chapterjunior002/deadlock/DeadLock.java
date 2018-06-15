@@ -12,13 +12,13 @@ public class DeadLock {
         }
 
         public synchronized void bow(Friend bower) {
-            System.out.println("[" + Thread.currentThread().getId() + "] Метод bow заблокировал объект " + this.name);
+           //System.out.println("[" + Thread.currentThread().getId() + "] Метод bow заблокировал объект " + this.name);
             bower.bowBack(this);
-            System.out.println("[" + Thread.currentThread().getId() + "] Метод bow разблокирует объект " + this.name);
+           //System.out.println("[" + Thread.currentThread().getId() + "] Метод bow разблокирует объект " + this.name);
         }
         public synchronized void bowBack(Friend bower) {
-            System.out.println("    [" + Thread.currentThread().getId() + "] Метод bowBack заблокировал объект " + this.name);
-            System.out.println("    [" + Thread.currentThread().getId() + "] Метод bowBack разблокирует объект " + this.name);
+           //System.out.println("    [" + Thread.currentThread().getId() + "] Метод bowBack заблокировал объект " + this.name);
+           //System.out.println("    [" + Thread.currentThread().getId() + "] Метод bowBack разблокирует объект " + this.name);
         }
     }
 

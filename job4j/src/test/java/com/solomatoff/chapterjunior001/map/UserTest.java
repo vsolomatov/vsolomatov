@@ -14,12 +14,12 @@ public class UserTest {
    /* @Test
     public void whenTwoUserDifferentShouldTwoElementMap() {
         User userFirst = new User("Viacheslav Solomatov");
-        System.out.println(userFirst.hashCode());
+       //System.out.println(userFirst.hashCode());
 
         User userSecond = new User("Viacheslav Solomatov");
-        System.out.println(userSecond.hashCode());
+       //System.out.println(userSecond.hashCode());
 
-        System.out.println("Объекты эквивалентны? Ответ: " + userFirst.equals(userSecond));
+       //System.out.println("Объекты эквивалентны? Ответ: " + userFirst.equals(userSecond));
 
         Map<User, Object> map = new HashMap<>();
         Object objectFirst = new Object();
@@ -27,7 +27,7 @@ public class UserTest {
         map.put(userFirst, objectFirst);
         map.put(userSecond, objectSecond);
 
-        System.out.println(map);
+       //System.out.println(map);
 
         Object resultobjectFirst = map.get(userFirst);
         assertThat(resultobjectFirst, is(objectFirst));
@@ -39,26 +39,26 @@ public class UserTest {
     @Test
     public void whenTwoUserDifferentShouldTwoElementMap() {
         User userFirst = new User("Viacheslav Solomatov");
-        System.out.println(userFirst.hashCode());
+       //System.out.println(userFirst.hashCode());
 
         User userSecond = new User("Viacheslav Solomatov");
-        System.out.println(userSecond.hashCode());
+       //System.out.println(userSecond.hashCode());
 
-        System.out.println("Объекты эквивалентны? Ответ: " + userFirst.equals(userSecond));
+       //System.out.println("Объекты эквивалентны? Ответ: " + userFirst.equals(userSecond));
 
         Map<User, Object> map = new HashMap<>();
 
         Object objectFirst = new Object();
-        System.out.println("objectFirst = " + objectFirst);
+       //System.out.println("objectFirst = " + objectFirst);
         Object resultobjectFirst = map.put(userFirst, objectFirst);
         assertThat(resultobjectFirst, is(nullValue()));
 
         Object objectSecond = new Object();
-        System.out.println("objectSecond = " + objectSecond);
+       //System.out.println("objectSecond = " + objectSecond);
         Object resultObjectSecond = map.put(userSecond, objectSecond);
         assertThat(resultObjectSecond, is(objectFirst));
 
-        System.out.println(map);
+       //System.out.println(map);
 
     }
 }

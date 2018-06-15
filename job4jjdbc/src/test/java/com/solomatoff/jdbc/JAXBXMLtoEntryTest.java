@@ -13,7 +13,7 @@ public class JAXBXMLtoEntryTest {
         entries = jaxbxmLtoEntry.xmlToEntry("2.xml");
         ArrayList<Entry> list = entries.getList();
         for (Entry entry : list) {
-            System.out.println("entry.getId() = " + entry.getId());
+           //System.out.println("entry.getId() = " + entry.getId());
         }
     }
 }

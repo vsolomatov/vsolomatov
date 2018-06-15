@@ -39,7 +39,7 @@ public class ParserProperty {
             try (FileInputStream inputFile = new FileInputStream(file)) {
                 properties.load(inputFile);
             } catch (IOException e) {
-                System.out.println("Ошибка чтения файла parser.properties.");
+               //System.out.println("Ошибка чтения файла parser.properties.");
             }
         }
         try (FileOutputStream outputFile = new FileOutputStream(file)) {
@@ -48,7 +48,7 @@ public class ParserProperty {
             //Сохраняем ВСЕ свойства в файл.
             properties.store(outputFile, "This is properties file for Parser application by Solomatov Vyacheslav");
         } catch (IOException e) {
-            System.out.println("Ошибка записи файла parser.properties.");
+           //System.out.println("Ошибка записи файла parser.properties.");
             e.printStackTrace();
         }
     }

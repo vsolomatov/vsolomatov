@@ -55,9 +55,9 @@ public class ConvertList {
         }
         /*for (int i = 0; i < rows; i++) {
             for (int j = 0; j < numElemInRow; j++) {
-                System.out.print(resultArray[i][j] + " ");
+               //System.out.print(resultArray[i][j] + " ");
             }
-            System.out.println(" ");
+           //System.out.println(" ");
         }*/
         return resultArray;
     }

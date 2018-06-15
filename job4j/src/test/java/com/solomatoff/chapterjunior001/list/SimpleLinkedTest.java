@@ -208,7 +208,7 @@ public class SimpleLinkedTest {
             @Override
             public void run() {
                 oSimpleContainer.delete(0);
-                System.out.println("get возвратил: " + oSimpleContainer.get(0));
+               //System.out.println("get возвратил: " + oSimpleContainer.get(0));
                 try {
                     sleep(500);
                 } catch (InterruptedException e) {
@@ -221,7 +221,7 @@ public class SimpleLinkedTest {
             @Override
             public void run() {
                 oSimpleContainer.delete(0);
-                System.out.println("get возвратил: " + oSimpleContainer.get(0));
+               //System.out.println("get возвратил: " + oSimpleContainer.get(0));
                 try {
                     sleep(400);
                 } catch (InterruptedException e) {
@@ -239,7 +239,7 @@ public class SimpleLinkedTest {
         }
         Iterator<Integer> it = oSimpleContainer.iterator();
         while (it.hasNext()) {
-            System.out.println(it.next());
+           //System.out.println(it.next());
         }
     }
 

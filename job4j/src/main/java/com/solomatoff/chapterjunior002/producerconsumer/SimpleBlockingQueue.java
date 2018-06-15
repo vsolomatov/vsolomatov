@@ -21,13 +21,13 @@ class SimpleBlockingQueue<T> {
             try {
                 wait();
             } catch (InterruptedException e) {
-                System.out.println("InterruptedException caught");
+               //System.out.println("InterruptedException caught");
             }
         }
         while (queue.size() < CAPACITY) {
             this.queue.offer(value);
         }
-        System.out.println("    Producer " + Thread.currentThread().getName() + " Put: " + value);
+       //System.out.println("    Producer " + Thread.currentThread().getName() + " Put: " + value);
         notifyAll();
     }
 
@@ -41,11 +41,11 @@ class SimpleBlockingQueue<T> {
             try {
                 wait();
             } catch (InterruptedException e) {
-                System.out.println("InterruptedException caught");
+               //System.out.println("InterruptedException caught");
             }
         }
         value = this.queue.poll();
-        System.out.println("    Got: " + value + " in " + Thread.currentThread().getName());
+       //System.out.println("    Got: " + value + " in " + Thread.currentThread().getName());
         notifyAll();
         return value;
     }

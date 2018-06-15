@@ -27,7 +27,7 @@ public class ParallelSearchTest {
         }
         int index = 1;
         for (String file : result) {
-            System.out.println("(" + index + ") " + file);
+           //System.out.println("(" + index + ") " + file);
             index++;
         }
     }
@@ -48,7 +48,7 @@ public class ParallelSearchTest {
         }
         int index = 1;
         for (String file : result) {
-            System.out.println("(" + index + ") " + file);
+           //System.out.println("(" + index + ") " + file);
             index++;
         }
     }

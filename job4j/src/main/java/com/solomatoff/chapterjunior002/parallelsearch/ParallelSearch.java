@@ -45,7 +45,7 @@ public class ParallelSearch {
         Thread search = new Thread(() -> {
             searchTask();
             finish = true;
-            System.out.println("Завершила работу нить search.");
+           //System.out.println("Завершила работу нить search.");
         });
         Thread read = new Thread(() -> {
             FillingFileQueue fillingFileQueue = new FillingFileQueue();
@@ -58,7 +58,7 @@ public class ParallelSearch {
             while (!finish) {
                 int i = 0;
             }
-            System.out.println("Завершила работу нить read.");
+           //System.out.println("Завершила работу нить read.");
         });
         search.start();
         read.start();
@@ -133,7 +133,7 @@ public class ParallelSearch {
                         try {
                             paths.add(file.toString());
                         } catch (IllegalStateException e) {
-                            System.out.println("Поиск остановлен, т.к. ограничен заданной емкостью результата (" + this.capacity + ")");
+                           //System.out.println("Поиск остановлен, т.к. ограничен заданной емкостью результата (" + this.capacity + ")");
                             result = TERMINATE;
                         }
                         break;

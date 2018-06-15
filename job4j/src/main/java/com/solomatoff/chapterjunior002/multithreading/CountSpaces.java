@@ -16,6 +16,6 @@ public class CountSpaces implements Runnable {
                 count++;
             }
         }
-        System.out.println("Кол-во пробелов в тексте: " + count);
+       //System.out.println("Кол-во пробелов в тексте: " + count);
     }
 }

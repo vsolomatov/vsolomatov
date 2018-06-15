@@ -22,12 +22,12 @@ public class Point {
         Point a = new Point(0, 1);
         Point b = new Point(2, 5);
         // сделаем вызов метода
-        System.out.println("x1 = " + a.x);
-        System.out.println("y1 = " + a.y);
-        System.out.println("x2 = " + b.x);
-        System.out.println("y2 = " + b.y);
+       //System.out.println("x1 = " + a.x);
+       //System.out.println("y1 = " + a.y);
+       //System.out.println("x2 = " + b.x);
+       //System.out.println("y2 = " + b.y);
 
         double result = a.distanceTo(b);
-        System.out.println("Расстояние между точками А и В : " + result);
+       //System.out.println("Расстояние между точками А и В : " + result);
     }
 }

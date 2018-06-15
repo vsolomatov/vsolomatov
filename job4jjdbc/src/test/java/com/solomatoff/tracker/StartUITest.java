@@ -13,7 +13,7 @@ import java.io.PrintStream;
 
 public class StartUITest {
     // поле содержит дефолтный вывод в консоль.
-    private final PrintStream stdout = System.out;
+    private final PrintStream stdout =//System.out;
     // буфер для результата.
     private final ByteArrayOutputStream out = new ByteArrayOutputStream();
     // Сформируем строку меню
@@ -21,14 +21,14 @@ public class StartUITest {
 
     @Before
     public void loadOutput() {
-        System.out.println("execute before method");
+       //System.out.println("execute before method");
         System.setOut(new PrintStream(this.out));
     }
 
     @After
     public void backOutput() {
         System.setOut(this.stdout);
-        System.out.println("execute after method");
+       //System.out.println("execute after method");
         //System.out.println(new String(out.toByteArray()));
     }
 
@@ -168,7 +168,7 @@ public class StartUITest {
         new StartUI(input, tracker).init();
 
         // проверяем, что в трекере не существует заявки с указанным id.
-        System.out.println("itemid = " + itemid);
+       //System.out.println("itemid = " + itemid);
         assertThat(tracker.findById(itemid), is(nullValue()));
     }
 }

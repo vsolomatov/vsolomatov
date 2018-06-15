@@ -16,8 +16,8 @@ public class UserTest {
         User origin = new User("Олег", 29);
         User expected = new User("Андрей", 29);
 
-        System.out.println(origin);
-        System.out.println(expected);
+       //System.out.println(origin);
+       //System.out.println(expected);
 
         boolean result = origin.equals(expected);
 

@@ -21,10 +21,10 @@ public class SortUserTest {
         expected.add(new User("Stanly", 41));
         expected.add(new User("Dmitriy", 35));
 
-        System.out.println(expected);
+       //System.out.println(expected);
 
         Set<User> result = sortUser.sort(origin);
-        System.out.println(result);
+       //System.out.println(result);
 
         assertThat(result, is(expected));
     }
@@ -43,10 +43,10 @@ public class SortUserTest {
         expected.add(new User("Dmitriy", 35));
         expected.add(new User("Vyacheslav", 47));
         expected.add(new User("Vyacheslav", 27));
-        System.out.println(expected);
+       //System.out.println(expected);
 
         List<User> result = sortUser.sortNameLength(origin);
-        System.out.println(result);
+       //System.out.println(result);
 
         assertThat(result, is(expected));
     }
@@ -65,10 +65,10 @@ public class SortUserTest {
         expected.add(new User("Stan", 41));
         expected.add(new User("Vyacheslav", 27));
         expected.add(new User("Vyacheslav", 47));
-        System.out.println(expected);
+       //System.out.println(expected);
 
         List<User> result = sortUser.sortByAllFields(origin);
-        System.out.println(result);
+       //System.out.println(result);
 
         assertThat(result, is(expected));
     }

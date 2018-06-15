@@ -29,7 +29,7 @@ public class SimpleLinked<E> implements SimpleContainer<E> {
 
     synchronized public void add(E e) {
         String threadName = Thread.currentThread().getName();
-        System.out.println("    Начинаем add " + e + " из потока " + threadName);
+       //System.out.println("    Начинаем add " + e + " из потока " + threadName);
         Node<E> newItem = new Node<>(null, e, null);
         if (this.lastItem == null) {
             this.firstItem = newItem;
@@ -46,7 +46,7 @@ public class SimpleLinked<E> implements SimpleContainer<E> {
         }
         this.size++;
         this.modCount++;
-        System.out.println("    Заканчиваем add " + e + " из потока " + threadName);
+       //System.out.println("    Заканчиваем add " + e + " из потока " + threadName);
     }
 
     synchronized public E get(int position) throws NoSuchElementException {
@@ -71,7 +71,7 @@ public class SimpleLinked<E> implements SimpleContainer<E> {
 
     synchronized public void delete(int position) throws NoSuchElementException {
         String threadName = Thread.currentThread().getName();
-        System.out.println("        Начинаем delete с индексом " + position + " из потока " + threadName);
+       //System.out.println("        Начинаем delete с индексом " + position + " из потока " + threadName);
         if (position >= this.size) {
             throw new NoSuchElementException();
         }
@@ -114,7 +114,7 @@ public class SimpleLinked<E> implements SimpleContainer<E> {
         }
         this.size--;
         this.modCount++;
-        System.out.println("        Заканчиваем delete с индексом " + position + " из потока " + threadName);
+       //System.out.println("        Заканчиваем delete с индексом " + position + " из потока " + threadName);
     }
 
     public E deleteFirst() throws NoSuchElementException {

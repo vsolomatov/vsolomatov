@@ -20,9 +20,9 @@ public class TrackerTest {
         tracker.add(itemone);
 
         /*for (Item item : tracker.findAll()) {
-            System.out.println(item.getId() + " " + item.getName() + " " + item.getDescription());
+           //System.out.println(item.getId() + " " + item.getName() + " " + item.getDescription());
         }
-        System.out.println(itemone.getId());*/
+       //System.out.println(itemone.getId());*/
 
         // Создаем новую заявку.
         Item itemtwo = new Item("test2", "testDescription2", 1234L);
@@ -39,7 +39,7 @@ public class TrackerTest {
         assertThat(tracker.findById(itemone.getId()).getDescription(), is("testDescription2"));
 
         /*for (Item item : tracker.findAll()) {
-            System.out.println(item.getId() + " " + item.getName() + " " + item.getDescription());
+           //System.out.println(item.getId() + " " + item.getName() + " " + item.getDescription());
         }*/
     }
     @Test
@@ -62,9 +62,9 @@ public class TrackerTest {
         tracker.add(itemone);
 
         /*for (Item item : tracker.findAll()) {
-            System.out.println(item.getId() + " " + item.getName() + " " + item.getDescription());
+           //System.out.println(item.getId() + " " + item.getName() + " " + item.getDescription());
         }
-        System.out.println(idDelete);*/
+       //System.out.println(idDelete);*/
 
         // Удаляем заявку в трекере.
         tracker.delete(idDelete);
@@ -73,7 +73,7 @@ public class TrackerTest {
        assertThat(tracker.findById(idDelete), is(nullValue()));
 
         /*for (Item item : tracker.findAll()) {
-            System.out.println(item.getId() + " " + item.getName() + " " + item.getDescription());
+           //System.out.println(item.getId() + " " + item.getName() + " " + item.getDescription());
         }*/
     }
 }

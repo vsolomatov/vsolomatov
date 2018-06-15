@@ -14,6 +14,6 @@ class CountWords implements Runnable {
     public void run() {
         String[] splitText = this.text.split(" ");
         int count = splitText.length;
-        System.out.println("Кол-во слов в тексте: " + count);
+       //System.out.println("Кол-во слов в тексте: " + count);
     }
 }

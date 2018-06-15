@@ -36,15 +36,15 @@ class WorkInThread implements Runnable {
     @Override
     public void run() {
         myLock.lock();
-        System.out.println("Start Working");
+       //System.out.println("Start Working");
         try {
-            System.out.println("        Working in " + Thread.currentThread().getName());
+           //System.out.println("        Working in " + Thread.currentThread().getName());
             sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
-            System.out.println("Finish Working");
-            System.out.println("");
+           //System.out.println("Finish Working");
+           //System.out.println("");
             myLock.unlock();
         }
     }

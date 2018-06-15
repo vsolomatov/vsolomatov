@@ -18,11 +18,11 @@ public class BoardTest {
             // пытаемся передвинуть фигуру и проверяем результат
             assertThat(newGame.move(oneCell, twoCell), is(true));
         } catch (FigureNotFoundException fnfe) {
-            System.out.println("Не найдена фигура");
+           //System.out.println("Не найдена фигура");
         } catch (ImpossibleMoveException ime) {
-            System.out.println("Невозможно сходить этой фигурой");
+           //System.out.println("Невозможно сходить этой фигурой");
         } catch (OccupiedWayException owe) {
-            System.out.println("Невозможно сходить этой фигурой, путь занят");
+           //System.out.println("Невозможно сходить этой фигурой, путь занят");
         }
 
         // Создадим новые две ячейки
@@ -32,11 +32,11 @@ public class BoardTest {
             // пытаемся передвинуть фигуру и проверяем результат
             assertThat(newGame.move(oneCell, twoCell), is(true));
         } catch (FigureNotFoundException fnfe) {
-            System.out.println("Не найдена фигура");
+           //System.out.println("Не найдена фигура");
         } catch (ImpossibleMoveException ime) {
-            System.out.println("Невозможно сходить этой фигурой");
+           //System.out.println("Невозможно сходить этой фигурой");
         } catch (OccupiedWayException owe) {
-            System.out.println("Невозможно сходить этой фигурой, путь занят");
+           //System.out.println("Невозможно сходить этой фигурой, путь занят");
         }
 
         // Создадим новые две ячейки
@@ -46,11 +46,11 @@ public class BoardTest {
             // пытаемся передвинуть фигуру и проверяем результат
             assertThat(newGame.move(oneCell, twoCell), is(true));
         } catch (FigureNotFoundException fnfe) {
-            System.out.println("Не найдена фигура");
+           //System.out.println("Не найдена фигура");
         } catch (ImpossibleMoveException ime) {
-            System.out.println("Невозможно сходить этой фигурой");
+           //System.out.println("Невозможно сходить этой фигурой");
         } catch (OccupiedWayException owe) {
-            System.out.println("Невозможно сходить этой фигурой, путь занят");
+           //System.out.println("Невозможно сходить этой фигурой, путь занят");
         }
 
         // Создадим новые две ячейки
@@ -60,11 +60,11 @@ public class BoardTest {
             // пытаемся передвинуть фигуру и проверяем результат
             assertThat(newGame.move(oneCell, twoCell), is(true));
         } catch (FigureNotFoundException fnfe) {
-            System.out.println("Не найдена фигура");
+           //System.out.println("Не найдена фигура");
         } catch (ImpossibleMoveException ime) {
-            System.out.println("Невозможно сходить этой фигурой");
+           //System.out.println("Невозможно сходить этой фигурой");
         } catch (OccupiedWayException owe) {
-            System.out.println("Невозможно сходить этой фигурой, путь занят");
+           //System.out.println("Невозможно сходить этой фигурой, путь занят");
         }
 
         //newGame.printcoordinates();
@@ -81,11 +81,11 @@ public class BoardTest {
             // пытаемся передвинуть фигуру и проверяем результат
             assertThat(newGame.move(oneCell, twoCell), is(false));
         } catch (FigureNotFoundException fnfe) {
-            System.out.println("Не найдена фигура");
+           //System.out.println("Не найдена фигура");
         } catch (ImpossibleMoveException ime) {
-            System.out.println("Невозможно сходить этой фигурой");
+           //System.out.println("Невозможно сходить этой фигурой");
         } catch (OccupiedWayException owe) {
-            System.out.println("Невозможно сходить этой фигурой, путь занят");
+           //System.out.println("Невозможно сходить этой фигурой, путь занят");
         }
 
         //newGame.printcoordinates();
@@ -101,11 +101,11 @@ public class BoardTest {
         try {
             assertThat(newGame.move(oneCell, twoCell), is(false));
         } catch (FigureNotFoundException fnfe) {
-            System.out.println("Не найдена фигура");
+           //System.out.println("Не найдена фигура");
         } catch (ImpossibleMoveException ime) {
-            System.out.println("Невозможно сходить этой фигурой");
+           //System.out.println("Невозможно сходить этой фигурой");
         } catch (OccupiedWayException owe) {
-            System.out.println("Невозможно сходить этой фигурой, путь занят");
+           //System.out.println("Невозможно сходить этой фигурой, путь занят");
         }
         //newGame.printcoordinates();
     }
@@ -120,11 +120,11 @@ public class BoardTest {
         try {
             assertThat(newGame.move(oneCell, twoCell), is(true));
         } catch (FigureNotFoundException fnfe) {
-            System.out.println("Не найдена фигура");
+           //System.out.println("Не найдена фигура");
         } catch (ImpossibleMoveException ime) {
-            System.out.println("Невозможно сходить этой фигурой");
+           //System.out.println("Невозможно сходить этой фигурой");
         } catch (OccupiedWayException owe) {
-            System.out.println("Невозможно сходить этой фигурой, путь занят");
+           //System.out.println("Невозможно сходить этой фигурой, путь занят");
         }
         // Создадим новые две ячейки
         oneCell = new Cell(5, 0);
@@ -132,11 +132,11 @@ public class BoardTest {
         try {
             assertThat(newGame.move(oneCell, twoCell), is(false));
         } catch (FigureNotFoundException fnfe) {
-            System.out.println("Не найдена фигура");
+           //System.out.println("Не найдена фигура");
         } catch (ImpossibleMoveException ime) {
-            System.out.println("Невозможно сходить этой фигурой");
+           //System.out.println("Невозможно сходить этой фигурой");
         } catch (OccupiedWayException owe) {
-            System.out.println("Невозможно сходить этой фигурой, путь занят");
+           //System.out.println("Невозможно сходить этой фигурой, путь занят");
         }
         //newGame.printcoordinates();
     }

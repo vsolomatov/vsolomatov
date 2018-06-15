@@ -15,8 +15,8 @@ public class TransferByThread implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("Начинает работу поток " + Thread.currentThread().getName());
+       //System.out.println("Начинает работу поток " + Thread.currentThread().getName());
         userStorage.transfer(this.userOne, this.userTwo, this.amount);
-        System.out.println("Закончил работу поток " + Thread.currentThread().getName());
+       //System.out.println("Закончил работу поток " + Thread.currentThread().getName());
     }
 }

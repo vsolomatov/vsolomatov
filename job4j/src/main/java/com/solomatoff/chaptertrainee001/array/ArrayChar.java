@@ -54,7 +54,7 @@ public class ArrayChar {
             // Цикл по subarray
             for (int in = 0; in < subarray.length; in++) {
 
-                // System.out.println( Integer.toString(out + in ) + " " + Integer.toString(in) );
+                ////System.out.println( Integer.toString(out + in ) + " " + Integer.toString(in) );
 
                 if (originarray[out + in] != subarray[in]) {
                     result = false;

@@ -14,6 +14,6 @@ public class Time implements Runnable {
         while (System.currentTimeMillis() - startTime < interruptTime) {
             currentTime = System.currentTimeMillis();
         }
-        System.out.println("Время закончилось! (" + currentTime + ")");
+       //System.out.println("Время закончилось! (" + currentTime + ")");
     }
 }

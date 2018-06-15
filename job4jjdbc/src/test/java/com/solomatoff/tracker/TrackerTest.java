@@ -38,10 +38,10 @@ public class TrackerTest {
         comments = new String[] {};
         tracker.commentsInsert(itemId, comments);
 
-        System.out.println("Список ВСЕХ заявок");
+       //System.out.println("Список ВСЕХ заявок");
         int index = 1;
         for (Item itemLoop : tracker.findAll()) {
-            System.out.println("    [" + index + "] " + itemLoop.getId() + " " + itemLoop.getName() + " " + itemLoop.getDescription() + " " + itemLoop.getCreated() + " " + itemLoop.commentsToString());
+           //System.out.println("    [" + index + "] " + itemLoop.getId() + " " + itemLoop.getName() + " " + itemLoop.getDescription() + " " + itemLoop.getCreated() + " " + itemLoop.commentsToString());
             index++;
         }
     }
@@ -56,11 +56,11 @@ public class TrackerTest {
         tracker.commentsInsert(itemId, comments);
 
         item = tracker.findById(itemId);
-        System.out.println("    Заявка ДО ИЗМЕНЕНИЯ " + item.getId() + " " + item.getName() + " " + item.getDescription() + " " + item.getCreated() + " " + item.commentsToString());
+       //System.out.println("    Заявка ДО ИЗМЕНЕНИЯ " + item.getId() + " " + item.getName() + " " + item.getDescription() + " " + item.getCreated() + " " + item.commentsToString());
 
         Item itemForReplace = new Item(null, "test replace", "test replace Description", null, null);
         // Обновляем заявку в трекере.
-        System.out.println("Изменяем заявку с itemId = " + itemId);
+       //System.out.println("Изменяем заявку с itemId = " + itemId);
         tracker.replace(itemId, itemForReplace);
 
         // Проверяем, что заявка с таким itemId имеет новое имя test6.
@@ -69,7 +69,7 @@ public class TrackerTest {
         assertThat(tracker.findById(itemId).getDescription(), is("test replace Description"));
 
         Item itemReplaced = tracker.findById(itemId);
-        System.out.println("    Заявка ПОСЛЕ ИЗМЕНЕНИЯ " + itemReplaced.getId() + " " + itemReplaced.getName() + " " + itemReplaced.getDescription() + " " + itemReplaced.getCreated() + " " + itemReplaced.commentsToString());
+       //System.out.println("    Заявка ПОСЛЕ ИЗМЕНЕНИЯ " + itemReplaced.getId() + " " + itemReplaced.getName() + " " + itemReplaced.getDescription() + " " + itemReplaced.getCreated() + " " + itemReplaced.commentsToString());
     }
 
     @Test
@@ -81,21 +81,21 @@ public class TrackerTest {
         String[] comments = new String[] {"Комментарий #1 к заявке " + itemId};
         tracker.commentsInsert(itemId, comments);
 
-        System.out.println("Список заявок ДО УДАЛЕНИЯ");
+       //System.out.println("Список заявок ДО УДАЛЕНИЯ");
         for (Item itemLoop : tracker.findAll()) {
-            System.out.println("    " + itemLoop.getId() + " " + itemLoop.getName() + " " + itemLoop.getDescription() + " " + itemLoop.getCreated() + " " + itemLoop.commentsToString());
+           //System.out.println("    " + itemLoop.getId() + " " + itemLoop.getName() + " " + itemLoop.getDescription() + " " + itemLoop.getCreated() + " " + itemLoop.commentsToString());
         }
 
-        System.out.println("Удаляем заявку с itemId = " + itemId);
+       //System.out.println("Удаляем заявку с itemId = " + itemId);
         // Удаляем заявку в трекере.
         tracker.delete(itemId);
 
         // Проверяем, что заявка с таким id отсутствует
         assertThat(tracker.findById(itemId), is(nullValue()));
 
-        System.out.println("Список заявок ПОСЛЕ УДАЛЕНИЯ");
+       //System.out.println("Список заявок ПОСЛЕ УДАЛЕНИЯ");
         for (Item itemLoop : tracker.findAll()) {
-            System.out.println("    " + itemLoop.getId() + " " + itemLoop.getName() + " " + itemLoop.getDescription() + " " + itemLoop.getCreated() + " " + itemLoop.commentsToString());
+           //System.out.println("    " + itemLoop.getId() + " " + itemLoop.getName() + " " + itemLoop.getDescription() + " " + itemLoop.getCreated() + " " + itemLoop.commentsToString());
         }
     }
 
@@ -109,9 +109,9 @@ public class TrackerTest {
         tracker.commentsInsert(itemId, comments);
 
         // Находим такие заявки в трекере.
-        System.out.println("Список заявок c name = test5");
+       //System.out.println("Список заявок c name = test5");
         for (Item itemLoop : tracker.findByName("test5")) {
-            System.out.println("    " + itemLoop.getId() + " " + itemLoop.getName() + " " + itemLoop.getDescription() + " " + itemLoop.getCreated() + " " + itemLoop.commentsToString());
+           //System.out.println("    " + itemLoop.getId() + " " + itemLoop.getName() + " " + itemLoop.getDescription() + " " + itemLoop.getCreated() + " " + itemLoop.commentsToString());
         }
     }
 }

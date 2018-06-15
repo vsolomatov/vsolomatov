@@ -6,7 +6,7 @@ public class CountTextTest {
     @Test
     public void whenCountText() {
         String text = "Создать программу, которая будет считать количество слов и пробелов в тексте. Здесь не надо использовать регулярные выражения. Просто в цикле перебрать символы.";
-        System.out.println("Начало расчетов");
+       //System.out.println("Начало расчетов");
         CountSpaces countSpaces = new CountSpaces(text);
         Thread t1 = new Thread(countSpaces, "thread 1");
         t1.start();
@@ -19,6 +19,6 @@ public class CountTextTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("Окончание расчетов");
+       //System.out.println("Окончание расчетов");
     }
 }

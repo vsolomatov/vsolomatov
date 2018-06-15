@@ -44,9 +44,9 @@ public class BoardTest {
         ReentrantLock[][] boardContainer = board.getBoardContainer();
         for (int i = 0; i < Board.ROW; i++) {
             for (int j = 0; j < Board.COL; j++) {
-                System.out.print("[" + i + "," + j + "]=" + boardContainer[i][j].isLocked() + " ");
+               //System.out.print("[" + i + "," + j + "]=" + boardContainer[i][j].isLocked() + " ");
             }
-            System.out.println("");
+           //System.out.println("");
         }
     }
 
@@ -106,9 +106,9 @@ public class BoardTest {
         ReentrantLock[][] boardContainer = board.getBoardContainer();
         for (int i = 0; i < Board.ROW; i++) {
             for (int j = 0; j < Board.COL; j++) {
-                System.out.print("[" + i + "," + j + "]=" + boardContainer[i][j].isLocked() + " ");
+               //System.out.print("[" + i + "," + j + "]=" + boardContainer[i][j].isLocked() + " ");
             }
-            System.out.println("");
+           //System.out.println("");
         }
     }
 

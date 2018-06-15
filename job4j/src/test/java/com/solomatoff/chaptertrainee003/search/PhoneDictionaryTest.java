@@ -25,7 +25,7 @@ public class PhoneDictionaryTest {
         List<Person> persons = phones.find("etr");
 
         /*for (Person person : persons) {
-            System.out.println(person.getSurname());
+           //System.out.println(person.getSurname());
         }*/
 
         ListIterator<Person> myiterator = persons.listIterator();

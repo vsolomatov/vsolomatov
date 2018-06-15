@@ -24,7 +24,7 @@ public class ParserSqlRu {
         parserSqlRu.init();
         // Настраиваем таймер
         parserSqlRu.initTimer();
-        System.out.println("Основной поток завершил работу!");
+       //System.out.println("Основной поток завершил работу!");
     }
 
     /**
@@ -35,7 +35,7 @@ public class ParserSqlRu {
         String filename = "log4j.properties";
         File file = new File(filename);
         if (!file.exists()) {
-            System.out.println("It is not possible to load the given log4j properties file :" + file.getAbsolutePath());
+           //System.out.println("It is not possible to load the given log4j properties file :" + file.getAbsolutePath());
         } else {
             PropertyConfigurator.configure(file.getAbsolutePath());
         }
@@ -69,16 +69,16 @@ public class ParserSqlRu {
         String mmfrequency = launchfrequency.substring(3, 5);
         // период запуска в миллисекундах
         long period = (Integer.parseInt(hhfrequency) * 60 + Integer.parseInt(mmfrequency)) * 60 * 1000;
-        System.out.println("Период запуска приложения в минутах: " + period / 60000);
+       //System.out.println("Период запуска приложения в минутах: " + period / 60000);
         // Определяем разницу между текущим моментом и последней датой запуска в миллисекундах
         Timestamp finishDate = null;
         try (Connection conn = createConnection()) {
             finishDate = getDateFromDateKeeper("selectmaxdatefinish", conn);
-            System.out.printf("    Предыдущая дата запуска: %1$ty-%1$tm-%1$td %1$tH:%1$tM%n", finishDate);
+           //System.out.printf("    Предыдущая дата запуска: %1$ty-%1$tm-%1$td %1$tH:%1$tM%n", finishDate);
             long diffDate = getDateDiff(finishDate, new Date());
-            System.out.println("    Разница текущего времени и предыдущего запуска в минутах: " + diffDate / 60000);
+           //System.out.println("    Разница текущего времени и предыдущего запуска в минутах: " + diffDate / 60000);
             long delay = (period - diffDate > 0) ? (period - diffDate) : 0L;
-            System.out.printf("         Отсрочка до следующего запуска в миллисекундах: %s (в минутах: %s)%n", delay, delay / 60000);
+           //System.out.printf("         Отсрочка до следующего запуска в миллисекундах: %s (в минутах: %s)%n", delay, delay / 60000);
             // планируем запуски
             TimerTask timerTask = new TimerTask() {
                 @Override
@@ -110,7 +110,7 @@ public class ParserSqlRu {
             // разбираем страницы сайта в цикле
             while (!resultParserPage.flagFinish) {
                 urlPage = "http://www.sql.ru/forum/job-offers/" + index;
-                System.out.println("Начинаем разбор страницы " + urlPage);
+               //System.out.println("Начинаем разбор страницы " + urlPage);
                 resultParserPage = parserPage.parserForumTable(urlPage, completionDate);
                 if (index == 1) { // это первая страница
                     vacancyDate = resultParserPage.vacancyDate;
@@ -163,7 +163,7 @@ public class ParserSqlRu {
         try (PreparedStatement stInsert = conn.prepareStatement(insertDateKeeper)) {
             stInsert.setTimestamp(1, currentDate);
             stInsert.setTimestamp(2, vacancyDate);
-            System.out.printf("     Добавляем в таблицу дату окончания текущего разбора: <%s>  и дату последей вакансии <%s>%n", currentDate, vacancyDate);
+           //System.out.printf("     Добавляем в таблицу дату окончания текущего разбора: <%s>  и дату последей вакансии <%s>%n", currentDate, vacancyDate);
             stInsert.executeUpdate();
         } catch (SQLException e) {
             ParserSqlRu.LOGGERPARSER.error(String.format("<   %s   > %s %s", e.getMessage(), currentDate, vacancyDate), e);

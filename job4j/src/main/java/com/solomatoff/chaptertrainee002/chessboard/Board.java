@@ -59,7 +59,7 @@ public class Board {
         Figure ourfigure, newfigure;
         boolean possible;
         ArrayList<Cell> cells;
-        System.out.println("Пытаемся передвинуть фигуру из " + sourse.x + ":" + sourse.y + " в " + dest.x + ":" + dest.y);
+       //System.out.println("Пытаемся передвинуть фигуру из " + sourse.x + ":" + sourse.y + " в " + dest.x + ":" + dest.y);
 
         try {
             //System.out.println("Проверяем что в заданной ячейке есть фигура");
@@ -86,7 +86,7 @@ public class Board {
         newfigure = ourfigure.copy(sourse, dest);
         this.figures.add(newfigure);
 
-        System.out.println("");
+       //System.out.println("");
         return possible;
     }
 
@@ -117,9 +117,9 @@ public class Board {
      *  Метод печатает координаты списка данного класса figures
      * */
     public void printcoordinates() {
-        System.out.println("Список занятых ячеек:");
+       //System.out.println("Список занятых ячеек:");
         for (Figure figure : this.figures) {
-            System.out.println(figure.position.x + ":" + figure.position.y);
+           //System.out.println(figure.position.x + ":" + figure.position.y);
         }
     }
 }

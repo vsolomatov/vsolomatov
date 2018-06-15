@@ -46,7 +46,7 @@ public class TrackerProperty {
             try (FileInputStream inputFile = new FileInputStream(file)) {
                 properties.load(inputFile);
             } catch (IOException e) {
-                System.out.println("Ошибка чтения файла tracker.properties.");
+               //System.out.println("Ошибка чтения файла tracker.properties.");
             }
         }
         try (FileOutputStream outputFile = new FileOutputStream(file)) {
@@ -55,7 +55,7 @@ public class TrackerProperty {
             //Сохраняем ВСЕ свойства в файл.
             properties.store(outputFile, "This is properties file for Tracker application by Solomatov Vyacheslav");
         } catch (IOException e) {
-            System.out.println("Ошибка записи файла tracker.properties.");
+           //System.out.println("Ошибка записи файла tracker.properties.");
             e.printStackTrace();
         }
     }

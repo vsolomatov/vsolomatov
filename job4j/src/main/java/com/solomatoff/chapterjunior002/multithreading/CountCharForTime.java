@@ -10,12 +10,12 @@ public class CountCharForTime {
         try {
             tTime.join();
         } catch (InterruptedException e) {
-            System.out.println("Отсчет времени был прерван!");
+           //System.out.println("Отсчет времени был прерван!");
         }
         if (tCount.getState() != Thread.State.TERMINATED) {
             //System.out.println("Меняем состояние прерывания потока, рассчитывающего кол-во символов в тексте.");
             tCount.interrupt();
         }
-        System.out.println("Окончание главного потока");
+       //System.out.println("Окончание главного потока");
     }
 }

@@ -18,7 +18,7 @@ public class UserStorage {
     private synchronized boolean update(User user, int amount) {
         boolean result = true;
         String threadName = Thread.currentThread().getName();
-        System.out.println("        Начинаем update пользователя с id = " + user.id + " из потока " + threadName);
+       //System.out.println("        Начинаем update пользователя с id = " + user.id + " из потока " + threadName);
         int index = this.userContainer.indexOf(user);
         if (index < 0) {
             result = false;
@@ -26,7 +26,7 @@ public class UserStorage {
             user.amount = amount;
             this.userContainer.set(index, user);
         }
-        System.out.println("        Закончили update пользователя с id = " + user.id + " из потока " + threadName);
+       //System.out.println("        Закончили update пользователя с id = " + user.id + " из потока " + threadName);
         return result;
     }
 
@@ -39,16 +39,16 @@ public class UserStorage {
         String threadName = Thread.currentThread().getName();
         int index = this.userContainer.indexOf(userFrom);
         int amountFromTo = this.userContainer.get(index).amount;
-        System.out.println("    Начальный остаток у userFrom: " + amountFromTo + " из потока " + threadName);
+       //System.out.println("    Начальный остаток у userFrom: " + amountFromTo + " из потока " + threadName);
         amountFromTo -= amount;
-        System.out.println("    Новый остаток у userFrom: " + amountFromTo + " из потока " + threadName);
+       //System.out.println("    Новый остаток у userFrom: " + amountFromTo + " из потока " + threadName);
         update(userFrom, amountFromTo);
 
         index = this.userContainer.indexOf(userTo);
         amountFromTo = this.userContainer.get(index).amount;
-        System.out.println("    Начальный остаток у userTo: " + amountFromTo + " из потока " + threadName);
+       //System.out.println("    Начальный остаток у userTo: " + amountFromTo + " из потока " + threadName);
         amountFromTo += amount;
-        System.out.println("    Новый остаток у userTo: " + amountFromTo + " из потока " + threadName);
+       //System.out.println("    Новый остаток у userTo: " + amountFromTo + " из потока " + threadName);
         update(userTo, amountFromTo);
     }
 

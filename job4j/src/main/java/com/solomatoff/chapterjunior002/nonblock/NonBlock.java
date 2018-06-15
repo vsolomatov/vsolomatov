@@ -20,7 +20,7 @@ public class NonBlock {
             @Override
             public Task apply(Integer id, Task task) {
                 Integer newVersion = task.getVersion() + 1;
-                System.out.printf("[%9s]. Изменяем задачу: %9s. Версия: %2d   на задачу  %9s. Версия: %2d%n", Thread.currentThread().getName(), task.getName(), task.getVersion(), newName, newVersion);
+               //System.out.printf("[%9s]. Изменяем задачу: %9s. Версия: %2d   на задачу  %9s. Версия: %2d%n", Thread.currentThread().getName(), task.getName(), task.getVersion(), newName, newVersion);
                 // проверяем версию (вдруг кто-то уже изменил элемент)
                 if (container.get(id).getVersion() != newVersion - 1) {
                     throw new OptimisticLockException();

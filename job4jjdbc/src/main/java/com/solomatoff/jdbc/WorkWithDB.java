@@ -33,7 +33,7 @@ public class WorkWithDB {
             st = conn.createStatement();
             // создаем таблицу TEST
             String stCreateTable = "CREATE TABLE IF NOT EXISTS " + username + ".test(field integer)";
-            System.out.println("stCreateTable = " + stCreateTable);
+           //System.out.println("stCreateTable = " + stCreateTable);
             st.execute(stCreateTable);
             conn.setAutoCommit(false);
             // очищаем таблицу TEST
@@ -67,7 +67,7 @@ public class WorkWithDB {
             System.exit(0);
         }
         String outputFile = "1.xml";
-        System.out.println("outputFile = " + outputFile);
+       //System.out.println("outputFile = " + outputFile);
         // делаем выборку из базы данных
         ResultSet rs = null;
         try {
@@ -107,9 +107,9 @@ public class WorkWithDB {
             LOG.error(e.getMessage(), e);
         }
         stylesheet = "1.xsl";
-        System.out.println("stylesheet = " + stylesheet);
+       //System.out.println("stylesheet = " + stylesheet);
         if (!new File(stylesheet).exists()) {
-            System.out.println("Файл таблицы стилей (1.xsl) не существует в указанном каталоге!");
+           //System.out.println("Файл таблицы стилей (1.xsl) не существует в указанном каталоге!");
             System.exit(1);
         }
         String dataFile = "1.xml";
@@ -124,7 +124,7 @@ public class WorkWithDB {
         for (Entry entry : list) {
             sumEntries += entry.getId();
         }
-        System.out.println("Сумма полей FIELD = " + sumEntries);
+       //System.out.println("Сумма полей FIELD = " + sumEntries);
     }
 
     private static void setUrl(String url) {
@@ -141,7 +141,7 @@ public class WorkWithDB {
 
     private static void setNumberN(Integer numberN) {
         WorkWithDB.numberN = numberN;
-        System.out.println("numberN = " + numberN);
+       //System.out.println("numberN = " + numberN);
     }
 
     public static void main(String[] args) {

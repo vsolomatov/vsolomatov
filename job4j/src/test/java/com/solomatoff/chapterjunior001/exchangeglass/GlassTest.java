@@ -59,7 +59,7 @@ public class GlassTest {
         assertThat(result, is(5));
 
         /*for (Order ord : glass) {
-            System.out.println(ord);
+           //System.out.println(ord);
         }*/
     }
 
@@ -103,7 +103,7 @@ public class GlassTest {
         boolean hasNext = it.hasNext();
         assertThat(hasNext, is(false));
         /*for (Order ord : glass) {
-            System.out.println(ord);
+           //System.out.println(ord);
         }*/
     }
 

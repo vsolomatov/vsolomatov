@@ -118,7 +118,7 @@ public class SimpleListTest {
         }
         Iterator<Integer> it = oSimpleContainer.iterator();
         while (it.hasNext()) {
-            System.out.println(it.next());
+           //System.out.println(it.next());
         }
     }
 }

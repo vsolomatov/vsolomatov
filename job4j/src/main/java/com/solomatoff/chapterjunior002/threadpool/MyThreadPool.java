@@ -39,10 +39,10 @@ class MyThreadPool {
                 Work nextTask = workQueue.poll();
                 if (nextTask != null) {
                     nameWork = "Task " + count + "[" + Thread.currentThread().getName().substring(7) + "]";
-                    System.out.println("Befor start " + nameWork);
+                   //System.out.println("Befor start " + nameWork);
                     nextTask.executeWork(nameWork);
-                    System.out.println("After finish " + nameWork);
-                    System.out.println("");
+                   //System.out.println("After finish " + nameWork);
+                   //System.out.println("");
                     count++;
                 }
 
@@ -53,12 +53,12 @@ class MyThreadPool {
 
 class Work {
     public void executeWork(String nameWork) {
-        System.out.println("    Start Working in " + nameWork);
+       //System.out.println("    Start Working in " + nameWork);
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("    Finish Working in " + nameWork);
+       //System.out.println("    Finish Working in " + nameWork);
     }
 }

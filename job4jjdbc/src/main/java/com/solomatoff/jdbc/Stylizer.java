@@ -21,7 +21,7 @@ public class Stylizer {
         }
         String dir = datafile.substring(0, separatorLastIndex + 1);
         String outputFile = dir + "2.xml";
-        System.out.println("outputFile - " + outputFile);
+       //System.out.println("outputFile - " + outputFile);
         try {
             DocumentBuilder builder = dbf.newDocumentBuilder();
             File datafileAsFile = new File(datafile);

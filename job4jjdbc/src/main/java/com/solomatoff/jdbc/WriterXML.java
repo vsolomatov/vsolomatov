@@ -39,7 +39,7 @@ public class WriterXML {
             trf.setOutputProperty(OutputKeys.INDENT, "yes"); // для того, чтобы каждый узел начинался с новой строки
             //trf.setOutputProperty(OutputKeys.ENCODING, "WINDOWS-1251");
             trf.transform(src, result);
-            System.out.println("    Записали файл " + path);
+           //System.out.println("    Записали файл " + path);
         } catch (TransformerException | ParserConfigurationException | IOException | SAXException e) {
             e.printStackTrace();
         }

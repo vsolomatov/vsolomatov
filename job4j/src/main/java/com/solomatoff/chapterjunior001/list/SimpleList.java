@@ -20,7 +20,7 @@ public class SimpleList<E> implements SimpleContainer<E> {
     @Override
     synchronized public void add(E e) {
         String threadName = Thread.currentThread().getName();
-        System.out.println("    Начинаем add " + e + " из потока " + threadName);
+       //System.out.println("    Начинаем add " + e + " из потока " + threadName);
         int oldCapacity = this.container.length;
         if (this.index == oldCapacity) {
             int newCapacity = oldCapacity * 2;
@@ -33,13 +33,13 @@ public class SimpleList<E> implements SimpleContainer<E> {
         }
         this.container[index++] = e;
         this.modCount++;
-        System.out.println("    Заканчиваем add " + e + " из потока " + threadName);
+       //System.out.println("    Заканчиваем add " + e + " из потока " + threadName);
     }
 
     @Override
     synchronized public E get(int position) throws NoSuchElementException {
         String threadName = Thread.currentThread().getName();
-        System.out.println("Начинаем get с индексом " + position + " из потока " + threadName);
+       //System.out.println("Начинаем get с индексом " + position + " из потока " + threadName);
         if (position >= this.index) {
             throw new NoSuchElementException();
         }
@@ -48,7 +48,7 @@ public class SimpleList<E> implements SimpleContainer<E> {
         } catch (InterruptedException e1) {
             e1.printStackTrace();
         }
-        System.out.println("Заканчиваем get с индексом " + position + " из потока " + threadName);
+       //System.out.println("Заканчиваем get с индексом " + position + " из потока " + threadName);
         return (E) this.container[position];
     }
 
@@ -56,7 +56,7 @@ public class SimpleList<E> implements SimpleContainer<E> {
     @Override
     synchronized public Iterator<E> iterator() throws ConcurrentModificationException {
         String threadName = Thread.currentThread().getName();
-        System.out.println("Вход в итератор  из потока " + threadName);
+       //System.out.println("Вход в итератор  из потока " + threadName);
         return new Iterator<E>() {
             // Ожидаемое значение счетчика изменений коллекции
             private int expectedModCount = modCount;

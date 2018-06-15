@@ -11,8 +11,8 @@ public class StaticInnerClassTest {
             d[i] = 100 * Math.random();
         }
         ArrayAlg.Pair p = ArrayAlg.minmax(d);           // Вот это необычно!!!
-        System.out.println("min = " + p.getFirst());
-        System.out.println("max = " + p.getSecond());
+       //System.out.println("min = " + p.getFirst());
+       //System.out.println("max = " + p.getSecond());
     }
 }
 

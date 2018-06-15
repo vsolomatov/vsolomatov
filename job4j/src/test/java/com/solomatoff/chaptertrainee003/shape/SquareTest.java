@@ -29,7 +29,7 @@ public class SquareTest {
                                 .toString()
                 )
         );
-        System.out.println(square.draw());
+       //System.out.println(square.draw());
     }
 }
 

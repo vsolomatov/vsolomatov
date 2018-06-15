@@ -22,9 +22,9 @@ public class BubbleSort {
                     arr[j + 1] = t;
                 }
                 /*for (int x : arr) {
-                    System.out.print(x + " ");
+                   //System.out.print(x + " ");
                 }
-                System.out.println(" ");*/
+               //System.out.println(" ");*/
             }
         }
         return arr;
