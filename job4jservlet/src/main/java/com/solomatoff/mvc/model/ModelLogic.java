@@ -99,7 +99,7 @@ public class ModelLogic {
         if (users.size() > 0) {
             return users;
         } else {
-            LoggerApp.getInstance().getLog().error(String.format("(FINDBYLOGIN) user with id = %4d not exists", user.getId()));
+            LoggerApp.getInstance().getLog().error(String.format("(FINDBYLOGIN) user with login = %s not exists", user.getLogin()));
             return new ArrayList<>();
         }
     }
@@ -109,7 +109,7 @@ public class ModelLogic {
         if (users.size() > 0) {
             return users;
         } else {
-            LoggerApp.getInstance().getLog().error(String.format("(FINDBYIDROLEUSER) user with id = %4d not exists", user.getId()));
+            LoggerApp.getInstance().getLog().error(String.format("(FINDBYIDROLEUSER) user with idRole = %4d not exists", user.getIdRole()));
             return new ArrayList<>();
         }
     }
@@ -163,7 +163,7 @@ public class ModelLogic {
         if (roles.size() > 0) {
             return roles;
         } else {
-            LoggerApp.getInstance().getLog().error(String.format("(FINDBYID) role with id = %4d not exists", role.getId()));
+            LoggerApp.getInstance().getLog().error(String.format("(FINDBYIDROLE) role with id = %4d not exists", role.getId()));
             return new ArrayList<>();
         }
     }

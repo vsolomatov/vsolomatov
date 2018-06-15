@@ -30,40 +30,40 @@ public class MemoryStoreTest {
         MEMORY_STORE.deleteRoleAll(new Role());
 
         // Добавляем новые три роли
-        MEMORY_STORE.addRole(new Role(1, "role1", true));
-        MEMORY_STORE.addRole(new Role(2, "role2", false));
-        MEMORY_STORE.addRole(new Role(3, "role3", false));
+        MEMORY_STORE.addRole(new Role(4, "role4", true));
+        MEMORY_STORE.addRole(new Role(5, "role5", false));
+        MEMORY_STORE.addRole(new Role(6, "role6", false));
 
         // Добавляем новых трех пользователей
-        MEMORY_STORE.addUser(new User(1, "user1", "login1", "password", "email1", new Timestamp(System.currentTimeMillis()), 1));
-        MEMORY_STORE.addUser(new User(2, "user2", "login2", "password", "email2", new Timestamp(System.currentTimeMillis()), 2));
-        MEMORY_STORE.addUser(new User(3, "user3", "login3", "password", "email3", new Timestamp(System.currentTimeMillis()), 3));
+        MEMORY_STORE.addUser(new User(4, "user4", "login4", "password", "email4", new Timestamp(System.currentTimeMillis()), 4));
+        MEMORY_STORE.addUser(new User(5, "user5", "login5", "password", "email5", new Timestamp(System.currentTimeMillis()), 5));
+        MEMORY_STORE.addUser(new User(6, "user6", "login6", "password", "email6", new Timestamp(System.currentTimeMillis()), 6));
     }
 
     @Test
     public void addUser() {
-        User user4 = new User(4, "name4", "login4", "password", "email4", new Timestamp(System.currentTimeMillis()), 1);
+        User user7 = new User(7, "name7", "login7", "password", "email7", new Timestamp(System.currentTimeMillis()), 7);
         List<User> expected = new ArrayList<>();
-        expected.add(user4);
+        expected.add(user7);
 
         // Добавляем первый раз user4
-        List<User> result = MEMORY_STORE.addUser(user4);
+        List<User> result = MEMORY_STORE.addUser(user7);
         assertThat(result, is(expected));
 
         // Добавляем второй раз user4, теперь список должен быть пустой, т.к. пользователь второй раз не добавится
-        result = MEMORY_STORE.addUser(user4);
+        result = MEMORY_STORE.addUser(user7);
         assertThat(result.size(), is(0));
     }
 
     @Test
     public void updateUser() {
         User user = new User();
-        user.setId(3);
+        user.setId(6);
         List<User> expected = MEMORY_STORE.findByIdUser(user);
 
-        // Обновим пользователя с id=3
-        User newUser3 = new User(3, "newname3", "newlogin3", "password", "newemail3", new Timestamp(System.currentTimeMillis()), 2);
-        List<User> result = MEMORY_STORE.updateUser(newUser3);
+        // Обновим пользователя с id=6
+        User newUser6 = new User(6, "newname6", "newlogin6", "password", "newemail6", new Timestamp(System.currentTimeMillis()), 6);
+        List<User> result = MEMORY_STORE.updateUser(newUser6);
         assertThat(result.get(0).getName(), is(expected.get(0).getName()));
 
         // Попытаемся обновить не существующего пользователя
@@ -76,10 +76,10 @@ public class MemoryStoreTest {
     @Test
     public void deleteUser() {
         User user = new User();
-        user.setId(2);
+        user.setId(6);
         List<User> expected = MEMORY_STORE.findByIdUser(user);
 
-        // Удалим пользователя с id = 2
+        // Удалим пользователя с id = 6
         List<User> result = MEMORY_STORE.deleteUser(user);
         assertThat(result.get(0).getName(), is(expected.get(0).getName()));
 
@@ -94,17 +94,17 @@ public class MemoryStoreTest {
     public void deleteUserAll() {
         List<User> expected = new ArrayList<>();
         User user = new User();
-        user.setId(1);
-        User user1 = MEMORY_STORE.findByIdUser(user).get(0);
-        expected.add(user1);
+        user.setId(4);
+        User user4 = MEMORY_STORE.findByIdUser(user).get(0);
+        expected.add(user4);
         user = new User();
-        user.setId(2);
-        User user2 = MEMORY_STORE.findByIdUser(user).get(0);
-        expected.add(user2);
+        user.setId(5);
+        User user5 = MEMORY_STORE.findByIdUser(user).get(0);
+        expected.add(user5);
         user = new User();
-        user.setId(3);
-        User user3 = MEMORY_STORE.findByIdUser(user).get(0);
-        expected.add(user3);
+        user.setId(6);
+        User user6 = MEMORY_STORE.findByIdUser(user).get(0);
+        expected.add(user6);
         List<User> result = MEMORY_STORE.deleteUserAll(user);
         int i = 0;
         for (User userloop : result) {
@@ -115,33 +115,33 @@ public class MemoryStoreTest {
 
     @Test
     public void findByIdUser() {
-        User user1 = new User(1, "user1", "login1", "password", "email1", new Timestamp(System.currentTimeMillis()), 1);
-        User result = MEMORY_STORE.findByIdUser(user1).get(0);
-        assertThat(result.getName(), is(user1.getName()));
+        User user4 = new User(4, "user4", "login4", "password", "email4", new Timestamp(System.currentTimeMillis()), 4);
+        User result = MEMORY_STORE.findByIdUser(user4).get(0);
+        assertThat(result.getName(), is(user4.getName()));
     }
 
     @Test
     public void findByLoginUser() {
-        User user1 = new User(2, "user2", "login2", "password", "email2", new Timestamp(System.currentTimeMillis()), 2);
-        User result = MEMORY_STORE.findByLoginUser(user1).get(0);
-        assertThat(result.getName(), is(user1.getName()));
+        User user4 = new User(5, "user5", "login5", "password", "email5", new Timestamp(System.currentTimeMillis()), 5);
+        User result = MEMORY_STORE.findByLoginUser(user4).get(0);
+        assertThat(result.getName(), is(user4.getName()));
     }
 
     @Test
     public void findAllUsers() {
         List<User> expected = new ArrayList<>();
         User user = new User();
-        user.setId(1);
-        User user1 = MEMORY_STORE.findByIdUser(user).get(0);
-        expected.add(user1);
+        user.setId(4);
+        User user4 = MEMORY_STORE.findByIdUser(user).get(0);
+        expected.add(user4);
         user = new User();
-        user.setId(2);
-        User user2 = MEMORY_STORE.findByIdUser(user).get(0);
-        expected.add(user2);
+        user.setId(5);
+        User user5 = MEMORY_STORE.findByIdUser(user).get(0);
+        expected.add(user5);
         user = new User();
-        user.setId(3);
-        User user3 = MEMORY_STORE.findByIdUser(user).get(0);
-        expected.add(user3);
+        user.setId(6);
+        User user6 = MEMORY_STORE.findByIdUser(user).get(0);
+        expected.add(user6);
         List<User> result = MEMORY_STORE.findAllUsers(user);
         int i = 0;
         for (User userloop : result) {
@@ -152,28 +152,28 @@ public class MemoryStoreTest {
 
     @Test
     public void addRole() {
-        Role role4 = new Role(4, "name4",  true);
+        Role role7 = new Role(7, "name7",  true);
         List<Role> expected = new ArrayList<>();
-        expected.add(role4);
+        expected.add(role7);
 
         // Добавляем первый раз role4
-        List<Role> result = MEMORY_STORE.addRole(role4);
+        List<Role> result = MEMORY_STORE.addRole(role7);
         assertThat(result, is(expected));
 
         // Добавляем второй раз role4, теперь список должен быть пустой, т.к. роль второй раз не добавится
-        result = MEMORY_STORE.addRole(role4);
+        result = MEMORY_STORE.addRole(role7);
         assertThat(result.size(), is(0));
     }
 
     @Test
     public void updateRole() {
         Role role = new Role();
-        role.setId(3);
+        role.setId(6);
         List<Role> expected = MEMORY_STORE.findByIdRole(role);
 
-        // Обновим роль с id=3
-        Role newRole3 = new Role(3, "newname3",  true);
-        List<Role> result = MEMORY_STORE.updateRole(newRole3);
+        // Обновим роль с id=6
+        Role newRole6 = new Role(6, "newname6",  true);
+        List<Role> result = MEMORY_STORE.updateRole(newRole6);
         assertThat(result.get(0).getName(), is(expected.get(0).getName()));
 
         // Попытаемся обновить не существующего роль
@@ -187,12 +187,12 @@ public class MemoryStoreTest {
     public void deleteRole() {
         // Перед удалением роли, удалим пользователя с этой ролью
         User user = new User();
-        user.setId(2);
+        user.setId(6);
         MEMORY_STORE.deleteUser(user);
         Role role = new Role();
-        role.setId(2);
+        role.setId(6);
         List<Role> expected = MEMORY_STORE.findByIdRole(role);
-        // Удалим роль с id = 2
+        // Удалим роль с id = 5
         List<Role> result = MEMORY_STORE.deleteRole(role);
         assertThat(result.get(0).getName(), is(expected.get(0).getName()));
 
@@ -209,17 +209,17 @@ public class MemoryStoreTest {
         MEMORY_STORE.deleteUserAll(new User());
         List<Role> expected = new ArrayList<>();
         Role role = new Role();
-        role.setId(1);
-        Role role1 = MEMORY_STORE.findByIdRole(role).get(0);
-        expected.add(role1);
+        role.setId(4);
+        Role role4 = MEMORY_STORE.findByIdRole(role).get(0);
+        expected.add(role4);
         role = new Role();
-        role.setId(2);
-        Role role2 = MEMORY_STORE.findByIdRole(role).get(0);
-        expected.add(role2);
+        role.setId(5);
+        Role role5 = MEMORY_STORE.findByIdRole(role).get(0);
+        expected.add(role5);
         role = new Role();
-        role.setId(3);
-        Role role3 = MEMORY_STORE.findByIdRole(role).get(0);
-        expected.add(role3);
+        role.setId(6);
+        Role role6 = MEMORY_STORE.findByIdRole(role).get(0);
+        expected.add(role6);
         List<Role> result = MEMORY_STORE.deleteRoleAll(role);
         int i = 0;
         for (Role roleloop : result) {
@@ -230,26 +230,26 @@ public class MemoryStoreTest {
 
     @Test
     public void findByIdRole() {
-        Role role1 = new Role(1, "role1", false);
-        Role result = MEMORY_STORE.findByIdRole(role1).get(0);
-        assertThat(result.getName(), is(role1.getName()));
+        Role role4 = new Role(4, "role4", false);
+        Role result = MEMORY_STORE.findByIdRole(role4).get(0);
+        assertThat(result.getName(), is(role4.getName()));
     }
 
     @Test
     public void findAllRoles() {
         List<Role> expected = new ArrayList<>();
         Role role = new Role();
-        role.setId(1);
-        Role role1 = MEMORY_STORE.findByIdRole(role).get(0);
-        expected.add(role1);
+        role.setId(4);
+        Role role4 = MEMORY_STORE.findByIdRole(role).get(0);
+        expected.add(role4);
         role = new Role();
-        role.setId(2);
-        Role role2 = MEMORY_STORE.findByIdRole(role).get(0);
-        expected.add(role2);
+        role.setId(5);
+        Role role5 = MEMORY_STORE.findByIdRole(role).get(0);
+        expected.add(role5);
         role = new Role();
-        role.setId(3);
-        Role role3 = MEMORY_STORE.findByIdRole(role).get(0);
-        expected.add(role3);
+        role.setId(6);
+        Role role6 = MEMORY_STORE.findByIdRole(role).get(0);
+        expected.add(role6);
         List<Role> result = MEMORY_STORE.findAllRoles(role);
         int i = 0;
         for (Role roleloop : result) {
@@ -260,17 +260,17 @@ public class MemoryStoreTest {
 
     @Test
     public void isCredentional() {
-        String login = "login1";
+        String login = "login4";
         String password = "password";
         boolean result = MEMORY_STORE.isCredentional(login, password);
         assertThat(result, is(true));
 
-        login = "login1";
+        login = "login4";
         password = "pass";
         result = MEMORY_STORE.isCredentional(login, password);
         assertThat(result, is(false));
 
-        login = "login4";
+        login = "login8";
         password = "password";
         result = MEMORY_STORE.isCredentional(login, password);
         assertThat(result, is(false));

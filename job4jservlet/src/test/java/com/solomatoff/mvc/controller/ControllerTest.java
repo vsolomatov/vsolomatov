@@ -26,8 +26,8 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.*;
 
 public class ControllerTest {
-    private static final ModelLogic MODEL_LOGIC = new ModelLogic();
     private static final Controller CONTROLLER = Controller.getInstance();
+    private static final ModelLogic MODEL_LOGIC = CONTROLLER.getLogic();
 
     @Before
     public void setUp() {
@@ -87,12 +87,11 @@ public class ControllerTest {
     @Test
     public void executeActionUser() {
         User user = new User();
-        user.setId(4);
-        user.setLogin("login4");
-        user.setPassword("123");
-        user.setIdRole(1);
-        List<User> list = CONTROLLER.executeActionUser("Create User", user);
-        assertThat(list.get(0).getId(), is(4));
+        user.setId(3);
+        List<User> list = CONTROLLER.executeActionUser("Find By Id User", user);
+        assertEquals(list.get(0).getId(), new Integer(3));
+        assertEquals(list.get(0).getLogin(), "login3");
+        assertEquals(list.get(0).getPassword(), "password");
     }
 
     @Test
@@ -110,7 +109,7 @@ public class ControllerTest {
         typeUser = CONTROLLER.getTypeUser("login1");
         assertThat(typeUser, is("admin"));
 
-        typeUser = CONTROLLER.getTypeUser("login");
+        typeUser = CONTROLLER.getTypeUser("login0");
         assertThat(typeUser, is(nullValue()));
     }
 }

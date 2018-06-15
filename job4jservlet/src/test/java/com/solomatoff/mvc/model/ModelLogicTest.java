@@ -55,16 +55,16 @@ public class ModelLogicTest {
 
     @Test
     public void addUser() {
-        User user4 = new User(4, "name4", "login4", "password", "email4", new Timestamp(System.currentTimeMillis()), 1);
+        User user7 = new User(7, "name7", "login7", "password", "email7", new Timestamp(System.currentTimeMillis()), 1);
         List<User> expected = new ArrayList<>();
-        expected.add(user4);
+        expected.add(user7);
 
-        // Добавляем первый раз user4
-        List<User> result = MODEL_LOGIC.addUser(user4);
+        // Добавляем первый раз user7
+        List<User> result = MODEL_LOGIC.addUser(user7);
         assertThat(result, is(expected));
 
-        // Добавляем второй раз user4, теперь список должен быть пустой, т.к. пользователь второй раз не добавится
-        result = MODEL_LOGIC.addUser(user4);
+        // Добавляем второй раз user7, теперь список должен быть пустой, т.к. пользователь второй раз не добавится
+        result = MODEL_LOGIC.addUser(user7);
         assertThat(result.size(), is(0));
     }
 
@@ -75,7 +75,7 @@ public class ModelLogicTest {
         List<User> expected = MODEL_LOGIC.findByIdUser(user);
 
         // Обновим пользователя с id=3
-        User newUser3 = new User(3, "newname3", "newlogin3", "password", "newemail3", new Timestamp(System.currentTimeMillis()), 2);
+        User newUser3 = new User(3, "newname3", "newlogin3", "password", "newemail3", new Timestamp(System.currentTimeMillis()), 3);
         List<User> result = MODEL_LOGIC.updateUser(newUser3);
         assertThat(result.get(0).getName(), is(expected.get(0).getName()));
 
@@ -92,10 +92,10 @@ public class ModelLogicTest {
     @Test
     public void deleteUser() {
         User user = new User();
-        user.setId(2);
+        user.setId(3);
         List<User> expected = MODEL_LOGIC.findByIdUser(user);
 
-        // Удалим пользователя с id = 2
+        // Удалим пользователя с id = 3
         List<User> result = MODEL_LOGIC.deleteUser(user);
         assertThat(result.get(0).getName(), is(expected.get(0).getName()));
 
@@ -168,16 +168,16 @@ public class ModelLogicTest {
 
     @Test
     public void addRole() {
-        Role role4 = new Role(4, "name4",  true);
+        Role role7 = new Role(7, "name7",  true);
         List<Role> expected = new ArrayList<>();
-        expected.add(role4);
+        expected.add(role7);
 
-        // Добавляем первый раз role4
-        List<Role> result = MODEL_LOGIC.addRole(role4);
+        // Добавляем первый раз role7
+        List<Role> result = MODEL_LOGIC.addRole(role7);
         assertThat(result, is(expected));
 
-        // Добавляем второй раз role4, теперь список должен быть пустой, т.к. пользователь второй раз не добавится
-        result = MODEL_LOGIC.addRole(role4);
+        // Добавляем второй раз role7, теперь список должен быть пустой, т.к. пользователь второй раз не добавится
+        result = MODEL_LOGIC.addRole(role7);
         assertThat(result.size(), is(0));
     }
 
@@ -203,12 +203,12 @@ public class ModelLogicTest {
     public void deleteRole() {
         // Перед удалением роли, удалим пользователя с этой ролью
         User user = new User();
-        user.setId(2);
+        user.setId(3);
         MODEL_LOGIC.deleteUser(user);
         Role role = new Role();
-        role.setId(2);
+        role.setId(3);
         List<Role> expected = MODEL_LOGIC.findByIdRole(role);
-        // Удалим роль с id = 2
+        // Удалим роль с id = 3
         List<Role> result = MODEL_LOGIC.deleteRole(role);
         assertThat(result.get(0).getName(), is(expected.get(0).getName()));
 
@@ -286,7 +286,7 @@ public class ModelLogicTest {
         result = MODEL_LOGIC.isCredentional(login, password);
         assertThat(result, is(false));
 
-        login = "login4";
+        login = "login8";
         password = "password";
         result = MODEL_LOGIC.isCredentional(login, password);
         assertThat(result, is(false));

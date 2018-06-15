@@ -37,7 +37,6 @@ public class ListUsersServlet extends HttpServlet {
         }
         // Параметр для типа харанения данных typestorage (может быть задан, а может и не быть задан)
         String pTypeStorage = request.getParameter("typestorage");
-        //System.out.println("    ListUsersServlet: pTypeStorage = " + pTypeStorage);
         if (pTypeStorage != null) { // если параметр задан
             ModelStore modelStore = new DbStore(); // значение по умолчанию
             if (pTypeStorage.equals("memory")) {
@@ -47,8 +46,8 @@ public class ListUsersServlet extends HttpServlet {
             CONTROLLER.getLogic().setPersistent(modelStore);
             // Если хранение в памяти, то добавить пользователя и роль (при первом обращении объекты для хранения будут пустыми)
             if (pTypeStorage.equals("memory")) {
-                CONTROLLER.getLogic().getPersistent().addRole(new Role(0, "CurrentRole", true));
-                CONTROLLER.getLogic().getPersistent().addUser(new User(0, "CurrentUser", login, "password", null, new Timestamp(System.currentTimeMillis()), 0));
+                CONTROLLER.getLogic().getPersistent().addRole(new Role(0, "Administrator", true));
+                CONTROLLER.getLogic().getPersistent().addUser(new User(0, "Administrator", "root", "root", null, new Timestamp(System.currentTimeMillis()), 0));
             }
         }
         // Ограничиваем список пользователей, если пользователь не является администратором
@@ -76,5 +75,4 @@ public class ListUsersServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         return (String) session.getAttribute("login");
     }
-
 }

@@ -20,9 +20,8 @@ public class HtmlView implements ViewLyaer {
 
     @Override
     public void showListUsers(HttpServletRequest request, HttpServletResponse response) {
-        try {
+        try (PrintWriter pw = response.getWriter()) {
             List<User> users = (List<User>) request.getAttribute("users");
-            PrintWriter pw = response.getWriter();
             saveUsersToPrintWriter(users, pw, request);
         } catch (IOException e) {
             LoggerApp.getInstance().getLog().error(e.getMessage(), e);
@@ -51,8 +50,7 @@ public class HtmlView implements ViewLyaer {
     }
 
     private void showFormForAction(HttpServletRequest request, HttpServletResponse response, User user) {
-        try {
-            PrintWriter pw = response.getWriter();
+        try (PrintWriter pw = response.getWriter()) {
             saveFormForActionToPrintWriter(user, pw, request);
         } catch (IOException e) {
             LoggerApp.getInstance().getLog().error(e.getMessage(), e);
@@ -111,7 +109,7 @@ public class HtmlView implements ViewLyaer {
             buttonNew.append("\t\t<form action='")
                     .append(contextPath)
                     .append("/protected/create'>\n")
-                    .append("\t\t\t<input type='hidden' name='action' value='Create User'>")
+                    .append("\t\t\t<input type='hidden' name='action' value='Create User'>\n")
                     .append("\t\t\t<input type='submit' value='New'>\n")
                     .append("\t\t</form>\n");
         }
@@ -136,14 +134,14 @@ public class HtmlView implements ViewLyaer {
                 .append("\t\t\t</tbody>\n")
                 .append("\t\t</table>\n")
                 .append(buttonNew.toString())
-                .append("\t\t<ul>")
+                .append("\t\t<ul>\n ")
                 .append("\t\t\t<li><a href='")
                 .append(contextPath)
-                .append("/'>Back to Main Page</a></li>")
+                .append("/'>Back to Main Page</a></li>\n")
                 .append("\t\t\t<li><a href='")
                 .append(contextPath)
-                .append("/logout'>Exit</a></li>")
-                .append("\t\t</ul>")
+                .append("/logout'>Exit</a></li>\n")
+                .append("\t\t</ul>\n")
                 .append("\t</body>\n")
                 .append("</html>");
     }
@@ -211,9 +209,8 @@ public class HtmlView implements ViewLyaer {
 
     @Override
     public void showListRoles(HttpServletRequest request, HttpServletResponse response) {
-        try {
+        try (PrintWriter pw = response.getWriter()) {
             List<Role> roles = (List<Role>) request.getAttribute("roles");
-            PrintWriter pw = response.getWriter();
             saveRolesToPrintWriter(roles, pw, request.getContextPath());
         } catch (IOException e) {
             LoggerApp.getInstance().getLog().error(e.getMessage(), e);
@@ -230,7 +227,7 @@ public class HtmlView implements ViewLyaer {
     @Override
     public void showRudRole(HttpServletRequest request, HttpServletResponse response) {
         Role role = (Role) request.getAttribute("role"); // У объекта будет заполнено только поле id
-        List<Role> roles = CONTROLLER.executeActionRole("Find By Id", role);
+        List<Role> roles = CONTROLLER.executeActionRole("Find By Id Role", role);
         if (roles.size() > 0) {
             role = roles.get(0);
         }
@@ -238,8 +235,7 @@ public class HtmlView implements ViewLyaer {
     }
 
     private void showFormForActionRole(HttpServletRequest request, HttpServletResponse response, Role role) {
-        try {
-            PrintWriter pw = response.getWriter();
+        try (PrintWriter pw = response.getWriter()) {
             String typeForm = request.getParameter("action");
             String contextPath = request.getContextPath();
             saveFormForActionRoleToPrintWriter(role, pw, typeForm, contextPath);
@@ -259,7 +255,7 @@ public class HtmlView implements ViewLyaer {
                     .append(role.getId())
                     .append("\t\t\t\t\t</td>\n\t\t\t\t\t<td>")
                     .append(role.getName())
-                    .append("\t\t\t\t\t</td>\n\t\t\t\t\t\t<form action='")
+                    .append("\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<form action='")
                     .append(contextPath)
                     .append("/protected/rudrole'>\n")
                     .append("\t\t\t\t\t\t\t<input type='hidden' name='action' value='Update Role'>\n")
@@ -289,6 +285,8 @@ public class HtmlView implements ViewLyaer {
                 .append("\t\t<table>\n")
                 .append("\t\t\t<th>id</th>\n")
                 .append("\t\t\t<th>name</th>\n")
+                .append("\t\t\t<th></th>\n")
+                .append("\t\t\t<th></th>\n")
                 .append("\t\t\t<tbody>\n")
                 .append(sb.toString())
                 .append("\t\t\t</tbody>\n")
@@ -296,14 +294,14 @@ public class HtmlView implements ViewLyaer {
                 .append("\t\t<form action='")
                 .append(contextPath)
                 .append("/protected/createrole'>\n")
-                .append("\t\t\t<input type='hidden' name='action' value='Create Role'>")
+                .append("\t\t\t<input type='hidden' name='action' value='Create Role'>\n")
                 .append("\t\t\t<input type='submit' value='New'>\n")
                 .append("\t\t</form>\n")
-                .append("\t\t<ul>")
+                .append("\t\t<ul>\n")
                 .append("\t\t\t<li><a href='")
                 .append(contextPath)
-                .append("/logout'>Exit</a></li>")
-                .append("\t\t</ul>")
+                .append("/logout'>Exit</a></li>\n")
+                .append("\t\t</ul>\n")
                 .append("\t</body>\n")
                 .append("</html>");
     }
@@ -331,7 +329,7 @@ public class HtmlView implements ViewLyaer {
                 .append("\t\t\t<b>role id:</b> <input type='number' name='id' value='")
                 .append(String.valueOf(role.getId())).append("' required><Br>\n")
                 .append("\t\t\t<b>role name:</b> <input type='text' name='name' value='")
-                .append(role.getName()).append("'><Br>\n")
+                .append(role.getName())
                 .append("'><Br>\n")
                 .append("\t\t\t<p><input type='submit'></p>\n")
                 .append("\t\t</form>\n")

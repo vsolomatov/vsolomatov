@@ -41,12 +41,12 @@ public class DbStoreTest {
 
     @Test
     public void addUser() {
-        User user4 = new User(4, "name4", "login4", "password", "email4", new Timestamp(System.currentTimeMillis()), 1);
+        User user7 = new User(7, "name7", "login7", "password", "email7", new Timestamp(System.currentTimeMillis()), 1);
         List<User> expected = new ArrayList<>();
-        expected.add(user4);
+        expected.add(user7);
 
-        // Добавляем первый раз user4
-        List<User> result = DB_STORE.addUser(user4);
+        // Добавляем первый раз user7
+        List<User> result = DB_STORE.addUser(user7);
         assertThat(result, is(expected));
 
         // Добавляем пользователя с пустым id
@@ -54,8 +54,8 @@ public class DbStoreTest {
         result = DB_STORE.addUser(userWithNullId);
         assertThat(result.size(), is(1));
 
-        // Добавляем второй раз user4, теперь список должен быть пустой, т.к. пользователь второй раз не добавится
-        result = DB_STORE.addUser(user4);
+        // Добавляем второй раз user7, теперь список должен быть пустой, т.к. пользователь второй раз не добавится
+        result = DB_STORE.addUser(user7);
         assertThat(result.size(), is(0));
 
         // Добавляем пользователя с пустым id
@@ -161,12 +161,12 @@ public class DbStoreTest {
 
     @Test
     public void addRole() {
-        Role role4 = new Role(4, "name4",  true);
+        Role role7 = new Role(7, "name7",  true);
         List<Role> expected = new ArrayList<>();
-        expected.add(role4);
+        expected.add(role7);
 
-        // Добавляем первый раз role4
-        List<Role> result = DB_STORE.addRole(role4);
+        // Добавляем первый раз role7
+        List<Role> result = DB_STORE.addRole(role7);
         assertThat(result, is(expected));
 
         // Добавляем роль с пустым id
@@ -174,8 +174,8 @@ public class DbStoreTest {
         result = DB_STORE.addRole(roleWithNullId);
         assertThat(result.size(), is(1));
 
-        // Добавляем второй раз role4, теперь список должен быть пустой, т.к. пользователь второй раз не добавится
-        result = DB_STORE.addRole(role4);
+        // Добавляем второй раз role7, теперь список должен быть пустой, т.к. пользователь второй раз не добавится
+        result = DB_STORE.addRole(role7);
         assertThat(result.size(), is(0));
 
         // Добавляем роль с пустым id
@@ -289,7 +289,7 @@ public class DbStoreTest {
         result = DB_STORE.isCredentional(login, password);
         assertThat(result, is(false));
 
-        login = "login4";
+        login = "login7";
         password = "password";
         result = DB_STORE.isCredentional(login, password);
         assertThat(result, is(false));
