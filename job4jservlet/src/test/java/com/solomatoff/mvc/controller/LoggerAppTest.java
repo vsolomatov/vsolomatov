@@ -24,7 +24,7 @@ public class LoggerAppTest {
         try (Stream stream = Files.lines(Paths.get(FILE_NAME), StandardCharsets.UTF_8)) {
             stream.forEach(System.out::println);
         } catch (IOException e) {
-            e.printStackTrace();
+            // ничего не делать
         }
     }
 }

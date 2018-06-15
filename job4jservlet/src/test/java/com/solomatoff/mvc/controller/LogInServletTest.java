@@ -123,6 +123,8 @@ public class LogInServletTest {
 
         servlet.doPost(request, response);
 
+        System.out.println("    session.login = " + session.getAttribute("login"));
+        System.out.println("    session.typeuser = " + session.getAttribute("typeuser"));
         assertThat(session.getAttribute("login"), is("login1"));
         assertThat(session.getAttribute("typeuser"), is("admin"));
     }
