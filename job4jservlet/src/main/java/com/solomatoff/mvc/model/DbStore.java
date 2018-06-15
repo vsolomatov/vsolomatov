@@ -11,6 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DbStore implements ModelStore {
+    private static DbStore singletonInstance = new DbStore();
+    public static DbStore getInstance() {
+        return singletonInstance;
+    }
+
     private static BasicDataSource dataSource = null;
     private static final String SCHEMA_NAME = "solomatov";
 

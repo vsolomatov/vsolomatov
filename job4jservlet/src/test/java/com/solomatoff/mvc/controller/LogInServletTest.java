@@ -106,6 +106,7 @@ public class LogInServletTest {
                 return null;
             }
         }).when(session).setAttribute(anyString(), anyObject());
+        ControllerTest.clearAndCreateData();
     }
 
     /**
@@ -120,18 +121,17 @@ public class LogInServletTest {
         parameters.put("typeview", "jsp");
         parameters.put("typestorage", "db");
 
-        MODEL_LOGIC.setPersistent(new DbStore());
+        MODEL_LOGIC.setPersistent(DbStore.getInstance());
 
         servlet.doPost(request, response);
 
         String sessionLogin = (String) session.getAttribute("login");
         String sessionTypeuser = (String) session.getAttribute("typeuser");
-        System.out.println("sessionLogin = " + sessionLogin);
-        System.out.println("sessionTypeuser = " + sessionTypeuser);
-        System.out.println("CONTROLLER.getLogic().getPersistent() = " + CONTROLLER.getLogic().getPersistent());
-        List<User> list = CONTROLLER.getLogic().findAllUsers(new User());
-        System.out.println("list = " + list);
-
+        //System.out.println("sessionLogin = " + sessionLogin);
+        //System.out.println("sessionTypeuser = " + sessionTypeuser);
+        //System.out.println("CONTROLLER.getLogic().getPersistent() = " + CONTROLLER.getLogic().getPersistent());
+        //List<User> list = CONTROLLER.getLogic().findAllUsers(new User());
+        //System.out.println("list = " + list);
         assertThat(sessionLogin, is("login1"));
         assertThat(sessionTypeuser, is("admin"));
     }
@@ -148,13 +148,7 @@ public class LogInServletTest {
         parameters.put("typeview", "html");
         parameters.put("typestorage", "memory");
 
-        MODEL_LOGIC.setPersistent(new MemoryStore());
-        MODEL_LOGIC.addRole(new Role(4, "role4", true));
-        MODEL_LOGIC.addRole(new Role(5, "role5", false));
-        MODEL_LOGIC.addRole(new Role(6, "role6", false));
-        MODEL_LOGIC.addUser(new User(4, "name4", "login4", "password", "email4", new Timestamp(System.currentTimeMillis()), 4));
-        MODEL_LOGIC.addUser(new User(5, "name5", "login5", "password", "email5", new Timestamp(System.currentTimeMillis()), 5));
-        MODEL_LOGIC.addUser(new User(6, "name6", "login6", "password", "email6", new Timestamp(System.currentTimeMillis()), 6));
+        MODEL_LOGIC.setPersistent(MemoryStore.getInstance());
 
         servlet.doPost(request, response);
 

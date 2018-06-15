@@ -102,21 +102,7 @@ public class ListRolesServletTest {
                 return null;
             }
         }).when(request).setAttribute(anyString(), anyObject());
-    }
-
-    @After
-    public void tearDown() {
-        ModelStore persistent = MODEL_LOGIC.getPersistent();
-        //System.out.println("After test: persistent.getClass().getName() = " + persistent.getClass().getName());
-        if (persistent.getClass().getName().equals("com.solomatoff.mvc.model.DbStore")) {
-            MODEL_LOGIC.updateRole(new Role(1, "role1", true));
-            MODEL_LOGIC.updateRole(new Role(2, "role2", false));
-            MODEL_LOGIC.updateRole(new Role(3, "role3", false));
-        } else {
-            MODEL_LOGIC.updateRole(new Role(4, "role4", true));
-            MODEL_LOGIC.updateRole(new Role(5, "role5", false));
-            MODEL_LOGIC.updateRole(new Role(6, "role6", false));
-        }
+        ControllerTest.clearAndCreateData();
     }
 
     /**
@@ -127,10 +113,8 @@ public class ListRolesServletTest {
     @Test
     public void testDoGet1() {
         CONTROLLER.setPresentation(new HtmlJspView());
-        MODEL_LOGIC.setPersistent(new DbStore());
-
+        MODEL_LOGIC.setPersistent(DbStore.getInstance());
         servlet.doGet(request, response);
-
         List<Role> roles = CONTROLLER.executeActionRole("Find All Roles", new Role());
         assertThat(request.getAttribute("roles").toString(), is(roles.toString()));
     }
@@ -143,14 +127,8 @@ public class ListRolesServletTest {
     @Test
     public void testDoGet2() {
         CONTROLLER.setPresentation(new HtmlView());
-        MODEL_LOGIC.setPersistent(new MemoryStore());
-
-        MODEL_LOGIC.addRole(new Role(4, "role4", true));
-        MODEL_LOGIC.addRole(new Role(5, "role5", false));
-        MODEL_LOGIC.addRole(new Role(6, "role6", false));
-
+        MODEL_LOGIC.setPersistent(MemoryStore.getInstance());
         servlet.doGet(request, response);
-
         List<Role> roles = CONTROLLER.executeActionRole("Find All Roles", new Role());
         assertThat(request.getAttribute("roles").toString(), is(roles.toString()));
     }

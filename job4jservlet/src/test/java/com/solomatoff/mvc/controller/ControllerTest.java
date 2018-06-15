@@ -31,7 +31,11 @@ public class ControllerTest {
 
     @Before
     public void setUp() {
-        MODEL_LOGIC.setPersistent(new DbStore());
+        clearAndCreateData();
+    }
+
+    public static void clearAndCreateData() {
+        MODEL_LOGIC.setPersistent(DbStore.getInstance());
 
         // Удаляем всех пользователей
         MODEL_LOGIC.deleteUserAll(new User());
@@ -47,6 +51,23 @@ public class ControllerTest {
         MODEL_LOGIC.addUser(new User(1, "user1", "login1", "password", "email1", new Timestamp(System.currentTimeMillis()), 1));
         MODEL_LOGIC.addUser(new User(2, "user2", "login2", "password", "email2", new Timestamp(System.currentTimeMillis()), 2));
         MODEL_LOGIC.addUser(new User(3, "user3", "login3", "password", "email3", new Timestamp(System.currentTimeMillis()), 3));
+
+        MODEL_LOGIC.setPersistent(MemoryStore.getInstance());
+
+        // Удаляем всех пользователей
+        MODEL_LOGIC.deleteUserAll(new User());
+        // Удаляем все роли
+        MODEL_LOGIC.deleteRoleAll(new Role());
+
+        // Добавляем новые три роли
+        MODEL_LOGIC.addRole(new Role(4, "role4", true));
+        MODEL_LOGIC.addRole(new Role(5, "role5", false));
+        MODEL_LOGIC.addRole(new Role(6, "role6", false));
+
+        // Добавляем новых трех пользователей
+        MODEL_LOGIC.addUser(new User(4, "user4", "login4", "password", "email4", new Timestamp(System.currentTimeMillis()), 4));
+        MODEL_LOGIC.addUser(new User(5, "user5", "login5", "password", "email5", new Timestamp(System.currentTimeMillis()), 5));
+        MODEL_LOGIC.addUser(new User(6, "user6", "login6", "password", "email6", new Timestamp(System.currentTimeMillis()), 6));
     }
 
     @Test
@@ -88,6 +109,7 @@ public class ControllerTest {
     public void executeActionUser() {
         User user = new User();
         user.setId(3);
+        MODEL_LOGIC.setPersistent(DbStore.getInstance());
         List<User> list = CONTROLLER.executeActionUser("Find By Id User", user);
         assertEquals(list.get(0).getId(), new Integer(3));
         assertEquals(list.get(0).getLogin(), "login3");
@@ -97,12 +119,14 @@ public class ControllerTest {
     @Test
     public void executeActionRole() {
         Role role = new Role(3, null, null);
+        MODEL_LOGIC.setPersistent(DbStore.getInstance());
         List<Role> listRoles = CONTROLLER.executeActionRole("Find By Id Role", role);
         assertThat(listRoles.get(0).getName(), is("role3"));
     }
 
     @Test
     public void getTypeUser() {
+        MODEL_LOGIC.setPersistent(DbStore.getInstance());
         String typeUser = CONTROLLER.getTypeUser("login2");
         assertThat(typeUser, is("any user"));
 

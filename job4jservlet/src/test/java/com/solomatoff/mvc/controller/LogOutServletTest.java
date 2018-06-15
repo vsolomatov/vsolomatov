@@ -1,5 +1,6 @@
 package com.solomatoff.mvc.controller;
 
+import com.solomatoff.mvc.model.ModelLogic;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -96,6 +97,7 @@ public class LogOutServletTest {
                 return null;
             }
         }).when(session).invalidate();
+        ControllerTest.clearAndCreateData();
     }
 
     /**

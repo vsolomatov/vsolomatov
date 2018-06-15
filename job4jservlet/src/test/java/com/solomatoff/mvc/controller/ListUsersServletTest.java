@@ -158,29 +158,7 @@ public class ListUsersServletTest {
                 return null;
             }
         }).when(request).setAttribute(anyString(), anyObject());
-    }
-
-    @After
-    public void tearDown() {
-        ModelStore persistent = MODEL_LOGIC.getPersistent();
-        //System.out.println("After test: persistent.getClass().getName() = " + persistent.getClass().getName());
-        Timestamp createDate = new Timestamp(System.currentTimeMillis());
-        if (persistent.getClass().getName().equals("com.solomatoff.mvc.model.DbStore")) {
-            MODEL_LOGIC.updateRole(new Role(1, "role1", true));
-            MODEL_LOGIC.updateRole(new Role(2, "role2", false));
-            MODEL_LOGIC.updateRole(new Role(3, "role3", false));
-            MODEL_LOGIC.updateUser(new User(1, "name1", "login1", "password", "email1", createDate, 1));
-            MODEL_LOGIC.updateUser(new User(2, "name2", "login2", "password", "email2", createDate, 2));
-            MODEL_LOGIC.updateUser(new User(3, "name3", "login3", "password", "email3", createDate, 3));
-
-        } else {
-            MODEL_LOGIC.updateRole(new Role(4, "role4", true));
-            MODEL_LOGIC.updateRole(new Role(5, "role5", false));
-            MODEL_LOGIC.updateRole(new Role(6, "role6", false));
-            MODEL_LOGIC.updateUser(new User(4, "name4", "login4", "password", "email4", createDate, 4));
-            MODEL_LOGIC.updateUser(new User(5, "name5", "login5", "password", "email5", createDate, 5));
-            MODEL_LOGIC.updateUser(new User(6, "name6", "login6", "password", "email6", createDate, 6));
-        }
+        ControllerTest.clearAndCreateData();
     }
 
     /**
@@ -190,12 +168,12 @@ public class ListUsersServletTest {
      */
     @Test
     public void testDoGetAdmin() {
-        MODEL_LOGIC.setPersistent(new DbStore());
-
         parameters.put("typeview", "jsp");
         parameters.put("typestorage", "db");
         String login = "login1";
         parameters.put("login", login);
+
+        MODEL_LOGIC.setPersistent(DbStore.getInstance());
 
         servlet.doGet(request, response);
 
@@ -223,13 +201,7 @@ public class ListUsersServletTest {
         String login = "login5";
         parameters.put("login", login);
 
-        MODEL_LOGIC.setPersistent(new MemoryStore());
-        MODEL_LOGIC.addRole(new Role(4, "role4", true));
-        MODEL_LOGIC.addRole(new Role(5, "role5", false));
-        MODEL_LOGIC.addRole(new Role(6, "role6", false));
-        MODEL_LOGIC.addUser(new User(4, "name4", "login4", "password", "email4", new Timestamp(System.currentTimeMillis()), 4));
-        MODEL_LOGIC.addUser(new User(5, "name5", "login5", "password", "email5", new Timestamp(System.currentTimeMillis()), 5));
-        MODEL_LOGIC.addUser(new User(6, "name6", "login6", "password", "email6", new Timestamp(System.currentTimeMillis()), 6));
+        MODEL_LOGIC.setPersistent(MemoryStore.getInstance());
 
         servlet.doGet(request, response);
 

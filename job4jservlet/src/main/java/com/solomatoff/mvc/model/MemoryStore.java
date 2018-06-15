@@ -11,6 +11,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 public class MemoryStore implements ModelStore {
+    private static MemoryStore singletonInstance = new MemoryStore();
+    public static MemoryStore getInstance() {
+        return singletonInstance;
+    }
      /**
      * Contains users
      */

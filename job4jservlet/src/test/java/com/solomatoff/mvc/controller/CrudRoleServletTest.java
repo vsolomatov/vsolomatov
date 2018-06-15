@@ -5,6 +5,7 @@ import com.solomatoff.mvc.entities.User;
 import com.solomatoff.mvc.entities.User;
 import com.solomatoff.mvc.model.DbStore;
 import com.solomatoff.mvc.model.MemoryStore;
+import com.solomatoff.mvc.model.ModelLogic;
 import com.solomatoff.mvc.model.ModelStore;
 import com.solomatoff.mvc.views.HtmlJspView;
 import com.solomatoff.mvc.views.HtmlView;
@@ -37,6 +38,7 @@ import static org.mockito.Mockito.when;
 public class CrudRoleServletTest {
     // Controller
     private static final Controller CONTROLLER = Controller.getInstance();
+    private static final ModelLogic MODEL_LOGIC = CONTROLLER.getLogic();
 
     /** Servlet under test. */
     private CrudRoleServlet servlet;
@@ -145,21 +147,7 @@ public class CrudRoleServletTest {
                 return attributes.get(key);
             }
         });
-    }
-
-    @After
-    public void tearDown() {
-        ModelStore persistent = CONTROLLER.getLogic().getPersistent();
-        //System.out.println("After test: persistent.getClass().getName() = " + persistent.getClass().getName());
-        if (persistent.getClass().getName().equals("com.solomatoff.mvc.model.DbStore")) {
-            CONTROLLER.getLogic().updateRole(new Role(1, "role1", true));
-            CONTROLLER.getLogic().updateRole(new Role(2, "role2", false));
-            CONTROLLER.getLogic().updateRole(new Role(3, "role3", false));
-        } else {
-            CONTROLLER.getLogic().updateRole(new Role(4, "role4", true));
-            CONTROLLER.getLogic().updateRole(new Role(5, "role5", false));
-            CONTROLLER.getLogic().updateRole(new Role(6, "role6", false));
-        }
+        ControllerTest.clearAndCreateData();
     }
 
     /**
@@ -176,11 +164,7 @@ public class CrudRoleServletTest {
         parameters.put("isAdmin", newRole.getIsAdmin().toString());
 
         CONTROLLER.setPresentation(new HtmlView());
-        CONTROLLER.getLogic().setPersistent(new MemoryStore());
-
-        CONTROLLER.getLogic().addRole(new Role(4, "role4", true));
-        CONTROLLER.getLogic().addRole(new Role(5, "role5", false));
-        CONTROLLER.getLogic().addRole(new Role(6, "role6", false));
+        MODEL_LOGIC.setPersistent(MemoryStore.getInstance());
 
         servlet.doPost(request, response);
 
@@ -207,7 +191,7 @@ public class CrudRoleServletTest {
         parameters.put("isAdmin", newRole.getIsAdmin().toString());
 
         CONTROLLER.setPresentation(new HtmlJspView());
-        CONTROLLER.getLogic().setPersistent(new DbStore());
+        MODEL_LOGIC.setPersistent(DbStore.getInstance());
 
         servlet.doPost(request, response);
 
@@ -232,7 +216,7 @@ public class CrudRoleServletTest {
         parameters.put("name", "role3");
 
         CONTROLLER.setPresentation(new HtmlJspView());
-        CONTROLLER.getLogic().setPersistent(new DbStore());
+        MODEL_LOGIC.setPersistent(DbStore.getInstance());
 
         servlet.doGet(request, response);
 
@@ -257,11 +241,7 @@ public class CrudRoleServletTest {
         parameters.put("name", "role6");
 
         CONTROLLER.setPresentation(new HtmlView());
-        CONTROLLER.getLogic().setPersistent(new MemoryStore());
-
-        CONTROLLER.getLogic().addRole(new Role(4, "role4", true));
-        CONTROLLER.getLogic().addRole(new Role(5, "role5", false));
-        CONTROLLER.getLogic().addRole(new Role(6, "role6", false));
+        MODEL_LOGIC.setPersistent(MemoryStore.getInstance());
 
         servlet.doGet(request, response);
 
