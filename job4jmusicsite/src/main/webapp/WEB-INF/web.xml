@@ -1,0 +1,168 @@
+<web-app>
+    <filter>
+        <filter-name>AuthFilter</filter-name>
+        <filter-class>com.solomatoff.mvc.controller.AuthFilter</filter-class>
+        <load-on-startup>1</load-on-startup>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/protected/*</url-pattern>
+    </filter-mapping>
+
+
+    <servlet>
+        <servlet-name>LogIn</servlet-name>
+        <servlet-class>com.solomatoff.mvc.controller.LogInServlet</servlet-class>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LogIn</servlet-name>
+        <url-pattern>/login</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>LogOut</servlet-name>
+        <servlet-class>com.solomatoff.mvc.controller.LogOutServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LogOut</servlet-name>
+        <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ListUsers</servlet-name>
+        <servlet-class>com.solomatoff.mvc.controller.userservlets.ListUsersServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ListUsers</servlet-name>
+        <url-pattern>/protected/listusers</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CreateUser</servlet-name>
+        <servlet-class>com.solomatoff.mvc.controller.userservlets.CrudUserServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CreateUser</servlet-name>
+        <url-pattern>/protected/createuser</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>RudUser</servlet-name>
+        <servlet-class>com.solomatoff.mvc.controller.userservlets.CrudUserServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RudUser</servlet-name>
+        <url-pattern>/protected/ruduser</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ListRoles</servlet-name>
+        <servlet-class>com.solomatoff.mvc.controller.roleservlets.ListRolesServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ListRoles</servlet-name>
+        <url-pattern>/protected/listroles</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CreateRole</servlet-name>
+        <servlet-class>com.solomatoff.mvc.controller.roleservlets.CrudRoleServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CreateRole</servlet-name>
+        <url-pattern>/protected/createrole</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>RudRole</servlet-name>
+        <servlet-class>com.solomatoff.mvc.controller.roleservlets.CrudRoleServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RudRole</servlet-name>
+        <url-pattern>/protected/rudrole</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>ListMusicTypes</servlet-name>
+        <servlet-class>com.solomatoff.mvc.controller.musictypeservlets.ListMusicTypesServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ListMusicTypes</servlet-name>
+        <url-pattern>/protected/listmusictypes</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CreateMusicType</servlet-name>
+        <servlet-class>com.solomatoff.mvc.controller.musictypeservlets.CrudMusicTypeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CreateMusicType</servlet-name>
+        <url-pattern>/protected/createmusictype</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>RudMusicType</servlet-name>
+        <servlet-class>com.solomatoff.mvc.controller.musictypeservlets.CrudMusicTypeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RudMusicType</servlet-name>
+        <url-pattern>/protected/rudmusictype</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>ListUserRoles</servlet-name>
+        <servlet-class>com.solomatoff.mvc.controller.userrolesservlets.ListUserRolesServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ListUserRoles</servlet-name>
+        <url-pattern>/protected/listuserroles</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CreateUserRoles</servlet-name>
+        <servlet-class>com.solomatoff.mvc.controller.userrolesservlets.CrudUserRolesServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CreateUserRoles</servlet-name>
+        <url-pattern>/protected/createuserroles</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>RudUserRoles</servlet-name>
+        <servlet-class>com.solomatoff.mvc.controller.userrolesservlets.CrudUserRolesServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RudUserRoles</servlet-name>
+        <url-pattern>/protected/ruduserroles</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ListUsersMusicTypes</servlet-name>
+        <servlet-class>com.solomatoff.mvc.controller.usersmusictypesservlets.ListUsersMusicTypesServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ListUsersMusicTypes</servlet-name>
+        <url-pattern>/protected/listusersmusictypes</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CreateUsersMusicTypes</servlet-name>
+        <servlet-class>com.solomatoff.mvc.controller.usersmusictypesservlets.CrudUsersMusicTypesServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CreateUsersMusicTypes</servlet-name>
+        <url-pattern>/protected/createusersmusictypes</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>RudUsersMusicTypes</servlet-name>
+        <servlet-class>com.solomatoff.mvc.controller.usersmusictypesservlets.CrudUsersMusicTypesServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RudUsersMusicTypes</servlet-name>
+        <url-pattern>/protected/rudusersmusictypes</url-pattern>
+    </servlet-mapping>
+</web-app>

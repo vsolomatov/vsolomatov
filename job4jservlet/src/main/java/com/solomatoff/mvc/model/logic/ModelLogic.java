@@ -1,9 +1,11 @@
-package com.solomatoff.mvc.model;
+package com.solomatoff.mvc.model.logic;
 
 import com.solomatoff.mvc.controller.Controller;
 import com.solomatoff.mvc.controller.LoggerApp;
 import com.solomatoff.mvc.entities.Role;
 import com.solomatoff.mvc.entities.User;
+import com.solomatoff.mvc.model.DbStore;
+import com.solomatoff.mvc.model.ModelStore;
 
 import java.util.ArrayList;
 import java.util.List;
