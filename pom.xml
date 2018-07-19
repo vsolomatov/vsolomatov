@@ -18,6 +18,7 @@
         <module>job4jjdbc</module>
         <module>job4jparser</module>
         <module>job4jmusicsite</module>
+        <module>amigo</module>
     </modules>
 	
 	<dependencies>
