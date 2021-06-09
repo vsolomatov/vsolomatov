@@ -1,8 +1,5 @@
 package com.solomatoff.tracker;
 
-import java.io.File;
-import java.util.ArrayList;
-
 public class StartUI {
     /**
      * Константа для выхода из цикла.

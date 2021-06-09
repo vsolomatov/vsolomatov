@@ -1,10 +1,9 @@
 package com.solomatoff.tracker;
 
-import java.io.File;
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.concurrent.Executor;
+import java.util.List;
 
 public class Tracker implements AutoCloseable {
     private TrackerProperty trackerProperty;
@@ -87,7 +86,7 @@ public class Tracker implements AutoCloseable {
     /**
      * Добавляет комментарии в таблицу комментариев (из массива)
      *
-     * @param id        Идентификатор заявки
+     * @param id            Идентификатор заявки
      * @param commentsArray массив комментариев
      */
     public void commentsInsert(String id, String[] commentsArray) {
@@ -141,7 +140,7 @@ public class Tracker implements AutoCloseable {
             stDeleteItems.setInt(1, itemId);
             stDeleteItems.executeUpdate();
         } catch (SQLException e) {
-           //System.out.println("Невозможно удалить заявку " + id);
+            //System.out.println("Невозможно удалить заявку " + id);
             e.printStackTrace();
         }
     }
@@ -262,7 +261,7 @@ public class Tracker implements AutoCloseable {
     /**
      * Метод возвращает список всех заявок
      *
-     *  @return ссылку на список items
+     * @return ссылку на список items
      */
     public List<Item> findAll() {
         ArrayList<Item> result = new ArrayList<>();
