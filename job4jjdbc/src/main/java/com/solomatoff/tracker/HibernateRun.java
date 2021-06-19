@@ -24,6 +24,12 @@ public class HibernateRun {
             Item rsl = findById(item.getId(), sf);
             System.out.println(rsl);
             delete(rsl.getId(), sf);
+            item = create(new Item(null, "Доставка пиццы","Стоимость доставки зависит от расстояния до места назначения", LocalDateTime.now()), sf);
+            System.out.println("item = " + item);
+            item = create(new Item(null, "Кекс домашний","Кекс домашний: вес 100 гр.", LocalDateTime.now()), sf);
+            System.out.println("item = " + item);
+            item = create(new Item(null, "Компот","Компот из сухофруктов, 120 мл.", LocalDateTime.now()), sf);
+            System.out.println("item = " + item);
             List<Item> list = findAll(sf);
             for (Item it : list) {
                 System.out.println(it);
