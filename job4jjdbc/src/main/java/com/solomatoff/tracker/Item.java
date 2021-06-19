@@ -1,20 +1,32 @@
 package com.solomatoff.tracker;
 
-import java.util.Date;
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "items")
 public class Item {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
     private String description;
-    private Date created;
-    private String[] comments;
+    private LocalDateTime created;
+    //private String[] comments;
 
-    public Item(Integer id, String name, String description, Date created, String[] comments) {
+    public Item() {
+    }
+
+    public Item(String name) {
+        this.name = name;
+    }
+
+    public Item(Integer id, String name, String description, LocalDateTime created) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.created = created;
-        this.comments = comments;
+        //this.comments = comments;
     }
 
     public Integer getId() {
@@ -29,11 +41,11 @@ public class Item {
         return this.description;
     }
 
-    public Date getCreated() {
+    public LocalDateTime getCreated() {
         return this.created;
     }
 
-    public String[] getComments() {
+    /*public String[] getComments() {
         return comments;
     }
 
@@ -45,7 +57,7 @@ public class Item {
         String result = resultBuilder.toString();
         result += "}";
         return result;
-    }
+    }*/
 
     public void setId(Integer id) {
         this.id = id;
@@ -59,13 +71,21 @@ public class Item {
         this.description = description;
     }
 
-    public void setCreated(Date created) {
+    public void setCreated(LocalDateTime created) {
         this.created = created;
     }
 
-    public void setComments(String[] comments) {
+    /*public void setComments(String[] comments) {
         this.comments = comments;
+    }*/
+
+    @Override
+    public String toString() {
+        return "Item{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", created=" + created +
+                '}';
     }
-
-
 }

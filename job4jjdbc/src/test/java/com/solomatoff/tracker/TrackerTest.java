@@ -16,24 +16,24 @@ public class TrackerTest {
         Tracker tracker = new Tracker("tracker.properties");
         // Добавляем заявки в трекер и комментарии к ним.
         String[] comments = new String[] {"Комментарий #1", "Комментарий #2", "Комментарий #3"};
-        Item item = new Item(null, "test1", "test1 Description", null, comments);
+        Item item = new Item(null, "test1", "test1 Description", null);
         tracker.add(item);
 
-        item = new Item(null, "test2", "test2 Description", null, null);
+        item = new Item(null, "test2", "test2 Description", null);
         String itemId = tracker.add(item);
         comments = new String[] {"Комментарий #1 к заявке " + itemId, "Комментарий #2 к заявке " + itemId, "Комментарий #3 к заявке " + itemId};
         tracker.commentsInsert(itemId, comments);
 
-        item = new Item(null, "test3", "test3 Description", null, null);
+        item = new Item(null, "test3", "test3 Description", null);
         itemId = tracker.add(item);
         tracker.commentsInsert(itemId, null);
 
-        item = new Item(null, "test5", "test5 Description", null, null);
+        item = new Item(null, "test5", "test5 Description", null);
         itemId = tracker.add(item);
         comments = new String[] {"Комментарий #1 к заявке " + itemId};
         tracker.commentsInsert(itemId, comments);
 
-        item = new Item(null, "test6", "test6 Description", null, null);
+        item = new Item(null, "test6", "test6 Description", null);
         itemId = tracker.add(item);
         comments = new String[] {};
         tracker.commentsInsert(itemId, comments);
@@ -50,7 +50,7 @@ public class TrackerTest {
     public void whenReplaceItemNameAndDescriptionThenReturnNewItemNameAndDescription() {
         Tracker tracker = new Tracker("tracker.properties");
         // Добавляем заявку в трекер и комментарии к ней.
-        Item item = new Item(null, "test5", "test5 Description", null, null);
+        Item item = new Item(null, "test5", "test5 Description", null);
         String itemId = tracker.add(item);
         String[] comments = new String[] {"Комментарий #1 к заявке " + itemId};
         tracker.commentsInsert(itemId, comments);
@@ -58,7 +58,7 @@ public class TrackerTest {
         item = tracker.findById(itemId);
        //System.out.println("    Заявка ДО ИЗМЕНЕНИЯ " + item.getId() + " " + item.getName() + " " + item.getDescription() + " " + item.getCreated() + " " + item.commentsToString());
 
-        Item itemForReplace = new Item(null, "test replace", "test replace Description", null, null);
+        Item itemForReplace = new Item(null, "test replace", "test replace Description", null);
         // Обновляем заявку в трекере.
        //System.out.println("Изменяем заявку с itemId = " + itemId);
         tracker.replace(itemId, itemForReplace);
@@ -76,14 +76,15 @@ public class TrackerTest {
     public void whenDeleteItemById() {
         Tracker tracker = new Tracker("tracker.properties");
         // Добавляем заявку в трекер и комментарии к ней.
-        Item item = new Item(null, "test5", "test5 Description", null, null);
+        Item item = new Item(null, "test5", "test5 Description", null);
         String itemId = tracker.add(item);
         String[] comments = new String[] {"Комментарий #1 к заявке " + itemId};
         tracker.commentsInsert(itemId, comments);
 
        //System.out.println("Список заявок ДО УДАЛЕНИЯ");
         for (Item itemLoop : tracker.findAll()) {
-            System.out.println("    " + itemLoop.getId() + " " + itemLoop.getName() + " " + itemLoop.getDescription() + " " + itemLoop.getCreated() + " " + itemLoop.commentsToString());
+            //System.out.println("    " + itemLoop.getId() + " " + itemLoop.getName() + " " + itemLoop.getDescription() + " " + itemLoop.getCreated() + " " + itemLoop.commentsToString());
+            System.out.println("    " + itemLoop.getId() + " " + itemLoop.getName() + " " + itemLoop.getDescription() + " " + itemLoop.getCreated());
         }
 
        //System.out.println("Удаляем заявку с itemId = " + itemId);
@@ -95,7 +96,8 @@ public class TrackerTest {
 
        //System.out.println("Список заявок ПОСЛЕ УДАЛЕНИЯ");
         for (Item itemLoop : tracker.findAll()) {
-            System.out.println("    " + itemLoop.getId() + " " + itemLoop.getName() + " " + itemLoop.getDescription() + " " + itemLoop.getCreated() + " " + itemLoop.commentsToString());
+            //System.out.println("    " + itemLoop.getId() + " " + itemLoop.getName() + " " + itemLoop.getDescription() + " " + itemLoop.getCreated() + " " + itemLoop.commentsToString());
+            System.out.println("    " + itemLoop.getId() + " " + itemLoop.getName() + " " + itemLoop.getDescription() + " " + itemLoop.getCreated());
         }
     }
 
@@ -103,7 +105,7 @@ public class TrackerTest {
     public void whenFindByName() {
         Tracker tracker = new Tracker("tracker.properties");
         // Добавляем заявку в трекер и комментарии к ней.
-        Item item = new Item(null, "test5", "test5 Description", null, null);
+        Item item = new Item(null, "test5", "test5 Description", null);
         String itemId = tracker.add(item);
         String[] comments = new String[] {"Комментарий #1 к заявке " + itemId};
         tracker.commentsInsert(itemId, comments);
@@ -111,7 +113,8 @@ public class TrackerTest {
         // Находим такие заявки в трекере.
        //System.out.println("Список заявок c name = test5");
         for (Item itemLoop : tracker.findByName("test5")) {
-            System.out.println("    " + itemLoop.getId() + " " + itemLoop.getName() + " " + itemLoop.getDescription() + " " + itemLoop.getCreated() + " " + itemLoop.commentsToString());
+            //System.out.println("    " + itemLoop.getId() + " " + itemLoop.getName() + " " + itemLoop.getDescription() + " " + itemLoop.getCreated() + " " + itemLoop.commentsToString());
+            System.out.println("    " + itemLoop.getId() + " " + itemLoop.getName() + " " + itemLoop.getDescription() + " " + itemLoop.getCreated());
         }
     }
 }

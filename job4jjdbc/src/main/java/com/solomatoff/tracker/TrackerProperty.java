@@ -25,14 +25,14 @@ public class TrackerProperty {
         setProperty("url", "jdbc:postgresql://localhost:5432/db_solomatov");
         setProperty("username", "solomatov");
         setProperty("password", "123");
-        setProperty("createitems", "CREATE TABLE IF NOT EXISTS solomatov.items(item_id serial PRIMARY KEY, item_name character varying, item_description character varying, item_created timestamp DEFAULT now())");
-        setProperty("createcomments", "CREATE TABLE IF NOT EXISTS solomatov.comments(comment_id serial PRIMARY KEY, comment_text character varying, comment_item_id integer NOT NULL references items)");
-        setProperty("insertitems", "INSERT INTO solomatov.items (item_name, item_description) VALUES (?, ?)");
-        setProperty("insertcomments", "INSERT INTO solomatov.comments (comment_text, comment_item_id) VALUES (?, ?)");
+        setProperty("createitems", "CREATE TABLE IF NOT EXISTS solomatov.items(id serial PRIMARY KEY, name character varying, description character varying, item_created timestamp DEFAULT now())");
+        setProperty("createcomments", "CREATE TABLE IF NOT EXISTS solomatov.comments(id serial PRIMARY KEY, text character varying, item_id integer NOT NULL references items)");
+        setProperty("insertitems", "INSERT INTO solomatov.items (name, description) VALUES (?, ?)");
+        setProperty("insertcomments", "INSERT INTO solomatov.comments (text, item_id) VALUES (?, ?)");
         setProperty("selectitems", "SELECT * FROM solomatov.items");
         setProperty("selectcomments", "SELECT * FROM solomatov.comments");
         setProperty("selectcountcomments", "SELECT count(*) FROM solomatov.comments");
-        setProperty("updateitems", "UPDATE solomatov.items SET item_name =?, item_description =?");
+        setProperty("updateitems", "UPDATE solomatov.items SET name =?, description =?");
         setProperty("deleteitems", "DELETE FROM solomatov.items");
         setProperty("deletecomments", "DELETE FROM solomatov.comments");
     }

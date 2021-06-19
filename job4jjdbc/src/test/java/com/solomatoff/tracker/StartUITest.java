@@ -41,15 +41,15 @@ public class StartUITest {
         // Добавляем заявки в трекер. И запоминаем их id в массиве itemid.
         String[] itemid = new String[3];
         String[] comments = new String[] {"Комментарий #1 к заявке ", "Комментарий #2 к заявке "};
-        Item item = new Item(null, "test1", "test1 Description", null, comments);
+        Item item = new Item(null, "test1", "test1 Description", null);
         itemid[0] = tracker.add(item);
 
         comments = new String[] {"Комментарий #3 к заявке ", "Комментарий #4 к заявке "};
-        item = new Item(null, "test3", "test3 Description", null, comments);
+        item = new Item(null, "test3", "test3 Description", null);
         itemid[1] = tracker.add(item);
 
         comments = new String[] {"Комментарий #5 к заявке ", "Комментарий #6 к заявке "};
-        item = new Item(null, "test5", "test5 Description", null, comments);
+        item = new Item(null, "test5", "test5 Description", null);
         itemid[2] = tracker.add(item);
 
         // Cоздаём StubInput с последовательностью действий
@@ -69,15 +69,15 @@ public class StartUITest {
         // Добавляем заявки в трекер. И запоминаем их id в массиве itemid.
         String[] itemid = new String[3];
         String[] comments = new String[] {"Комментарий #1 к заявке ", "Комментарий #2 к заявке "};
-        Item item = new Item(null, "test1", "test1 Description", null, comments);
+        Item item = new Item(null, "test1", "test1 Description", null);
         itemid[0] = tracker.add(item);
 
         comments = new String[] {"Комментарий #3 к заявке ", "Комментарий #4 к заявке "};
-        item = new Item(null, "test3", "test3 Description", null, comments);
+        item = new Item(null, "test3", "test3 Description", null);
         itemid[1] = tracker.add(item);
 
         comments = new String[] {"Комментарий #5 к заявке ", "Комментарий #6 к заявке "};
-        item = new Item(null, "test5", "test5 Description", null, comments);
+        item = new Item(null, "test5", "test5 Description", null);
         itemid[2] = tracker.add(item);
 
         // Cоздаём StubInput с последовательностью действий
@@ -100,15 +100,15 @@ public class StartUITest {
         // Добавляем заявки в трекер. И запоминаем их id в массиве itemid.
         String[] itemid = new String[3];
         String[] comments = new String[] {"Комментарий #1 к заявке ", "Комментарий #2 к заявке "};
-        Item item = new Item(null, "test1", "test1 Description", null, comments);
+        Item item = new Item(null, "test1", "test1 Description", null);
         itemid[0] = tracker.add(item);
 
         comments = new String[] {"Комментарий #3 к заявке ", "Комментарий #4 к заявке "};
-        item = new Item(null, "test2", "test2 Description", null, comments);
+        item = new Item(null, "test2", "test2 Description", null);
         itemid[1] = tracker.add(item);
 
         comments = new String[] {"Комментарий #5 к заявке ", "Комментарий #6 к заявке "};
-        item = new Item(null, "test5", "test5 Description", null, comments);
+        item = new Item(null, "test5", "test5 Description", null);
         itemid[2] = tracker.add(item);
 
         // Cоздаём StubInput с последовательностью действий
@@ -139,7 +139,7 @@ public class StartUITest {
         // Очищаем трекер
         tracker.deleteAll();
         String[] comments = new String[] {"Комментарий #1 к заявке ", "Комментарий #2 к заявке "};
-        Item item = new Item(null, "test1", "test1 Description", null, comments);
+        Item item = new Item(null, "test1", "test1 Description", null);
         String itemid = tracker.add(item);
 
         //создаём StubInput с последовательностью действий
@@ -158,7 +158,7 @@ public class StartUITest {
         // Очищаем трекер
         tracker.deleteAll();
         String[] comments = new String[] {"Комментарий #1 к заявке ", "Комментарий #2 к заявке "};
-        Item item = new Item(null, "test1", "test1 Description", null, comments);
+        Item item = new Item(null, "test1", "test1 Description", null);
         String itemid = tracker.add(item);
 
         //создаём StubInput с последовательностью действий

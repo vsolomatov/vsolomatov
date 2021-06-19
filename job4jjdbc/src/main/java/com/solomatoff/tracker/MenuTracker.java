@@ -47,7 +47,7 @@ public class MenuTracker {
             System.out.println("------------ Добавление новой заявки --------------");
             String name = input.ask("Введите имя заявки :");
             String desc = input.ask("Введите описание заявки :");
-            String newItemId = tracker.add(new Item(null, name, desc, null, null));
+            String newItemId = tracker.add(new Item(null, name, desc, null));
             System.out.println("------------ Создана новая заявка с Id : " + newItemId + " -----------");
         }
     }
@@ -76,7 +76,7 @@ public class MenuTracker {
             if (!id.equals("q")) {
                 String name = input.ask("Введите новое имя заявки :");
                 String desc = input.ask("Введите новое описание заявки :");
-                Item item = new Item(Integer.getInteger(id), name, desc, null, null);
+                Item item = new Item(Integer.getInteger(id), name, desc, null);
                 tracker.replace(id, item);
                 System.out.println("------------ Заявка с Id : " + id + " отредактирована -----------");
             }

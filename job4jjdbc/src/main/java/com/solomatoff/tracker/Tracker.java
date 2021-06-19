@@ -1,8 +1,9 @@
 package com.solomatoff.tracker;
 
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Tracker implements AutoCloseable {
@@ -52,12 +53,12 @@ public class Tracker implements AutoCloseable {
             itemIdAsString = Integer.toString(itemId);
             resultSet.close();
             // Добавляем комментарии этой заявки в таблицу comments
-            String[] comments = item.getComments();
+            /*String[] comments = item.getComments();
             if (comments != null) {
                 for (String comment : comments) {
                     commentInsert(itemId, comment);
                 }
-            }
+            }*/
         } catch (NullPointerException | SQLException e) {
             System.out.println("Невозможно добавить новую заявку " + item.getName() + " " + item.getDescription());
             e.printStackTrace();
@@ -107,7 +108,7 @@ public class Tracker implements AutoCloseable {
      */
     public void replace(String id, Item item) {
         String updateItems = trackerProperty.getProperty("updateitems");
-        try (PreparedStatement stUpdareItem = conn.prepareStatement(updateItems + " WHERE item_id=?")) {
+        try (PreparedStatement stUpdareItem = conn.prepareStatement(updateItems + " WHERE id=?")) {
             stUpdareItem.setString(1, item.getName());
             stUpdareItem.setString(2, item.getDescription());
             Integer itemId = Integer.parseInt(id);
@@ -126,7 +127,7 @@ public class Tracker implements AutoCloseable {
      */
     public void delete(String id) {
         String deleteComments = trackerProperty.getProperty("deletecomments");
-        try (PreparedStatement stDeleteComments = conn.prepareStatement(deleteComments + " WHERE comment_item_id=?")) {
+        try (PreparedStatement stDeleteComments = conn.prepareStatement(deleteComments + " WHERE item_id=?")) {
             Integer itemId = Integer.parseInt(id);
             stDeleteComments.setInt(1, itemId);
             stDeleteComments.executeUpdate();
@@ -135,7 +136,7 @@ public class Tracker implements AutoCloseable {
             e.printStackTrace();
         }
         String deleteItems = trackerProperty.getProperty("deleteitems");
-        try (PreparedStatement stDeleteItems = conn.prepareStatement(deleteItems + " WHERE item_id=?")) {
+        try (PreparedStatement stDeleteItems = conn.prepareStatement(deleteItems + " WHERE id=?")) {
             Integer itemId = Integer.parseInt(id);
             stDeleteItems.setInt(1, itemId);
             stDeleteItems.executeUpdate();
@@ -165,8 +166,8 @@ public class Tracker implements AutoCloseable {
         }
     }
 
-    private Item createItemForTracker(Integer itemId, String itemName, String itemDescription, Date itemCreated) {
-        Item item = new Item(null, null, null, null, null);
+    private Item createItemForTracker(Integer itemId, String itemName, String itemDescription, LocalDateTime itemCreated) {
+        Item item = new Item(null, null, null, null);
         item.setId(itemId);
         item.setName(itemName);
         item.setDescription(itemDescription);
@@ -174,7 +175,7 @@ public class Tracker implements AutoCloseable {
         // Вначале определим количество комментариев
         String selectcountcomments = trackerProperty.getProperty("selectcountcomments");
         int sizeComments = 0;
-        try (PreparedStatement stComments = conn.prepareStatement(selectcountcomments + " WHERE comment_item_id=?")) {
+        try (PreparedStatement stComments = conn.prepareStatement(selectcountcomments + " WHERE item_id=?")) {
             stComments.setInt(1, itemId);
             ResultSet rsComments = stComments.executeQuery();
             rsComments.next();
@@ -187,7 +188,7 @@ public class Tracker implements AutoCloseable {
         String selectcomments = trackerProperty.getProperty("selectcomments");
         String[] comments = new String[sizeComments];
         int index = 0;
-        try (PreparedStatement stComments = conn.prepareStatement(selectcomments + " WHERE comment_item_id =?")) {
+        try (PreparedStatement stComments = conn.prepareStatement(selectcomments + " WHERE item_id =?")) {
             stComments.setInt(1, item.getId());
             ResultSet rsComments = stComments.executeQuery();
             while (rsComments.next()) {
@@ -196,7 +197,7 @@ public class Tracker implements AutoCloseable {
             }
             rsComments.close();
             // Заполняем в item поле comments
-            item.setComments(comments);
+            //item.setComments(comments);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -213,13 +214,13 @@ public class Tracker implements AutoCloseable {
         Item item = null;
         if (id != null) {
             String selectitems = trackerProperty.getProperty("selectitems");
-            try (PreparedStatement stItems = conn.prepareStatement(selectitems + " WHERE item_id=?")) {
+            try (PreparedStatement stItems = conn.prepareStatement(selectitems + " WHERE id=?")) {
                 Integer itemId = Integer.parseInt(id);
                 stItems.setInt(1, itemId);
                 // делаем выборку из таблицы items
                 ResultSet rs = stItems.executeQuery();
                 if (rs.next()) {
-                    item = createItemForTracker(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getTimestamp(4));
+                    item = createItemForTracker(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getTimestamp(4).toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime());
                 }
                 rs.close();
             } catch (NullPointerException | SQLException e) {
@@ -243,12 +244,12 @@ public class Tracker implements AutoCloseable {
         ArrayList<Item> result = new ArrayList<>();
         Item item;
         String selectitems = trackerProperty.getProperty("selectitems");
-        try (PreparedStatement st = conn.prepareStatement(selectitems + " WHERE item_name=?")) {
+        try (PreparedStatement st = conn.prepareStatement(selectitems + " WHERE name=?")) {
             st.setString(1, name);
             // делаем выборку из таблицы items
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
-                item = createItemForTracker(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getTimestamp(4));
+                item = createItemForTracker(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getTimestamp(4).toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime());
                 result.add(item);
             }
             rs.close();
@@ -269,9 +270,9 @@ public class Tracker implements AutoCloseable {
         String selectitems = trackerProperty.getProperty("selectitems");
         try (Statement st = conn.createStatement()) {
             // делаем выборку из таблицы items
-            ResultSet rs = st.executeQuery(selectitems + " order by item_id");
+            ResultSet rs = st.executeQuery(selectitems + " order by id");
             while (rs.next()) {
-                item = createItemForTracker(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getTimestamp(4));
+                item = createItemForTracker(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getTimestamp(4).toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime());
                 result.add(item);
             }
             rs.close();
