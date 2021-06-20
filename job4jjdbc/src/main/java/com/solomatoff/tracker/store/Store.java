@@ -5,11 +5,15 @@ import com.solomatoff.tracker.Item;
 import java.util.List;
 
 public interface Store {
-    Item add(Item item);
+    String add(Item item);
 
-    boolean replace(String id, Item item);
+    void commentsInsert(String id, String[] commentsArray);
 
-    boolean delete(String id);
+    void replace(String id, Item item);
+
+    void delete(String id);
+
+    void deleteAll();
 
     List<Item> findAll();
 

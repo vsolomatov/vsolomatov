@@ -1,12 +1,14 @@
 package com.solomatoff.tracker;
 
+import com.solomatoff.tracker.store.Store;
+
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Tracker implements AutoCloseable {
+public class Tracker implements Store, AutoCloseable {
     private TrackerProperty trackerProperty;
     private Connection conn;
 
@@ -39,6 +41,7 @@ public class Tracker implements AutoCloseable {
      * @param item новая заявка
      * @return id добавленной заявки
      */
+    @Override
     public String add(Item item) {
         String insertItems = trackerProperty.getProperty("insertitems");
         String itemIdAsString = null;
@@ -90,6 +93,7 @@ public class Tracker implements AutoCloseable {
      * @param id            Идентификатор заявки
      * @param commentsArray массив комментариев
      */
+    @Override
     public void commentsInsert(String id, String[] commentsArray) {
         if (commentsArray != null) {
             Integer itemId;
@@ -106,6 +110,7 @@ public class Tracker implements AutoCloseable {
      * @param id   Идентификатор заявки
      * @param item новая заявка
      */
+    @Override
     public void replace(String id, Item item) {
         String updateItems = trackerProperty.getProperty("updateitems");
         try (PreparedStatement stUpdareItem = conn.prepareStatement(updateItems + " WHERE id=?")) {
@@ -125,6 +130,7 @@ public class Tracker implements AutoCloseable {
      *
      * @param id Идентификатор заявки
      */
+    @Override
     public void delete(String id) {
         String deleteComments = trackerProperty.getProperty("deletecomments");
         try (PreparedStatement stDeleteComments = conn.prepareStatement(deleteComments + " WHERE item_id=?")) {
@@ -149,6 +155,7 @@ public class Tracker implements AutoCloseable {
     /**
      * Удаляет все имеющиеся заявки
      */
+    @Override
     public void deleteAll() {
         String deleteComments = trackerProperty.getProperty("deletecomments");
         try (PreparedStatement stDeleteComments = conn.prepareStatement(deleteComments)) {

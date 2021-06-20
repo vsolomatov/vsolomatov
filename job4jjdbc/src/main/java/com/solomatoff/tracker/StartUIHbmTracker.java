@@ -1,8 +1,9 @@
 package com.solomatoff.tracker;
 
+import com.solomatoff.tracker.store.HbmTracker;
 import com.solomatoff.tracker.store.Store;
 
-public class StartUI {
+public class StartUIHbmTracker {
     /**
      * Константа для выхода из цикла.
      */
@@ -24,7 +25,7 @@ public class StartUI {
      * @param input   ввод данных.
      * @param tracker хранилище заявок.
      */
-    public StartUI(Input input, Store tracker) {
+    public StartUIHbmTracker(Input input, Store tracker) {
         this.input = input;
         this.tracker = tracker;
     }
@@ -57,8 +58,8 @@ public class StartUI {
      */
     public static void main(String[] args) {
         Input input = new ValidateInput(new ConsoleInput());
-        try (Tracker tracker = new Tracker("tracker.properties")) {
-            new StartUI(input, tracker).init();
+        try (HbmTracker hbmTracker = new HbmTracker()) {
+            new StartUIHbmTracker(input, hbmTracker).init();
         } catch (Exception e) {
             e.printStackTrace();
         }

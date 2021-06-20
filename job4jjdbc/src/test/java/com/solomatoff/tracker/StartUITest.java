@@ -1,5 +1,6 @@
 package com.solomatoff.tracker;
 
+import com.solomatoff.tracker.store.Store;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
@@ -35,7 +36,7 @@ public class StartUITest {
     @Test
     public void whenUserChooseFindAll() {
         // создаём Tracker
-        Tracker tracker = new Tracker("tracker.properties");
+        Store tracker = new Tracker("tracker.properties");
         // Очищаем трекер
         tracker.deleteAll();
         // Добавляем заявки в трекер. И запоминаем их id в массиве itemid.
@@ -63,7 +64,7 @@ public class StartUITest {
     @Test
     public void whenUserChooseFindById() {
         // Cоздаём Tracker
-        Tracker tracker = new Tracker("tracker.properties");
+        Store tracker = new Tracker("tracker.properties");
         // Очищаем трекер
         tracker.deleteAll();
         // Добавляем заявки в трекер. И запоминаем их id в массиве itemid.
@@ -94,7 +95,7 @@ public class StartUITest {
     @Test
     public void whenUserChooseFindByName() {
         // создаём Tracker
-        Tracker tracker = new Tracker("tracker.properties");
+        Store tracker = new Tracker("tracker.properties");
         // Очищаем трекер
         tracker.deleteAll();
         // Добавляем заявки в трекер. И запоминаем их id в массиве itemid.
@@ -124,7 +125,7 @@ public class StartUITest {
 
     @Test
     public void whenUserAddItemThenTrackerHasNewItem() {
-        Tracker tracker = new Tracker("tracker.properties");     // создаём Tracker
+        Store tracker = new Tracker("tracker.properties");     // создаём Tracker
         // Очищаем трекер
         tracker.deleteAll();
         Input input = new StubInput(new String[]{"10", "test add", "desc", "70"});   //создаём StubInput с последовательностью действий
@@ -135,7 +136,7 @@ public class StartUITest {
     @Test
     public void whenUpdateThenTrackerHasUpdatedValue() {
         // создаём Tracker
-        Tracker tracker = new Tracker("tracker.properties");
+        Store tracker = new Tracker("tracker.properties");
         // Очищаем трекер
         tracker.deleteAll();
         String[] comments = new String[] {"Комментарий #1 к заявке ", "Комментарий #2 к заявке "};
@@ -154,7 +155,7 @@ public class StartUITest {
 
     @Test
     public void whenDeleteThenTrackerHasNotValue() {
-        Tracker tracker = new Tracker("tracker.properties");
+        Store tracker = new Tracker("tracker.properties");
         // Очищаем трекер
         tracker.deleteAll();
         String[] comments = new String[] {"Комментарий #1 к заявке ", "Комментарий #2 к заявке "};
